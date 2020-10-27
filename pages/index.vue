@@ -3,7 +3,26 @@
 </template>
 
 <script>
-export default {}
+export default {
+  head() {
+    return {
+      title: 'java学习网',
+      meta: [
+        {
+          hid: 'description',
+          name: 'description',
+          content:
+            'java学习网seo简介'
+        },
+        {
+          hid: 'keywords',
+          name: 'keywords',
+          content: 'java学习网seo关键词'
+        }
+      ]
+    };
+  },
+}
 </script>
 
 <style lang='scss' scoped>
