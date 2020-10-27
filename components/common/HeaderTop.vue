@@ -183,6 +183,7 @@ export default {
           }
         }
       }
+
       .right {
         height: 100%;
 
@@ -190,7 +191,7 @@ export default {
           font-size: 16px;
           color: #333;
           font-weight: bold;
-          margin: 0;
+          margin-bottom: 3px;
         }
 
         .level {
