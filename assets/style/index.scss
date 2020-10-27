@@ -1,6 +1,4 @@
-
 @import './reset.scss';
-@import './common.scss';
 
 .flex {
     display: flex;
@@ -35,29 +33,28 @@
     clear: both;
 }
 
-
 ::-webkit-scrollbar-track-piece {
-    -webkit-border-radius: 0
+    border-radius: 0;
 }
 
 ::-webkit-scrollbar {
     width: 5px;
-    height: 10px
+    height: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
     height: 50px;
     background-color: #e6e6e6;
-    -webkit-border-radius: 6px;
+    border-radius: 6px;
     outline-offset: -2px;
     filter: alpha(opacity=50);
     -moz-opacity: 0.5;
     -khtml-opacity: 0.5;
-    opacity: 0.5
+    opacity: 0.5;
 }
 
 ::-webkit-scrollbar-thumb:hover {
     height: 50px;
     background-color: #e6e6e6;
-    -webkit-border-radius: 6px
+    border-radius: 6px;
 }

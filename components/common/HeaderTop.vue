@@ -8,10 +8,10 @@
                 </li>
                 <li class="menu-item personal-info">
                     <div class="left">
-                        <img class="head" src="https://static.woshipm.com/TTW_USER_202010_20201009200405_8295.jpg?imageView2/2/w/200/size-limit/5k!" alt="" />
+                        <img class="head" src="http://139.159.147.237/images/xuxiaofei.jpeg" alt="" />
                     </div>
                     <div class="right">
-                        <p class="title">🐟</p>
+                        <p class="title">曾阿牛🐂</p>
                         <p class="level">
                             <span>初学者</span>
                             <span>|</span>
@@ -34,12 +34,6 @@
 
 <script>
 export default {
-    components: {
-
-    },
-    props: {
-
-    },
     data() {
         return {
             active: 0,
@@ -61,39 +55,25 @@ export default {
                     link: '/comunication'
                 },
                 {
-                    title: ' 组队学习',
-                    link: '/feedback'
-                },
-                {
                     title: '关于我们',
                     link: '/about'
                 }
             ]
         };
     },
-    computed: {
-
-    },
-    created() {
-
-    },
-    mounted() {
-
-    },
-    watch: {
-
-    },
+    props: {},
+    created() {},
+    mounted() {},
     methods: {
         changeMenu(index) {
             if (index != this.active) {
                 this.active = index;
             }
         }
-    },
+    }
 };
 </script>
-
-<style scoped lang="scss">
+<style rel="stylesheet/scss" lang="scss" scoped>
 #header {
     position: fixed;
     width: 100%;
@@ -143,7 +123,7 @@ export default {
                         bottom: -10px;
                         width: 100%;
                         height: 2px;
-                        background: rgb(74, 144, 226);
+                        background: $main-col;
                         opacity: 0;
                         transform: scaleX(0);
                         transition: all 0.3s cubic-bezier(0.18, 0.89, 0.17, 0.88), opacity 0.25s ease;
@@ -162,7 +142,7 @@ export default {
             }
 
             & .active .link {
-                color: rgb(74, 144, 226);
+                color: $main-col;
 
                 &:after {
                     opacity: 1;
@@ -189,7 +169,7 @@ export default {
                 border-radius: 50%;
                 box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.15);
                 padding: 1px;
-                border: 1px solid rgb(74, 144, 226);
+                border: 1px solid $main-col;
                 margin-right: 10px;
                 cursor: pointer;
             }

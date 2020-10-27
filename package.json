@@ -1,22 +1,27 @@
 {
-  "name": "java-study-nuxt",
-  "version": "1.0.0",
-  "private": true,
-  "scripts": {
-    "dev": "nuxt",
-    "build": "nuxt build",
-    "start": "nuxt start",
-    "generate": "nuxt generate"
-  },
-  "dependencies": {
-    "ant-design-vue": "^1.6.5",
-    "clipboard": "^2.0.6",
-    "core-js": "^3.6.5",
-    "moment": "^2.29.1",
-    "nuxt": "^2.14.6"
-  },
-  "devDependencies": {
-    "node-sass": "^4.14.1",
-    "sass-loader": "^10.0.4"
-  }
+    "name": "java-study-nuxt",
+    "version": "1.0.0",
+    "private": true,
+    "scripts": {
+        "dev": "nuxt",
+        "build": "nuxt build",
+        "start": "nuxt start",
+        "generate": "nuxt generate"
+    },
+    "dependencies": {
+        "ant-design-vue": "^1.6.5",
+        "clipboard": "^2.0.6",
+        "core-js": "^3.6.5",
+        "css-loader": "^5.0.0",
+        "moment": "^2.29.1",
+        "nuxt": "^2.14.6"
+    },
+    "devDependencies": {
+        "autoprefixer": "^9.8.6",
+        "eslint-config-prettier": "^6.14.0",
+        "eslint-plugin-prettier": "^3.1.4",
+        "node-sass": "^4.14.1",
+        "sass-loader": "^7.3.1",
+        "sass-resources-loader": "^2.1.1"
+    }
 }
