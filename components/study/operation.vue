@@ -32,7 +32,7 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
+<style scoped lang="less">
 .widget-operation-bottom {
     display: flex;
     justify-content: flex-end;
@@ -53,7 +53,7 @@ export default {
         position: relative;
 
         &::before {
-            content: "";
+            content: '';
             position: absolute;
             left: 0;
             top: 2px;
@@ -63,7 +63,7 @@ export default {
         }
 
         &:first-child:before {
-            content: "";
+            content: '';
             position: absolute;
             width: 0;
             height: 0;

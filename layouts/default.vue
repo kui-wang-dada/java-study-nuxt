@@ -14,7 +14,7 @@ export default {
     components: { HeaderTop }
 };
 </script>
-<style lang="scss" scoped>
+<style lang="less" scoped>
 .main {
     display: flex;
     justify-content: center;
@@ -27,7 +27,7 @@ export default {
 }
 </style>
 <style>
-/* @import '@/assets/style/index.scss'; */
+/* @import '@/assets/style/index.less'; */
 /* @import '@/assets/icon/iconfont.css'; */
 
 *,

@@ -161,7 +161,7 @@ export default {
     }
 };
 </script>
-<style scoped lang="scss">
+<style scoped lang="less">
 .sidebar {
     overflow-x: hidden;
     overflow-y: auto;

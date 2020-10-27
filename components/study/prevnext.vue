@@ -26,7 +26,7 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
+<style scoped lang="less">
 .prevnext {
     padding: 20px 40px;
     border-top: 1px #efefef solid;

@@ -1,3 +1,4 @@
+const path = require('path');
 export default {
     // Global page headers (https://go.nuxtjs.dev/config-head)
     head: {
@@ -14,7 +15,16 @@ export default {
     },
 
     // Global CSS (https://go.nuxtjs.dev/config-css)
-    css: ['ant-design-vue/dist/antd.css', '~assets/style/index.scss', '~assets/icon/iconfont.css'],
+    css: [
+        'ant-design-vue/lib/list/style',
+        'ant-design-vue/lib/button/style',
+        'ant-design-vue/lib/spin/style',
+        'ant-design-vue/lib/select/style',
+        'ant-design-vue/lib/input/style',
+
+        '@/assets/style/index.less',
+        '~assets/icon/iconfont.css'
+    ],
 
     // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
     plugins: ['@/plugins/antd-ui'],
@@ -29,9 +39,30 @@ export default {
     modules: ['@nuxtjs/style-resources'],
 
     styleResources: {
-        scss: './assets/style/theme.scss'
+        less: '@/assets/style/theme.less'
     },
 
     // Build Configuration (https://go.nuxtjs.dev/config-build)
-    build: {}
+    build: {
+        extend(config, ctx) {
+            config.resolve.alias['@'] = path.resolve(__dirname, './');
+
+            if (ctx.isClient && !ctx.isDev) {
+                config.optimization.minimizer[0].options.terserOptions.compress.drop_console = true;
+                config.optimization.minimizer[0].options.terserOptions.compress.drop_debugger = true;
+                config.optimization.minimizer[0].options.terserOptions.compress.warnings = false;
+            }
+        },
+        loaders: {
+            less: {
+                lessOptions: {
+                    javascriptEnabled: true,
+                    modifyVars: {
+                        'primary-color': '#4169e2',
+                        'link-color': '#4169e2'
+                    }
+                }
+            }
+        }
+    }
 };

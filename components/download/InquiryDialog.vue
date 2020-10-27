@@ -59,7 +59,7 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
+<style scoped lang="less">
 .inquiry-block {
     width: 300px;
     padding: 15px 0;

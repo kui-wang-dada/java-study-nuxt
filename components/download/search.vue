@@ -24,7 +24,7 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
+<style scoped lang="less">
 .search-wrap {
     min-width: 620px;
     margin: 0 auto;

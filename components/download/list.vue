@@ -182,7 +182,7 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
+<style scoped lang="less">
 .aside-left {
     width: 680px;
     min-height: 400px;

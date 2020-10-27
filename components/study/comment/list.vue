@@ -110,7 +110,7 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
+<style scoped lang="less">
 .font-size-xs {
     font-size: 14px;
 }

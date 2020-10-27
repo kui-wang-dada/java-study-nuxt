@@ -9,24 +9,23 @@
 import list from '@/components/download/list';
 import sidebar from '@/components/download/sidebar';
 export default {
-     head() {
-    return {
-      title: 'java学习网',
-      meta: [
-        {
-          hid: 'description',
-          name: 'description',
-          content:
-            'java学习网seo简介'
-        },
-        {
-          hid: 'keywords',
-          name: 'keywords',
-          content: 'java学习网seo关键词'
-        }
-      ]
-    };
-  },
+    head() {
+        return {
+            title: 'java学习网',
+            meta: [
+                {
+                    hid: 'description',
+                    name: 'description',
+                    content: 'java学习网seo简介'
+                },
+                {
+                    hid: 'keywords',
+                    name: 'keywords',
+                    content: 'java学习网seo关键词'
+                }
+            ]
+        };
+    },
     components: {
         list,
         sidebar
@@ -43,9 +42,9 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
-    .mian {
-        display: flex;
-        justify-content: space-between;
-    }
+<style scoped lang="less">
+.mian {
+    display: flex;
+    justify-content: space-between;
+}
 </style>

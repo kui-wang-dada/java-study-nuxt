@@ -66,7 +66,7 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
+<style scoped lang="less">
 .entry {
     transition: ease-in-out 0.5s;
     padding: 40px;

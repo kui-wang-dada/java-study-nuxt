@@ -60,7 +60,7 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
+<style scoped lang="less">
 .agreement-block {
     width: 380px;
     padding: 20px;

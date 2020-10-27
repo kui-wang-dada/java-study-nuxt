@@ -73,7 +73,8 @@ export default {
     }
 };
 </script>
-<style rel="stylesheet/scss" lang="scss" scoped>
+<style rel="stylesheet/less" lang="less" scoped>
+// @import '../../assets/style/theme.less';
 #header {
     position: fixed;
     width: 100%;
@@ -123,7 +124,7 @@ export default {
                         bottom: -10px;
                         width: 100%;
                         height: 2px;
-                        background: $main-col;
+                        background: @main-col;
                         opacity: 0;
                         transform: scaleX(0);
                         transition: all 0.3s cubic-bezier(0.18, 0.89, 0.17, 0.88), opacity 0.25s ease;
@@ -142,7 +143,7 @@ export default {
             }
 
             & .active .link {
-                color: $main-col;
+                color: @main-col;
 
                 &:after {
                     opacity: 1;
@@ -169,7 +170,7 @@ export default {
                 border-radius: 50%;
                 box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.15);
                 padding: 1px;
-                border: 1px solid $main-col;
+                border: 1px solid @main-col;
                 margin-right: 10px;
                 cursor: pointer;
             }

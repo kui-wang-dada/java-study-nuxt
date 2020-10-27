@@ -75,7 +75,7 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
+<style scoped lang="less">
 .article-comment-block {
     transition: ease-in-out 0.5s;
     padding: 20px 30px;
