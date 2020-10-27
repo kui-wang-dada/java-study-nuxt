@@ -1,0 +1,22 @@
+{
+  "name": "java-study-nuxt",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "nuxt",
+    "build": "nuxt build",
+    "start": "nuxt start",
+    "generate": "nuxt generate"
+  },
+  "dependencies": {
+    "ant-design-vue": "^1.6.5",
+    "clipboard": "^2.0.6",
+    "core-js": "^3.6.5",
+    "moment": "^2.29.1",
+    "nuxt": "^2.14.6"
+  },
+  "devDependencies": {
+    "node-sass": "^4.14.1",
+    "sass-loader": "^10.0.4"
+  }
+}

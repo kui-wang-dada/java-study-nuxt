@@ -1,0 +1,105 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'PingFang SC', 'Microsoft Yahei', 'Helvetica Neue', Helvetica, STHeiTi, sans-serif;
+    color: #2c3e50;
+    font-size: 1rem;
+    background-color: #f7f9fa;
+}
+
+a {
+    font-style: normal;
+    text-decoration: none;
+    color: #304455;
+    cursor: pointer;
+    transition: all 0.15s ease-out;
+
+    &:hover {
+        color: #304455;
+    }
+}
+
+li {
+    list-style-type: none;
+    display: list-item;
+    text-align: -webkit-match-parent;
+}
+
+input,
+img,
+button {
+    border: none;
+    outline: none;
+}
+
+img {
+    -webkit-user-drag: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+
+    color: #333;
+    text-rendering: optimizelegibility;
+}
+
+h1 {
+    font-size: 2.2rem;
+}
+
+.theme-default-content:not(.custom) > h1:first-child,
+.theme-default-content:not(.custom) > h2:first-child,
+.theme-default-content:not(.custom) > h3:first-child,
+.theme-default-content:not(.custom) > h4:first-child,
+.theme-default-content:not(.custom) > h5:first-child,
+.theme-default-content:not(.custom) > h6:first-child {
+    margin-bottom: 1rem;
+}
+
+
+
+i,
+em {
+    font-style: normal;
+}
+
+input[type='number'],
+textarea {
+    -moz-appearance: textfield;
+}
+
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button,
+input[type='submit'],
+input[type='search'],
+input[type='reset'] {
+    -webkit-appearance: none;
+}
+
+::-webkit-input-placeholder {
+    /* WebKit browsers */
+    color: #bebebe;
+}
+
+:-moz-placeholder {
+    /* Mozilla Firefox 4 to 18 */
+    color: #bebebe;
+}
+
+::-moz-placeholder {
+    /* Mozilla Firefox 19+ */
+    color: #bebebe;
+}
+
+:-ms-input-placeholder {
+    /* Internet Explorer 10+ */
+    color: #bebebe;
+}
