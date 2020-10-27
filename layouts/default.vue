@@ -24,12 +24,10 @@ export default {
 .main-body {
     width: 1000px;
     margin-top: 81px;
+    padding-bottom: 30px;
 }
 </style>
 <style>
-/* @import '@/assets/style/index.less'; */
-/* @import '@/assets/icon/iconfont.css'; */
-
 *,
 *::before,
 *::after {

@@ -88,8 +88,8 @@ export default {
         }
 
         .confirm {
-            border: 1px solid rgb(74, 144, 226);
-            background-color: rgb(74, 144, 226);
+            border: 1px solid @main-col;
+            background-color: @main-col;
             margin-right: 30px;
 
             &:hover {
@@ -102,7 +102,7 @@ export default {
             color: #606266;
 
             &:hover {
-                color: rgb(74, 144, 226);
+                color: @main-col;
                 border-color: #c6e2ff;
                 background-color: #ecf5ff;
             }

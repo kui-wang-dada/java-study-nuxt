@@ -32,8 +32,35 @@
     </dialog-panel>
 </template>
 
+
 <script>
 import DialogPanel from '@/components/common/dialog';
+export default {
+    components: {
+        DialogPanel
+    },
+    props: {},
+    data() {
+        return {
+            examples1: false,
+            examples2: false
+        };
+    },
+    computed: {},
+    methods: {
+        // 关闭弹窗
+        handleClose() {
+            this.$emit('close');
+        },
+
+        // 确认
+        handleConfirm() {
+            console.log('点击了确认');
+        }
+    }
+};
+</script>
+
 export default {
     components: {
         DialogPanel
@@ -94,7 +121,7 @@ export default {
                 cursor: pointer;
 
                 &:hover {
-                    color: rgb(74, 144, 226);
+                    color: @main-col;
                 }
             }
 
@@ -109,7 +136,7 @@ export default {
         .agreement-btn {
             display: block;
             margin-top: 20px;
-            background-color: rgb(74, 144, 226);
+            background-color: @main-col;
             height: 32px;
             line-height: 32px;
             width: 140px;

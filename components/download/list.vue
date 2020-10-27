@@ -189,7 +189,6 @@ export default {
     transition: ease-in-out 0.5s;
     background-color: #fff;
     border-radius: 4px;
-    box-shadow: 0px 3px 10px 0px rgba(153, 153, 153, 0.1);
 
     .search-block {
         height: 70px;
@@ -197,7 +196,6 @@ export default {
 
     .download-list {
         border-radius: 4px 4px 0px 0px;
-        box-shadow: 0px 3px 10px 0px rgba(153, 153, 153, 0.1);
 
         .download-item {
             border-top: 1px solid #f2f2f2;
@@ -298,7 +296,7 @@ export default {
 
                         .icon-zu-,
                         .icon-11-04 {
-                            color: rgb(74, 144, 226);
+                            color: @main-col;
                         }
                     }
 
@@ -306,7 +304,7 @@ export default {
                         .btn {
                             width: 70px;
                             height: 30px;
-                            background-color: rgb(74, 144, 226);
+                            background-color: @main-col;
                             color: #fff;
                             font-size: 14px;
                             border-radius: 4px;

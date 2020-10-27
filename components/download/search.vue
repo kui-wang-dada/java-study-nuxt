@@ -35,13 +35,13 @@ export default {
         .search {
             box-shadow: none;
             font-size: 16px;
-            padding: 10px 30px;
+            padding: 10px 30px 10px 20px;
             height: auto;
             text-align: left;
             color: #333;
 
             &:focus {
-                border-color: #2c74e6;
+                border-color: @main-col;
             }
         }
 
@@ -69,7 +69,7 @@ export default {
             cursor: pointer;
 
             .icon-sousuo1 {
-                color: #2c74e6;
+                color: @main-col;
                 font-size: 20px;
                 line-height: 40px;
             }
