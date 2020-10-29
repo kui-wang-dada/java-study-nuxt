@@ -12,29 +12,32 @@
                         </div>
                     </div>
                     <div class="right">
+                        <div class="info-row flex-s-b">
+                            <div class="flex-align">
+                                <div class="user-name">fend.</div>
+                                <div class="public-time">今天11:41</div>
+                            </div>
+                        </div>
                         <div class="title">
                             <span class="tag" :class="'tag' + (index + 1)" v-if="index + 1 <= 3">
                                 <i class="iconfont icon-redu1"></i>
                             </span>
                             <span>【{{ item.id }}】{{ item.title }}</span>
                         </div>
-                        <div class="operation flex-s-b">
-                            <div class="more-column flex-align">
-                                <span class="more font-v-a">
-                                    <i class="iconfont icon-11-04"></i>
-                                    <em>{{ item.downloadNum }}</em>
-                                </span>
-                                <span class="line">|</span>
-                                <span class="more font-v-a">
-                                    <i class="iconfont icon-zu-"></i>
-                                    <em>{{ item.integral }}</em>
-                                </span>
-                                <span class="line">|</span>
-                                <div class="date">{{ item.date }}</div>
+                        <div class="operations flex-s-b">
+                            <div class="btns flex-align">
+                                <div class="btn">
+                                    <i class="iconfont icon-xiazailiang"></i>
+                                    <span class="btn-text">88</span>
+                                </div>
+                                <div class="btn">
+                                    <i class="iconfont icon-pinglun1"></i>
+                                    <span class="btn-text">8</span>
+                                </div>
                             </div>
                             <div class="btn-column">
                                 <div class="btn flex-align-center" @click="handleDownload(index)">
-                                    <i class="iconfont icon-11-04"></i>
+                                    <i class="iconfont icon-xiazailiang"></i>
                                     下载
                                 </div>
                             </div>
@@ -211,8 +214,8 @@ export default {
 
                 .avatar-wrap {
                     .avatar {
-                        width: 40px;
-                        height: 40px;
+                        width: 42px;
+                        height: 42px;
                         display: block;
                         background: #d0d4d7;
                         border-radius: 100%;
@@ -222,6 +225,22 @@ export default {
 
             .right {
                 flex: 1;
+
+                .info-row {
+                    margin: 5px 0 8px 0;
+
+                    .user-name {
+                        font-size: 16px;
+                        color: #2e3135;
+                        font-weight: 600;
+                        margin-right: 10px;
+                    }
+
+                    .public-time {
+                        font-size: 12px;
+                        color: #b2b2b2;
+                    }
+                }
 
                 .title {
                     font-size: 16px;
@@ -256,47 +275,46 @@ export default {
                     }
                 }
 
-                .operation {
-                    position: relative;
-                    width: 100%;
-                    margin-top: 20px;
-                    line-height: 1;
-                    font-size: 14px;
-                    font-weight: 400;
-                    color: #141414;
+                .operations {
+                    margin-top: 10px;
 
-                    .date {
-                        font-size: 14px;
-                        font-weight: 400;
-                        color: #999;
-                    }
+                    .btns {
+                        justify-content: flex-end;
 
-                    .more-column {
-                        .more {
-                            color: #999;
+                        .btn {
+                            display: inline-block;
                             cursor: pointer;
+                            color: #446586;
                             user-select: none;
-                        }
+                            margin-left: 15px;
+                            vertical-align: middle;
 
-                        .line {
-                            margin: 0 8px;
-                            font-size: 12px;
-                            color: #999;
-                        }
+                            &:hover {
+                                color: @main-col;
 
-                        .iconfont {
-                            font-size: 16px;
-                            user-select: none;
-                            margin-right: 5px;
-                        }
+                                .iconfont {
+                                    color: @main-col;
+                                }
 
-                        .icon-xiazai {
-                            margin-top: 1px;
-                        }
+                                .btn-text {
+                                    text-decoration: underline;
+                                }
+                            }
 
-                        .icon-zu-,
-                        .icon-11-04 {
-                            color: @main-col;
+                            &:first-child {
+                                margin: 0;
+                            }
+
+                            .iconfont {
+                                color: #446586;
+                                font-size: 18px;
+                                vertical-align: middle;
+                            }
+
+                            .btn-text {
+                                font-size: 14px;
+                                vertical-align: middle;
+                            }
                         }
                     }
 
@@ -314,7 +332,7 @@ export default {
                                 opacity: 0.9;
                             }
 
-                            .icon-11-04 {
+                            .icon-xiazailiang {
                                 font-size: 16px;
                                 color: #fff;
                                 margin: 2px 3px 0 0;

@@ -2,8 +2,8 @@
     <div class="search-wrap">
         <div class="search-form">
             <input class="search control" type="text" placeholder="请输入关键字搜索" />
-            <span class=" search-icon">
-                <i class="iconfont icon-sousuo1"></i>
+            <span class="search-icon flex-align-center">
+                <i class="iconfont icon-sousuo"></i>
             </span>
         </div>
     </div>
@@ -35,13 +35,17 @@ export default {
         .search {
             box-shadow: none;
             font-size: 16px;
-            padding: 10px 30px 10px 20px;
+            padding: 8px 50px 8px 20px;
             height: auto;
             text-align: left;
             color: #333;
 
             &:focus {
                 border-color: @main-col;
+            }
+
+            &:focus + .search-icon .icon-sousuo {
+                color: @main-col;
             }
         }
 
@@ -62,16 +66,13 @@ export default {
             right: 0;
             top: 0;
             width: 50px;
-            height: 40px;
-            text-align: center;
+            height: 100%;
             line-height: 40px;
-            border-radius: 2px;
             cursor: pointer;
 
-            .icon-sousuo1 {
-                color: @main-col;
-                font-size: 20px;
-                line-height: 40px;
+            .icon-sousuo {
+                color: #999;
+                font-size: 18px;
             }
         }
     }
