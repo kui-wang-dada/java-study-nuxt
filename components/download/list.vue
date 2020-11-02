@@ -5,40 +5,77 @@
         </div>
         <div class="download-list">
             <ul class="list-ul">
-                <li class="download-item flex" v-for="(item, index) in list" :key="item.id">
-                    <div class="left">
-                        <div class="avatar-wrap">
-                            <img :src="item.head" alt="用户头像" class="avatar" />
-                        </div>
-                    </div>
-                    <div class="right">
-                        <div class="info-row flex-s-b">
-                            <div class="flex-align">
-                                <div class="user-name">fend.</div>
-                                <div class="public-time">今天11:41</div>
+                <li v-for="(item, index) in list" :key="item.id">
+                    <div class="download-item flex">
+                        <div class="left">
+                            <div class="avatar-wrap">
+                                <img :src="item.head" alt="用户头像" class="avatar" />
                             </div>
                         </div>
-                        <div class="title">
-                            <span class="tag" :class="'tag' + (index + 1)" v-if="index + 1 <= 3">
-                                <i class="iconfont icon-redu1"></i>
-                            </span>
-                            <span>【{{ item.id }}】{{ item.title }}</span>
-                        </div>
-                        <div class="operations flex-s-b">
-                            <div class="btns flex-align">
-                                <div class="btn">
-                                    <i class="iconfont icon-xiazailiang"></i>
-                                    <span class="btn-text">88</span>
-                                </div>
-                                <div class="btn">
-                                    <i class="iconfont icon-pinglun1"></i>
-                                    <span class="btn-text">8</span>
+                        <div class="right">
+                            <div class="info-row flex-s-b">
+                                <div class="flex-align">
+                                    <div class="user-name">fend.</div>
+                                    <div class="public-time">今天11:41</div>
                                 </div>
                             </div>
-                            <div class="btn-column">
-                                <div class="btn flex-align-center" @click="handleDownload(index)">
-                                    <i class="iconfont icon-xiazailiang"></i>
-                                    下载
+                            <div class="title">
+                                <span class="tag" :class="'tag' + (index + 1)" v-if="index + 1 <= 3">
+                                    <i class="iconfont icon-redu1"></i>
+                                </span>
+                                <span>【{{ item.id }}】{{ item.title }}</span>
+                            </div>
+                            <div class="operations flex-s-b">
+                                <div class="btns flex-align">
+                                    <div class="btn">
+                                        <i class="iconfont icon-xiazailiang"></i>
+                                        <span class="btn-text">88</span>
+                                    </div>
+                                    <div class="btn">
+                                        <i class="iconfont icon-dianzan3"></i>
+                                        <span class="btn-text">5</span>
+                                    </div>
+                                    <div class="btn">
+                                        <i class="iconfont icon-pinglun1"></i>
+                                        <span class="btn-text">8</span>
+                                    </div>
+                                </div>
+                                <div class="btn-column">
+                                    <div class="btn flex-align-center" @click="handleDownload(index)">
+                                        <i class="iconfont icon-xiazailiang"></i>
+                                        下载
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="reply-form">
+                                <edit-div @submit="onSubmit" :btnText="btnText" />
+                            </div>
+                            <div class="reply-list">
+                                <div class="reply-item flex" v-for="child in item.childs" :key="child.id">
+                                    <div class="left">
+                                        <div class="avatar-wrap">
+                                            <img :src="child.head" alt="用户头像" class="avatar" />
+                                        </div>
+                                    </div>
+                                    <div class="right">
+                                        <div class="info-row flex-s-b">
+                                            <div class="flex-align">
+                                                <div class="reply-name">fend.</div>
+                                                <div class="public-time">今天11:41</div>
+                                            </div>
+                                        </div>
+                                        <div class="desc_para">
+                                            开发者说的是软件版本不是系统版本
+                                        </div>
+                                        <div class="operations">
+                                            <div class="btns flex-align">
+                                                <div class="btn">
+                                                    <i class="iconfont icon-dianzan3"></i>
+                                                    <span class="btn-text">点赞</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -52,12 +89,14 @@
 
 <script>
 import { disableScroll, openScroll } from '@/utils';
+import EditDiv from './EditDiv';
 import InquiryDialog from './InquiryDialog';
 import search from './search';
 export default {
     components: {
         search,
-        InquiryDialog
+        InquiryDialog,
+        EditDiv
     },
     props: {},
     data() {
@@ -71,7 +110,30 @@ export default {
                     date: '1小时前',
                     downloadNum: 89,
                     integral: 4,
-                    content: '链接: https://pan.baidu.com/s/1-6EupUOaH6mEKj2kWnL52A  密码: v0ca --来自百度网盘超级会员V5的分享'
+                    content: '链接: https://pan.baidu.com/s/1-6EupUOaH6mEKj2kWnL52A  密码: v0ca --来自百度网盘超级会员V5的分享',
+                    childs: [
+                        {
+                            id: 2,
+                            head: '//static001.geekbang.org/account/avatar/00/0f/f7/6e/04f9a672.jpg?x-oss-process=image/resize,w_200,h_200',
+                            name: '阿牛',
+                            content: '网络喷子原型？',
+                            date: '一天前',
+                            like: 0,
+                            at: '谋生',
+                            isReply: false,
+                            placeholderText: '11'
+                        },
+                        {
+                            id: 3,
+                            head: 'https://static.woshipm.com/TTW_USER_202004_20200414140658_1283.jpg?imageView2/2/w/80/size-limit/5k!?imageView2/2/w/80/size-limit/5k!',
+                            name: '谋生',
+                            content: '这不是有手就行？',
+                            date: '一周前',
+                            like: 1,
+                            isReply: false,
+                            placeholderText: '11'
+                        }
+                    ]
                 },
                 {
                     id: 'AC783',
@@ -110,7 +172,8 @@ export default {
                     content: '复制这段内容后打开百度网盘手机App，操作更方便哦 链接:https://pan.baidu.com/s/1a9iL8PTDft8qs6iBm3kZZg 提取码:oa64'
                 }
             ],
-            index: '' // 当前索引
+            index: '', // 当前索引
+            btnText: '回复'
         };
     },
     computed: {},
@@ -120,6 +183,11 @@ export default {
     },
     watch: {},
     methods: {
+        // 评论按钮
+        onSubmit(content) {
+            console.log(content);
+        },
+
         // 处理列表数据
         handleData() {
             this.list.forEach(item => {
@@ -337,6 +405,55 @@ export default {
                                 color: #fff;
                                 margin: 2px 3px 0 0;
                             }
+                        }
+                    }
+                }
+
+                .reply-list {
+                    position: relative;
+                    box-sizing: border-box;
+                    background-color: rgba(0, 0, 0, 0.02);
+                    border-radius: 4px;
+                    padding: 0 20px;
+                    margin-top: 15px;
+
+                    .reply-item {
+                        position: relative;
+                        border-bottom: 0.5px solid #f0f1f3;
+                        padding: 20px 0;
+
+                        .left {
+                            margin-right: 8px;
+
+                            .avatar-wrap {
+                                .avatar {
+                                    width: 32px;
+                                    height: 32px;
+                                    display: block;
+                                    background: #d0d4d7;
+                                    border-radius: 100%;
+                                }
+                            }
+                        }
+
+                        .right {
+                            .info-row {
+                                margin: 5px 0 6px 0;
+
+                                .reply-name {
+                                    font-size: 14px;
+                                    color: #2e3135;
+                                    margin-right: 10px;
+                                }
+                            }
+                        }
+
+                        .operations {
+                            margin: 8px 0 0 0;
+                        }
+
+                        &:last-child {
+                            border: none;
                         }
                     }
                 }
