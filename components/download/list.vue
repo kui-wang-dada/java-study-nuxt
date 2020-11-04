@@ -47,9 +47,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="reply-form">
-                                <edit-div @submit="onSubmit" :btnText="btnText" />
-                            </div>
                             <div class="reply-list">
                                 <div class="reply-item flex" v-for="child in item.childs" :key="child.id">
                                     <div class="left">
@@ -77,6 +74,9 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="reply-form">
+                                <edit-div @submit="onSubmit" :maxLength="200" :btnText="btnText" />
                             </div>
                         </div>
                     </div>
@@ -173,7 +173,7 @@ export default {
                 }
             ],
             index: '', // 当前索引
-            btnText: '回复'
+            btnText: '评论'
         };
     },
     computed: {},
@@ -393,7 +393,7 @@ export default {
                             background-color: @main-col;
                             color: #fff;
                             font-size: 14px;
-                            border-radius: 4px;
+                            border-radius: 3px;
                             cursor: pointer;
 
                             &:hover {
@@ -409,13 +409,17 @@ export default {
                     }
                 }
 
+                .reply-form {
+                    // margin-top: 15px;
+                }
+
                 .reply-list {
                     position: relative;
                     box-sizing: border-box;
                     background-color: rgba(0, 0, 0, 0.02);
                     border-radius: 4px;
                     padding: 0 20px;
-                    margin-top: 15px;
+                    margin: 20px 0;
 
                     .reply-item {
                         position: relative;
