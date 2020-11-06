@@ -35,7 +35,7 @@
                                         <i class="iconfont icon-dianzan3"></i>
                                         <span class="btn-text">5</span>
                                     </div>
-                                    <div class="btn">
+                                    <div class="btn" @click="showCommentForm(item)">
                                         <i class="iconfont icon-pinglun1"></i>
                                         <span class="btn-text">8</span>
                                     </div>
@@ -47,7 +47,10 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="reply-list">
+                            <div class="reply-form" v-if="item.isForm">
+                                <edit-div @submit="onSubmit" :maxLength="200" :btnText="btnText" />
+                            </div>
+                            <div class="reply-list" v-if="item.childs && item.childs.length > 0">
                                 <div class="reply-item flex" v-for="child in item.childs" :key="child.id">
                                     <div class="left">
                                         <div class="avatar-wrap">
@@ -74,9 +77,6 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="reply-form">
-                                <edit-div @submit="onSubmit" :maxLength="200" :btnText="btnText" />
                             </div>
                         </div>
                     </div>
@@ -110,6 +110,7 @@ export default {
                     date: '1小时前',
                     downloadNum: 89,
                     integral: 4,
+                    isForm: false,
                     content: '链接: https://pan.baidu.com/s/1-6EupUOaH6mEKj2kWnL52A  密码: v0ca --来自百度网盘超级会员V5的分享',
                     childs: [
                         {
@@ -141,6 +142,7 @@ export default {
                     title: 'LeetCode刷题实战60道-源码',
                     date: '15小时前',
                     downloadNum: 78,
+                    isForm: false,
                     integral: 3,
                     content: '复制这段内容后打开百度网盘手机App，操作更方便哦 链接：https://pan.baidu.com/s/1uaSy5GUUwJfudH63-vVRIA 提取码：15PT --来自百度网盘超级会员V5的分享'
                 },
@@ -150,6 +152,7 @@ export default {
                     title: 'SpringBoot+Vue前后端分离实现邮件定时发送功能-全套视频',
                     date: '一天前',
                     downloadNum: 67,
+                    isForm: false,
                     integral: 10,
                     content: '链接：https://pan.baidu.com/s/1FUQctOm7_jWPoVituGnxvg 提取码：xj21 复制这段内容后打开百度网盘手机App，操作更方便哦'
                 },
@@ -159,6 +162,7 @@ export default {
                     title: 'Springboot+Vue前后端分离实现Excle文件导入并在前端页面回显功能-源码',
                     date: '一周前',
                     downloadNum: 40,
+                    isForm: false,
                     integral: 8,
                     content: '复制这段内容后打开百度网盘手机App，操作更方便哦 链接：https://pan.baidu.com/s/1K_HmdnsUofe_TnYFpFNdgA 提取码：6098 --来自百度网盘超级会员V5的分享'
                 },
@@ -168,6 +172,7 @@ export default {
                     title: '前端开发核心知识进阶',
                     date: '2020-09-22 22:00',
                     downloadNum: 16,
+                    isForm: false,
                     integral: 9,
                     content: '复制这段内容后打开百度网盘手机App，操作更方便哦 链接:https://pan.baidu.com/s/1a9iL8PTDft8qs6iBm3kZZg 提取码:oa64'
                 }
@@ -186,6 +191,12 @@ export default {
         // 评论按钮
         onSubmit(content) {
             console.log(content);
+        },
+
+        // 是否显示评论表单
+        showCommentForm(item) {
+            console.log(item);
+            item.isForm = !item.isForm;
         },
 
         // 处理列表数据
@@ -273,9 +284,9 @@ export default {
             padding: 30px;
             position: relative;
 
-            &:hover {
-                background-color: #fafbfc;
-            }
+            // &:hover {
+            //     background-color: #fafbfc;
+            // }
 
             .left {
                 margin-right: 15px;
@@ -410,7 +421,7 @@ export default {
                 }
 
                 .reply-form {
-                    // margin-top: 15px;
+                    margin-top: 30px;
                 }
 
                 .reply-list {
@@ -419,7 +430,7 @@ export default {
                     background-color: rgba(0, 0, 0, 0.02);
                     border-radius: 4px;
                     padding: 0 20px;
-                    margin: 20px 0;
+                    margin-top: 30px;
 
                     .reply-item {
                         position: relative;

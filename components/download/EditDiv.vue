@@ -1,7 +1,10 @@
 <template>
     <div>
-        <div class="comment-form">
-            <a-textarea class="comment-textarea" v-model="content" @change="onChange" :placeholder="placeholderText" :maxLength="maxLength" :auto-size="{ minRows: 2, maxRows: 4 }" />
+        <div class="comment-form flex">
+            <div class="avatar-box">
+                <a-avatar :size="32" src="https://static.woshipm.com/WX_U_202010_20201009070042_2416.jpg?imageView2/2/w/80/size-limit/5k!?imageView2/2/w/80/size-limit/5k!" />
+            </div>
+            <a-textarea class="comment-textarea" v-model="content" @change="onChange" :placeholder="placeholderText" :maxLength="maxLength" :auto-size="{ maxRows: 4 }" />
         </div>
         <div class="comment-operation">
             <span class="max">还能输入{{ maxNum }}个字符</span>
@@ -47,6 +50,8 @@ export default {
             }
         },
 
+        onFocus() {},
+
         // 监听输入框
         onChange(e) {
             this.maxNum = this.maxLength - this.content.length;
@@ -57,6 +62,14 @@ export default {
 
 <style scoped lang="less">
 .comment-form {
+    .avatar-box {
+        width: 32px;
+        height: 32px;
+        margin-right: 12px;
+        box-shadow: 0 0 0 2px rgba(65, 105, 226, 0.2);
+        border-radius: 50%;
+    }
+
     .comment-textarea {
         resize: none;
         color: #333;
@@ -70,8 +83,8 @@ export default {
     }
 
     .comment-textarea:hover {
-        border-color: @main-col;
-        border-right-width: 1px !important;
+        border-color: #d9d9d9;
+        border-right-width: 1px;
     }
 }
 
@@ -84,7 +97,7 @@ export default {
     .max {
         font-size: 12px;
         color: #999;
-        margin-left: 2px;
+        margin-left: 45px;
     }
 
     .comment-btn {
@@ -94,7 +107,7 @@ export default {
 
     .comment-btn[disabled='disabled'] {
         background: @main-col;
-        opacity: 0.9;
+        opacity: 0.8;
         color: #fff;
     }
 }

@@ -21,6 +21,7 @@ export default {
         'ant-design-vue/lib/spin/style',
         'ant-design-vue/lib/select/style',
         'ant-design-vue/lib/input/style',
+        'ant-design-vue/lib/avatar/style',
 
         '@/assets/style/index.less',
         '~assets/icon/iconfont.css'
