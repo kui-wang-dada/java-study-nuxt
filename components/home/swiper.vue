@@ -1,10 +1,10 @@
 <template>
-    <a-carousel arrows>
-        <div slot="prevArrow" slot-scope="props" class="custom-slick-arrow" style="left: 10px;zIndex: 1">
-            <a-icon type="left-circle" />
+    <a-carousel arrows effect="fade" autoplay>
+        <div slot="prevArrow" :slot-scope="props" class="custom-slick-arrow" style="left: 10px;zIndex: 1">
+            <a-icon type="left" />
         </div>
-        <div slot="nextArrow" slot-scope="props" class="custom-slick-arrow" style="right: 10px">
-            <a-icon type="right-circle" />
+        <div slot="nextArrow" :slot-scope="props" class="custom-slick-arrow" style="right: 10px">
+            <a-icon type="right" />
         </div>
         <div class="image" v-for="item in list" :key="item.url">
             <img :src="item.url" alt />
@@ -16,6 +16,7 @@ export default {
     name: 'Banner',
     data() {
         return {
+            props: 'props',
             list: [
                 {
                     url: 'https://static001.infoq.cn/resource/image/d3/68/d34eb4692dcdcfcd80143cd552719768.jpg?x-oss-process=image/crop,y_1,w_1279,h_718/resize,w_613,h_345'
@@ -41,6 +42,7 @@ export default {
     border-radius: 4px;
     overflow: hidden;
     cursor: pointer;
+    position: relative;
 
     .image {
         width: 100%;
@@ -63,22 +65,27 @@ export default {
     }
 }
 
-.ant-carousel /deep/ .custom-slick-arrow {
-    width: 25px;
-    height: 25px;
-    font-size: 25px;
-    color: #fff;
-    background-color: rgba(31, 45, 61, 0.11);
-    opacity: 0.3;
-}
-.ant-carousel /deep/ .custom-slick-arrow:before {
-    display: none;
-}
-.ant-carousel /deep/ .custom-slick-arrow:hover {
-    opacity: 0.5;
-}
+.ant-carousel {
+    /deep/ .custom-slick-arrow {
+        height: 36px;
+        width: 36px;
+        cursor: pointer;
+        transition: 0.3s;
+        border-radius: 50%;
+        background-color: rgba(31, 45, 61, 0.11);
+        color: #fff;
+        z-index: 10;
+        text-align: center;
+        font-size: 12px;
+        line-height: 36px;
 
-.ant-carousel /deep/ .slick-slide h3 {
-    color: #fff;
+        &:hover {
+            background-color: rgba(31, 45, 61, 0.23);
+        }
+
+        &:before {
+            display: none;
+        }
+    }
 }
 </style>
