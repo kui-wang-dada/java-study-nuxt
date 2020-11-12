@@ -16,12 +16,15 @@ export default {
 
     // Global CSS (https://go.nuxtjs.dev/config-css)
     css: [
+        // 'ant-design-vue/dist/antd.css',
+        // 按需引入
         'ant-design-vue/lib/list/style',
         'ant-design-vue/lib/button/style',
         'ant-design-vue/lib/spin/style',
         'ant-design-vue/lib/select/style',
         'ant-design-vue/lib/input/style',
         'ant-design-vue/lib/avatar/style',
+        'ant-design-vue/lib/carousel/style',
 
         '@/assets/style/index.less',
         '~assets/icon/iconfont.css'

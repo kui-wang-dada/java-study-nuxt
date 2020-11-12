@@ -1,27 +1,5 @@
 <template>
     <aside class="aside-right">
-        <div class="hot-block" v-if="false">
-            <div class="hot-t flex-s-b">
-                <span class="flex-align">
-                    <i class="iconfont icon-shangchuan"></i>
-                    <em>上传资料</em>
-                </span>
-                <span>
-                    <i @click="handleAgreement" class="iconfont icon-wenhao"></i>
-                </span>
-            </div>
-            <div class="hot-m">
-                <div class="wrap flex-align">
-                    <label class="label">资料名称:</label>
-                    <input spellcheck="false" autocomplete="off" type="text" placeholder="请输入资料名称" class="data-name" />
-                </div>
-                <div class="wrap textarea  flex-align">
-                    <label class="label">分享地址:</label>
-                    <textarea spellcheck="false" autocomplete="off" placeholder="请粘贴分享地址" class="share-address"></textarea>
-                </div>
-            </div>
-            <div class="hot-b">我要上传</div>
-        </div>
         <div class="hot-block">
             <div class="hot-m">
                 <div class="customer">
@@ -39,22 +17,16 @@
                 </div>
             </div>
         </div>
-        <agreement-dialog v-if="dialogAgreementVisible" @close="handleClose" />
     </aside>
 </template>
 
 <script>
 import { disableScroll, openScroll } from '@/utils';
-import AgreementDialog from './AgreementDialog';
 export default {
-    components: {
-        AgreementDialog
-    },
+    components: {},
     props: {},
     data() {
-        return {
-            dialogAgreementVisible: false
-        };
+        return {};
     },
     computed: {},
     created() {},
