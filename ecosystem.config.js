@@ -5,8 +5,9 @@ module.exports = {
             script: './node_modules/nuxt/bin/nuxt.js',
 
             // Options reference: https://pm2.keymetrics.io/docs/usage/application-declaration/
-            args: 'one two',
-            instances: 1,
+            args: 'start',
+            exec_mode: 'cluster',
+            instances: 'max',
             autorestart: true,
             watch: false,
             max_memory_restart: '1G',
