@@ -23,7 +23,7 @@ module.exports = {
         production: {
             user: 'root',
             host: '121.196.189.114',
-            ref: 'origin/master',
+            ref: 'origin/main',
             repo: 'git@github.com:wangkui1991/java-study-nuxt.git',
             path: '/root/wk/javastudy/production',
             'post-deploy': 'npm install && npm run build &&  pm2 reload ecosystem.config.js --env production'
