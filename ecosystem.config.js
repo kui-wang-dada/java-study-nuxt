@@ -26,7 +26,7 @@ module.exports = {
             ref: 'origin/main',
             repo: 'git@github.com:wangkui1991/java-study-nuxt.git',
             path: '/root/wk/javastudy/production',
-            'post-deploy': 'npm install && npm run build &&  pm2 reload ecosystem.config.js --env production'
+            'post-deploy': 'yarn && npm run build &&  pm2 reload ecosystem.config.js --env production'
         }
     }
 };
