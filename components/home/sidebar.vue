@@ -1,18 +1,16 @@
 <template>
     <aside class="aside-right">
+        <div class="title-row">关注我们</div>
         <div class="hot-block">
             <div class="hot-m">
-                <div class="customer">
-                    <div class="img-wrap">
-                        <img src="http://139.159.147.237/images/kefu.jpeg" alt="客服" />
+                <div class="wechat-subscribe flex-s-b">
+                    <div class="right qrcode">
+                        <img src="https://static001.geekbang.org/static/img/qrcode.bc44c82.png" />
                     </div>
-                    <div class="tips">
-                        <p class="top">
-                            如果资料失效，可以直接联系资料客服微信索取，微信在线时间为：8:00-23:30。请下载后24小时内删除，若侵权请联系客服删除该资料。
-                        </p>
-                        <p class="bottom">
-                            <b>声明：本站资料整理自互联网，用于Java学习者交流学习使用，对资料版权不负任何法律责任，若有侵权请及时联系客服屏蔽删除</b>
-                        </p>
+                    <div class="left flex">
+                        <div class="title">扫码关注java项目开发</div>
+                        <div class="exhibit-row">「技术干货」 「免费资料」</div>
+                        <div class="exhibit-row">「技术社群」 「实操案例」</div>
                     </div>
                 </div>
             </div>
@@ -53,6 +51,13 @@ export default {
     width: 300px;
     margin-left: 20px;
 
+    .title-row {
+        height: 50px;
+        line-height: 50px;
+        color: #303030;
+        font-size: 16px;
+    }
+
     .hot-block {
         background-color: #fff;
         margin-bottom: 20px;
@@ -85,6 +90,60 @@ export default {
         .hot-m {
             padding: 25px;
             border-bottom: 1px solid #f2f2f2;
+
+            .toggle-row {
+                h2 {
+                    line-height: 1;
+                    font-size: 25px;
+                    font-weight: 600;
+                    color: #303030;
+                    margin: 0;
+                }
+            }
+
+            .subscribe-row {
+                line-height: 1;
+                font-size: 25px;
+                font-weight: 600;
+                color: #303030;
+                margin: 5px 0 18px;
+            }
+
+            .wechat-subscribe {
+                .left {
+                    flex: 1;
+                    flex-direction: column;
+                    margin-left: 10px;
+
+                    .title {
+                        font-size: 14px;
+                        font-weight: 500;
+                        color: #303030;
+                        padding-left: 5px;
+                        margin-bottom: 5px;
+                    }
+
+                    .exhibit-row {
+                        font-size: 12px;
+                        font-weight: 400;
+                        color: #888;
+                        margin-top: 5px;
+                    }
+                }
+
+                .right {
+                    display: flex;
+                    box-sizing: border-box;
+                    width: 78px;
+                    height: 78px;
+                    border-radius: 4px;
+
+                    img {
+                        width: 100%;
+                        height: 100%;
+                    }
+                }
+            }
 
             .wrap {
                 &.textarea {
