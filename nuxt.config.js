@@ -29,13 +29,21 @@ export default {
         'ant-design-vue/lib/input/style',
         'ant-design-vue/lib/avatar/style',
         'ant-design-vue/lib/carousel/style',
+        'ant-design-vue/lib/message/style',
+        'ant-design-vue/lib/spin/style',
 
         '@/assets/style/index.less',
         '~assets/icon/iconfont.css'
     ],
 
     // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
-    plugins: ['@/plugins/antd-ui'],
+    plugins: [
+        '@/plugins/antd-ui',
+        {
+            src: '@plugins/vue-infinite-scroll', // vue-infinite-scroll名字和js文件名字对应就行
+            ssr: false // 只在client被打包引用
+        }
+    ],
 
     // Auto import components (https://go.nuxtjs.dev/config-components)
     components: true,

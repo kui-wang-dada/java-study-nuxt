@@ -1,16 +1,29 @@
 <template>
     <aside class="aside-right">
-        <div class="title-row">关注我们</div>
         <div class="hot-block">
             <div class="hot-m">
-                <div class="wechat-subscribe flex-s-b">
-                    <div class="right qrcode">
-                        <img src="https://static001.geekbang.org/static/img/qrcode.bc44c82.png" />
+                <div class="customer">
+                    <div class="img-wrap">
+                        <img src="http://139.159.147.237/images/kefu.jpeg" alt="客服" />
                     </div>
-                    <div class="left flex">
-                        <div class="title">扫码关注java项目开发</div>
-                        <div class="exhibit-row">「技术干货」 「免费资料」</div>
-                        <div class="exhibit-row">「技术社群」 「实操案例」</div>
+                    <div class="tips">
+                        <p class="top">
+                            如果资料失效，可以直接联系资料客服微信索取，微信在线时间为：8:00-23:30。请下载后24小时内删除，若侵权请联系客服删除该资料。
+                        </p>
+                        <p class="bottom">
+                            <b>声明：本站资料整理自互联网，用于Java学习者交流学习使用，对资料版权不负任何法律责任，若有侵权请及时联系客服屏蔽删除</b>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="hot-block">
+            <div class="hot-t">热门标签</div>
+            <div class="hot-m" style="padding: 0 20px 20px;">
+                <div class="content-block">
+                    <div class="label-box flex-align">
+                        <a href="" class="label-tag flex-align" v-for="(tag, i) in labelArr" :key="i">#{{ tag }}</a>
                     </div>
                 </div>
             </div>
@@ -24,7 +37,9 @@ export default {
     components: {},
     props: {},
     data() {
-        return {};
+        return {
+            labelArr: ['前端', 'React', 'Vue', '后端', 'Springboot', 'Echarts', '微信小程序', 'java', 'c++', 'c', 'Element', 'Python', '工程化', '产品', '项目经理', '测试', '单文件测试']
+        };
     },
     computed: {},
     created() {},
@@ -51,44 +66,28 @@ export default {
     width: 300px;
     margin-left: 20px;
 
-    .title-row {
-        height: 50px;
-        line-height: 50px;
-        color: #303030;
-        font-size: 16px;
-    }
-
     .hot-block {
         background-color: #fff;
         margin-bottom: 20px;
         box-shadow: 0px 3px 10px 0px rgba(153, 153, 153, 0.1);
         border-radius: 4px;
 
-        .hot-t {
+        .title-row {
             height: 50px;
             line-height: 50px;
-            padding: 0 25px;
+            color: #303030;
+            font-size: 16px;
+        }
+
+        .hot-t {
+            padding: 20px;
             font-size: 16px;
             color: #333;
             font-weight: bold;
-            border-bottom: 1px solid #f2f2f2;
-
-            .icon-shangchuan {
-                font-size: 16px;
-                color: rgb(74, 144, 226);
-                margin-right: 10px;
-            }
-
-            .icon-wenhao {
-                font-size: 16px;
-                color: #999;
-                margin-left: 5px;
-                cursor: pointer;
-            }
         }
 
         .hot-m {
-            padding: 25px;
+            padding: 20px;
             border-bottom: 1px solid #f2f2f2;
 
             .toggle-row {
@@ -141,6 +140,30 @@ export default {
                     img {
                         width: 100%;
                         height: 100%;
+                    }
+                }
+            }
+
+            .label-box {
+                flex-wrap: wrap;
+                .icon-huati {
+                    font-size: 14px;
+                    color: @main-col;
+                }
+
+                .label-tag {
+                    color: @main-col;
+                    background-color: rgba(67, 112, 245, 0.1);
+                    font-size: 12px;
+                    margin: 0 8px 10px 0;
+                    border-radius: 2px;
+                    line-height: 1.4;
+                    padding: 2px 6px;
+                    transition: background-color 0.5s;
+                    will-change: background-color;
+
+                    &:hover {
+                        background-color: rgba(67, 112, 245, 0.2);
                     }
                 }
             }
