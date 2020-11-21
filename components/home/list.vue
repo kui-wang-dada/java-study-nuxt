@@ -3,8 +3,9 @@
         <div class="swiper">
             <swiper />
         </div>
-        <div class="list shadow demo-infinite-container" v-infinite-scroll="loadMore" :infinite-scroll-disabled="busy" :infinite-scroll-distance="10">
-            <div class="top-title flex-s-b">
+        <!-- v-infinite-scroll="loadMore" :infinite-scroll-disabled="busy" :infinite-scroll-distance="87" -->
+        <div class="list">
+            <div class="top-title flex-s-b" v-infinite-scroll="loadMore" :infinite-scroll-disabled="busy" :infinite-scroll-distance="80">
                 <div>
                     <h3 class="section-title">推荐文章</h3>
                 </div>
@@ -29,16 +30,16 @@
             </div>
         </div>
         <!-- Loading -->
-        <div v-if="loading && !busy" class="loading-box">
-            <a-spin tip="Loading...">
-                <!-- <a-icon slot="indicator" type="loading" style="font-size: 24px" spin /> -->
-            </a-spin>
+        <div v-if="loading && !busy" class="loading-box flex-align-center shadow">
+            <a-spin tip="Loading..." />
         </div>
+        <!-- <div v-else class="loading-box flex-align-center shadow">
+            <a-button @click="onLoadMore">加载更多</a-button>
+        </div> -->
     </aside>
 </template>
 
 <script>
-const fakeDataUrl = 'https://randomuser.me/api/?results=5&inc=name,gender,email,nat&noinfo';
 import swiper from '@/components/home/swiper';
 export default {
     components: {
@@ -50,6 +51,41 @@ export default {
             loading: false,
             busy: false,
             list: [
+                {
+                    title: 'Springboot＋Vue实现富文本发表文章功能',
+                    date: '09/01',
+                    url: '',
+                    image: 'https://static001.geekbang.org/infoq/e5/e5233842e4f6b091b2c2fc1f9fd94fbc.png?x-oss-process=image/resize,w_416,h_234',
+                    tags: ['前端', 'React', 'Vue']
+                },
+                {
+                    title: 'Springboot+Vue实现仿百度搜索自动提示框匹配查询功能',
+                    date: '10/11',
+                    url: '',
+                    image: 'https://static001.infoq.cn/resource/image/55/b2/55ce76852d235f03f8304fefc10c1bb2.png?x-oss-process=image/crop,w_1066,h_598/resize,w_416,h_234',
+                    tags: ['前端', '后端', 'React', 'Vue', 'Springboot']
+                },
+                {
+                    title: 'Springboot+React实现从数据库中获取数据生成树状图在前端页面展示功能',
+                    date: '08/12',
+                    url: '',
+                    image: 'https://static001.infoq.cn/resource/image/a1/72/a19ec693c1dc102b0ef4f0cc8f53d172.jpg?x-oss-process=image/crop,y_56,w_1280,h_720/resize,w_416,h_234',
+                    tags: ['前端', 'React', 'Echarts']
+                },
+                {
+                    title: 'Springboot+Vue实现仿百度搜索自动提示框匹配查询功能',
+                    date: '10/11',
+                    url: '',
+                    image: 'https://static001.infoq.cn/resource/image/55/b2/55ce76852d235f03f8304fefc10c1bb2.png?x-oss-process=image/crop,w_1066,h_598/resize,w_416,h_234',
+                    tags: ['前端', '后端', 'React', 'Vue', 'Springboot']
+                },
+                {
+                    title: 'Springboot+React实现从数据库中获取数据生成树状图在前端页面展示功能',
+                    date: '08/12',
+                    url: '',
+                    image: 'https://static001.infoq.cn/resource/image/a1/72/a19ec693c1dc102b0ef4f0cc8f53d172.jpg?x-oss-process=image/crop,y_56,w_1280,h_720/resize,w_416,h_234',
+                    tags: ['前端', 'React', 'Echarts']
+                },
                 {
                     title: 'Springboot＋Vue实现富文本发表文章功能',
                     date: '09/01',
@@ -96,12 +132,12 @@ export default {
         loadMore() {
             const data = this.list;
             this.loading = true;
-            // if (data.length > 14) {
-            //     this.$message.warning('暂无更多数据了哦!');
-            //     this.busy = true;
-            //     this.loading = false;
-            //     return;
-            // }
+            if (data.length > 24) {
+                this.$message.warning('暂无更多数据了哦!');
+                this.busy = true;
+                this.loading = false;
+                return;
+            }
             setTimeout(() => {
                 this.list = data.concat([
                     {
@@ -120,7 +156,31 @@ export default {
                     }
                 ]);
                 this.loading = false;
-            }, 1000);
+            }, 1500);
+        },
+
+        onLoadMore() {
+            const data = this.list;
+            this.loading = true;
+            setTimeout(() => {
+                this.list = data.concat([
+                    {
+                        title: 'Springboot＋Vue实现富文本发表文章功能',
+                        date: '09/01',
+                        url: '',
+                        image: 'https://static001.geekbang.org/infoq/e5/e5233842e4f6b091b2c2fc1f9fd94fbc.png?x-oss-process=image/resize,w_416,h_234',
+                        tags: ['前端', 'React', 'Vue']
+                    },
+                    {
+                        title: 'Springboot+Vue实现仿百度搜索自动提示框匹配查询功能',
+                        date: '10/11',
+                        url: '',
+                        image: 'https://static001.infoq.cn/resource/image/55/b2/55ce76852d235f03f8304fefc10c1bb2.png?x-oss-process=image/crop,w_1066,h_598/resize,w_416,h_234',
+                        tags: ['前端', '后端', 'React', 'Vue', 'Springboot']
+                    }
+                ]);
+                this.loading = false;
+            }, 1500);
         }
     }
 };
@@ -139,8 +199,9 @@ export default {
 
     .loading-box {
         width: 680px;
-        text-align: center;
-        padding: 20px 0;
+        height: 80px;
+        background: #fff;
+        border-radius: 4px;
 
         /deep/ .ant-spin {
             color: @main-col;
