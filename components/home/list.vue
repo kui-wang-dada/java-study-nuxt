@@ -3,9 +3,9 @@
         <div class="swiper">
             <swiper />
         </div>
-        <!-- v-infinite-scroll="loadMore" :infinite-scroll-disabled="busy" :infinite-scroll-distance="87" -->
+        <!-- v-infinite-scroll="loadMore" :infinite-scroll-disabled="busy" :infinite-scroll-distance="80" -->
         <div class="list">
-            <div class="top-title flex-s-b" v-infinite-scroll="loadMore" :infinite-scroll-disabled="busy" :infinite-scroll-distance="80">
+            <div class="top-title flex-s-b">
                 <div>
                     <h3 class="section-title">推荐文章</h3>
                 </div>
@@ -15,12 +15,18 @@
                     <h6 class="title ellipsis-2">
                         <a :href="item.url">{{ item.title }}</a>
                     </h6>
-                    <div class="operations flex-align">
-                        <div class="date">{{ item.date }}</div>
-                        <div class="break">~</div>
-                        <div class="label-box flex-align">
-                            <i class="iconfont icon-huati"></i>
-                            <a href="" class="label-tag" v-for="(tag, i) in item.tags" :key="i">{{ tag }}</a>
+                    <div class="operations flex-align flex-s-b">
+                        <div class="flex-align">
+                            <div class="date">{{ item.date }}</div>
+                            <div class="break">~</div>
+                            <div class="label-box flex-align">
+                                <i class="iconfont icon-huati"></i>
+                                <a href="" class="label-tag" v-for="(tag, i) in item.tags" :key="i">{{ tag }}</a>
+                            </div>
+                        </div>
+                        <div class="flex-align collect">
+                            <i class="iconfont icon-shoucang" :class="index == 0 ? 'active ' : ''"></i>
+                            <span class="text-collect" :class="index == 0 ? 'active ' : ''">收藏</span>
                         </div>
                     </div>
                 </div>
@@ -33,9 +39,9 @@
         <div v-if="loading && !busy" class="loading-box flex-align-center shadow">
             <a-spin tip="Loading..." />
         </div>
-        <!-- <div v-else class="loading-box flex-align-center shadow">
+        <div v-else class="loading-box flex-align-center shadow">
             <a-button @click="onLoadMore">加载更多</a-button>
-        </div> -->
+        </div>
     </aside>
 </template>
 
@@ -255,6 +261,7 @@ export default {
                 }
 
                 .operations {
+                    width: 100%;
                     flex: 1;
                     position: absolute;
                     bottom: 5px;
@@ -287,6 +294,37 @@ export default {
 
                         &:hover {
                             background-color: rgba(67, 112, 245, 0.2);
+                        }
+                    }
+
+                    .collect {
+                        padding-left: 10px;
+                        cursor: pointer;
+
+                        .icon-shoucang {
+                            font-size: 16px;
+                            color: #828a92;
+                        }
+
+                        .text-collect {
+                            font-size: 12px;
+                            color: #828a92;
+                            margin-left: 2px;
+                        }
+
+                        &:hover {
+                            .icon-shoucang,
+                            .text-collect {
+                                color: #666;
+                            }
+
+                            .active {
+                                color: @main-col;
+                            }
+                        }
+
+                        .active {
+                            color: @main-col;
                         }
                     }
                 }
