@@ -17,7 +17,7 @@
                         </a-form-model-item>
                     </a-form-model>
                     <div class="button-container">
-                        <a-button type="primary" :loading="iconLoading" class="ant-btn-lg ant-btn-block" @click="submitForm('ruleForm')">
+                        <a-button type="primary" :loading="iconLoading" class="ant-btn-lg ant-btn-block" @click="login('ruleForm')">
                             登录
                         </a-button>
                     </div>
@@ -46,7 +46,7 @@
                         </a-form-model-item>
                     </a-form-model>
                     <div class="button-container">
-                        <a-button type="primary" :loading="iconLoading" class="ant-btn-lg ant-btn-block" @click="submitForm('ruleForm')">
+                        <a-button type="primary" :loading="iconLoading" class="ant-btn-lg ant-btn-block" @click="register('ruleForm')">
                             注册
                         </a-button>
                     </div>
@@ -130,7 +130,8 @@ export default {
             },
             registerForm: {
                 username: '',
-                password: ''
+                password: '',
+                email: ''
             },
             registerRules: {
                 username: [{ required: true, validator: validateRegisterUsername, trigger: 'blur' }],
@@ -140,11 +141,35 @@ export default {
         };
     },
     methods: {
-        submitForm(formName) {
+        register(formName) {
             this.iconLoading = true;
-            this.$refs[formName].validate(valid => {
+            this.$refs[formName].validate(async valid => {
                 if (valid) {
-                    alert('submit!');
+                    // alert('submit!');
+                    let params = {
+                        userName: this.registerForm.username,
+                        userEmail: this.registerForm.email,
+                        password: this.registerForm.password
+                    };
+                    let res = await this.$api['user/register'](params);
+                    console.log(res, 'res');
+                    this.iconLoading = false;
+                } else {
+                    console.log('error submit!!');
+                    return false;
+                }
+            });
+        },
+        login(formName) {
+            this.iconLoading = true;
+            this.$refs[formName].validate(async valid => {
+                if (valid) {
+                    let params = {
+                        userName: this.loginForm.username,
+                        password: this.loginForm.password
+                    };
+                    let res = await this.$api['user/login'](params);
+                    console.log(res, 'res');
                     this.iconLoading = false;
                 } else {
                     console.log('error submit!!');

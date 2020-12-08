@@ -41,6 +41,7 @@ export default {
     plugins: [
         '@/plugins/antd-ui',
         '@/plugins/main',
+        '@/plugins/api',
         {
             src: '@plugins/vue-infinite-scroll', // vue-infinite-scroll名字和js文件名字对应就行
             ssr: false // 只在client被打包引用
