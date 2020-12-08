@@ -14,6 +14,9 @@ export default {
         list,
         sidebar
     },
+    data() {
+        return {};
+    },
     head() {
         return {
             title: 'java学习网',
@@ -30,7 +33,8 @@ export default {
                 }
             ]
         };
-    }
+    },
+    methods: {}
 };
 </script>
 

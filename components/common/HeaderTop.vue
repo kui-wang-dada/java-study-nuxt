@@ -6,7 +6,7 @@
                 <li v-for="(item, index) in list" :key="item.title" :class="active == index ? 'active' : ''" @click="changeMenu(index)" class="menu-item">
                     <router-link class="link" :to="item.link">{{ item.title }}</router-link>
                 </li>
-                <li class="menu-item personal-info">
+                <li class="menu-item personal-info" v-if="false">
                     <div class="left flex-align">
                         <div class="head-box">
                             <img class="head" src="http://139.159.147.237/images/xuxiaofei.jpeg" alt="" />
@@ -29,15 +29,26 @@
                         </li>
                     </ul>
                 </li>
+                <li class="menu-item personal-info">
+                    <a-button type="primary" @click="handleShowLogin">登录/注册</a-button>
+                </li>
             </ul>
         </div>
+
+        <login v-if="dialoLoginVisible" @close="handleCloseLogin" />
     </header>
 </template>
 
 <script>
+import login from '@/components/common/login';
+import { disableScroll, openScroll } from '@/utils';
 export default {
+    components: {
+        login
+    },
     data() {
         return {
+            dialoLoginVisible: false,
             active: 0,
             list: [
                 {
@@ -71,6 +82,18 @@ export default {
             if (index != this.active) {
                 this.active = index;
             }
+        },
+
+        // 登录弹窗
+        handleShowLogin() {
+            this.dialoLoginVisible = true;
+            disableScroll();
+        },
+
+        // 关闭登录弹窗
+        handleCloseLogin() {
+            this.dialoLoginVisible = false;
+            openScroll();
         }
     }
 };
@@ -255,6 +278,16 @@ export default {
             }
         }
     }
+}
+
+/deep/ .ant-btn {
+    background: @main-col;
+    border-color: @main-col;
+}
+
+/deep/ button.ant-btn-primary:hover {
+    background-color: #388ae8;
+    box-shadow: 0 0 10px rgba(45, 55, 72, 0.5);
 }
 
 @media screen and (max-width: 1000px) {
