@@ -62,7 +62,7 @@ class Api {
 
             Object.defineProperty(this.api, `${apiname}`, {
                 value(outerParams, outerOptions) {
-                    console.log(outerParams, outerOptions);
+                    console.log(config, outerParams, outerOptions);
                     // let _data = _isEmpty(outerParams) ? params : _pick(_assign({}, params, outerParams), Object.keys(params));
                     let _data;
                     if (process.browser) {
@@ -73,7 +73,6 @@ class Api {
 
                     /* 特殊页面，需要对数据做处理 */
                     if ((method.toUpperCase() === 'POST' || method.toUpperCase() === 'PUT') && (!headers || !headers.hasOwnProperty('Content-Type'))) {
-                        console.log(112312323);
                         _data = Qs.stringify(_data);
                     }
 

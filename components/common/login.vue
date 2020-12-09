@@ -1,11 +1,11 @@
 <template>
-    <div class="login-container" :class="!isLogin ? 'register-container' : ''">
+    <div class="login-container" :class="classObject">
         <div class="com-close-btn" @click.stop="handleClose">
             <a-icon type="close" />
         </div>
         <div class="modal-scroll">
             <div class="mask" @click.stop="handleClose"></div>
-            <div class="main" v-if="isLogin">
+            <div class="main" v-if="isLogin && !isEmail">
                 <div class="logo-container">java学习</div>
                 <div class="form-container login-form">
                     <a-form-model ref="ruleForm" :model="loginForm" :rules="loginRules">
@@ -16,12 +16,12 @@
                             <a-input v-model="loginForm.password" placeholder="请输入密码" type="password" autocomplete="off" />
                         </a-form-model-item>
                     </a-form-model>
-                    <div class="button-container">
+                    <div class="button-container pt-24">
                         <a-button type="primary" :loading="iconLoading" class="ant-btn-lg ant-btn-block" @click="login('ruleForm')">
                             登录
                         </a-button>
                     </div>
-                    <div class="login-footer flex-s-b">
+                    <div class="login-footer pt-28 flex-s-b">
                         <a>忘记密码</a>
                         <span class="flex">
                             没有账号？去
@@ -31,7 +31,7 @@
                 </div>
             </div>
 
-            <div class="main" v-else>
+            <div class="main" v-if="!isLogin && !isEmail">
                 <div class="logo-container register-logo">java学习</div>
                 <div class="form-container login-form">
                     <a-form-model ref="ruleForm" :model="registerForm" :rules="registerRules">
@@ -45,16 +45,42 @@
                             <a-input-password v-model="registerForm.password" placeholder="6-20位字符，包含数字跟字母" type="password" autocomplete="off" />
                         </a-form-model-item>
                     </a-form-model>
-                    <div class="button-container">
+                    <div class="button-container pt-24">
                         <a-button type="primary" :loading="iconLoading" class="ant-btn-lg ant-btn-block" @click="register('ruleForm')">
                             注册
                         </a-button>
                     </div>
-                    <div class="login-footer flex-align-center">
+                    <div class="login-footer pt-28 flex-align-center">
                         <span class="flex">
                             已有账号？去
                             <a @click.prevent="doToggle">登录</a>
                         </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="main" v-if="isEmail">
+                <div class="logo-container email-logo">java学习</div>
+                <div class="form-container email-check-container">
+                    <div class="email-check-tips mb-12">
+                        <p class="m-0">
+                            将会向您的邮箱
+                            <span class="text-primary">604595095@qq.com</span>
+                            发送一条验证邮件，请注意查收！
+                        </p>
+                    </div>
+                    <a-form-model ref="ruleForm" :model="emailForm" :rules="emailRules">
+                        <a-form-model-item label="验证码" prop="code" :colon="false">
+                            <a-input v-model="emailForm.code" placeholder="请输入验证码" type="text" autocomplete="off">
+                                <a-button type="primary" slot="suffix" class="email-btn ant-btn-lg" @click="getCode" v-show="show">{{ btnMsg }}</a-button>
+                                <a-button type="primary" slot="suffix" class="email-btn ant-btn-lg" v-show="!show" disabled>{{ count }}秒后重新发送</a-button>
+                            </a-input>
+                        </a-form-model-item>
+                    </a-form-model>
+                    <div class="button-container pt-14">
+                        <a-button type="primary" :loading="iconLoading" class="ant-btn-lg ant-btn-block" @click="login('ruleForm')">
+                            确认
+                        </a-button>
                     </div>
                 </div>
             </div>
@@ -82,7 +108,6 @@ export default {
                 callback();
             }
         };
-
         // 注册账号
         const validateRegisterUsername = (rule, value, callback) => {
             const uPattern = this.$pattern.userNameRegex;
@@ -116,10 +141,20 @@ export default {
                 callback();
             }
         };
+        // 邮箱验证码
+        const validateEmailcode = (rule, value, callback) => {
+            if (!value) {
+                callback(new Error('请输入邮箱验证码'));
+            } else {
+                callback();
+            }
+        };
 
         return {
-            isLogin: true,
+            isLogin: true, // 登录注册 true登录 false注册
+            isEmail: false, // 邮箱验证 true显示 false隐藏
             iconLoading: false,
+            // 登录
             loginForm: {
                 username: '',
                 password: ''
@@ -128,6 +163,7 @@ export default {
                 username: [{ required: true, validator: validateUsername, trigger: 'blur' }],
                 password: [{ required: true, validator: validatePassword, trigger: 'blur' }]
             },
+            // 注册
             registerForm: {
                 username: '',
                 password: '',
@@ -137,10 +173,31 @@ export default {
                 username: [{ required: true, validator: validateRegisterUsername, trigger: 'blur' }],
                 password: [{ required: true, validator: validateRegisterPassword, trigger: 'blur' }],
                 email: [{ required: true, validator: validateRegisterEmail, trigger: 'blur' }]
-            }
+            },
+            // 邮箱验证
+            emailForm: {
+                code: ''
+            },
+            emailRules: {
+                code: [{ required: true, validator: validateEmailcode, trigger: 'blur' }]
+            },
+            // 发送验证码
+            btnMsg: '发送验证码',
+            show: true,
+            count: '',
+            intervalBtn: null
         };
     },
+    computed: {
+        classObject() {
+            return {
+                'register-container': !this.isLogin && !this.isEmail,
+                'email-container': this.isEmail
+            };
+        }
+    },
     methods: {
+        // 注册
         register(formName) {
             this.iconLoading = true;
             this.$refs[formName].validate(async valid => {
@@ -155,11 +212,14 @@ export default {
                     console.log(res, 'res');
                     this.iconLoading = false;
                 } else {
+                    this.iconLoading = false;
                     console.log('error submit!!');
                     return false;
                 }
             });
         },
+
+        // 登录
         login(formName) {
             this.iconLoading = true;
             this.$refs[formName].validate(async valid => {
@@ -172,10 +232,30 @@ export default {
                     console.log(res, 'res');
                     this.iconLoading = false;
                 } else {
+                    this.iconLoading = false;
                     console.log('error submit!!');
                     return false;
                 }
             });
+        },
+
+        // 发送验证码
+        getCode() {
+            const TIME_COUNT = 60;
+            if (!this.intervalBtn) {
+                this.count = TIME_COUNT;
+                this.show = false;
+                this.intervalBtn = setInterval(() => {
+                    if (this.count > 0 && this.count <= TIME_COUNT) {
+                        this.count--;
+                    } else {
+                        this.show = true;
+                        this.btnMsg = '重新发送';
+                        clearInterval(this.intervalBtn);
+                        this.intervalBtn = null;
+                    }
+                }, 1000);
+            }
         },
 
         // 关闭弹窗
@@ -192,6 +272,21 @@ export default {
 </script>
 
 <style scoped lang="less">
+// 邮箱验证
+.email-container.login-container {
+    .modal-scroll {
+        .main {
+            height: 500px;
+            margin-top: -250px;
+        }
+
+        .logo-container.email-logo {
+            margin: 68px 0 76px;
+            text-align: center;
+        }
+    }
+}
+
 // 注册
 .register-container.login-container {
     .modal-scroll {
@@ -267,6 +362,31 @@ export default {
                 font-weight: bold;
             }
 
+            .email-check-container {
+                /deep/ .ant-input-suffix {
+                    right: 0;
+                }
+
+                .email-btn {
+                    background: #fff;
+                    border-color: #edf2f7;
+                    border-width: 4px;
+                    color: #718096;
+                    font-size: 14px;
+                    line-height: 32px;
+                    box-shadow: none;
+
+                    &:hover {
+                        box-shadow: none;
+                        color: #388ae8;
+                    }
+                }
+
+                .email-btn[disabled] {
+                    background: #f5f5f5;
+                }
+            }
+
             .form-container {
                 margin: 0 110px;
 
@@ -311,6 +431,11 @@ export default {
                     text-align: left;
                 }
 
+                /deep/ .ant-form-item-label > label {
+                    color: #718096;
+                    font-size: 14px;
+                }
+
                 /deep/ .ant-row.ant-form-item-with-help {
                     margin-bottom: 12px;
                 }
@@ -320,8 +445,6 @@ export default {
                 }
 
                 .button-container {
-                    padding-top: 25px;
-
                     .ant-btn-block {
                         width: 100%;
                     }
@@ -343,14 +466,24 @@ export default {
                 }
 
                 .login-footer {
-                    margin-top: 30px;
-
                     span {
-                        color: #9da6b3;
+                        color: #718096;
                     }
 
                     a {
                         color: #388ae8;
+                    }
+                }
+
+                .email-check-tips {
+                    color: #718096;
+
+                    .text-primary {
+                        color: #388ae8;
+
+                        &:hover {
+                            color: #1060a2;
+                        }
                     }
                 }
             }
