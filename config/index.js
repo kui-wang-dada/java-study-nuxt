@@ -6,7 +6,7 @@ export const AXIOS_DEFAULT_CONFIG = {
     maxContentLength: 20000000,
     headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
-        // 'Content-Type': 'application/json'
+        // 'Content-Type': 'application/json;charset=UTF-8'
     },
     baseURL: 'http://121.196.189.114:8010'
 };

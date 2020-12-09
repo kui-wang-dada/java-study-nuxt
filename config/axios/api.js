@@ -85,7 +85,6 @@ class Api {
                                     desc,
                                     baseURL,
                                     method,
-
                                     cache
                                 },
                                 outerOptions
@@ -114,6 +113,11 @@ function _normoalize(options, data) {
 
     if (options.method === 'POST' || options.method === 'PUT' || options.method === 'DELETE') {
         options.data = data;
+        
+        // post 参数放请求头
+        // if(options.desc == "注册" || options.desc == "登录" ) {
+        //     options.params = Qs.parse(data);
+        // }
     } else if (options.method === 'GET') {
         options.params = data;
     }
