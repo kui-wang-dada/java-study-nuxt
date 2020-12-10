@@ -10,10 +10,10 @@
                 <div class="form-container login-form">
                     <a-form-model ref="ruleForm" :model="loginForm" :rules="loginRules">
                         <a-form-model-item label="账号" prop="username" :colon="false">
-                            <a-input v-model="loginForm.username" placeholder="请输入用户名或邮箱" type="text" autocomplete="off" />
+                            <a-input v-model="loginForm.username" @keyup.enter="enterKey('login')" placeholder="请输入用户名或邮箱" type="text" autocomplete="off" />
                         </a-form-model-item>
                         <a-form-model-item label="密码" prop="password" :colon="false">
-                            <a-input v-model="loginForm.password" placeholder="请输入密码" type="password" autocomplete="off" />
+                            <a-input v-model="loginForm.password" @keyup.enter="enterKey('login')" placeholder="请输入密码" type="password" autocomplete="off" />
                         </a-form-model-item>
                     </a-form-model>
                     <div class="button-container pt-24">
@@ -22,7 +22,9 @@
                         </a-button>
                     </div>
                     <div class="login-footer pt-28 flex-s-b">
-                        <a>忘记密码</a>
+                        <a-tooltip placement="top" title="暂未开发，忘记密码请联系管理员" arrow-point-at-center>
+                            <a>忘记密码</a>
+                        </a-tooltip>
                         <span class="flex">
                             没有账号？去
                             <a @click.prevent="doToggle">注册</a>
@@ -36,13 +38,13 @@
                 <div class="form-container login-form">
                     <a-form-model ref="ruleForm" :model="registerForm" :rules="registerRules">
                         <a-form-model-item label="账号" prop="username" :colon="false">
-                            <a-input v-model="registerForm.username" placeholder="4-16位字符，可使用_-符号" type="text" autocomplete="off" />
+                            <a-input v-model="registerForm.username" @keyup.enter="enterKey('register')" placeholder="4-16位字符，可使用_-符号" type="text" autocomplete="off" />
                         </a-form-model-item>
                         <a-form-model-item label="邮箱" prop="email" :colon="false">
-                            <a-input v-model="registerForm.email" placeholder="请填写常用邮箱地址" type="text" autocomplete="off" />
+                            <a-input v-model="registerForm.email" @keyup.enter="enterKey('register')" placeholder="请填写常用邮箱地址" type="text" autocomplete="off" />
                         </a-form-model-item>
                         <a-form-model-item label="密码" prop="password" :colon="false">
-                            <a-input-password v-model="registerForm.password" placeholder="6-20位字符，包含数字跟字母" type="password" autocomplete="off" />
+                            <a-input-password v-model="registerForm.password" @keyup.enter="enterKey('register')" placeholder="6-20位字符，包含数字跟字母" type="password" autocomplete="off" />
                         </a-form-model-item>
                     </a-form-model>
                     <div class="button-container pt-24">
@@ -160,8 +162,8 @@ export default {
                 password: ''
             },
             loginRules: {
-                username: [{ required: true, validator: validateUsername, trigger: 'blur' }],
-                password: [{ required: true, validator: validatePassword, trigger: 'blur' }]
+                username: [{ validator: validateUsername, trigger: 'blur' }],
+                password: [{ validator: validatePassword, trigger: 'blur' }]
             },
             // 注册
             registerForm: {
@@ -239,6 +241,18 @@ export default {
             });
         },
 
+        // 回车键事件
+        enterKey(type) {
+            // 登录
+            if (type == 'login') {
+                this.login('ruleForm');
+            }
+            // 注册
+            if (type == 'register') {
+                this.register('ruleForm');
+            }
+        },
+
         // 发送验证码
         getCode() {
             const TIME_COUNT = 60;
@@ -265,6 +279,8 @@ export default {
 
         // 登录、注册切换
         doToggle() {
+            // 清空表单残留信息
+            this.$refs['ruleForm'].resetFields();
             this.isLogin = !this.isLogin;
         }
     }

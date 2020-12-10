@@ -32,6 +32,7 @@ export default {
         'ant-design-vue/lib/carousel/style',
         'ant-design-vue/lib/message/style',
         'ant-design-vue/lib/icon/style',
+        'ant-design-vue/lib/tooltip/style',
 
         '@/assets/style/index.less',
         '~assets/icon/iconfont.css'
