@@ -12,9 +12,9 @@ export const AXIOS_DEFAULT_CONFIG = {
 };
 
 // 开启请求参数打印
-export const CONSOLE_REQUEST_ENABLE = true;
+export const CONSOLE_REQUEST_ENABLE = false;
 // 开启响应参数打印
-export const CONSOLE_RESPONSE_ENABLE = true;
+export const CONSOLE_RESPONSE_ENABLE = false;
 
 // API 默认配置
 export const API_DEFAULT_CONFIG = {

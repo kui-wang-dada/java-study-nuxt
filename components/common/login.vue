@@ -9,8 +9,8 @@
                 <div class="logo-container">java学习</div>
                 <div class="form-container login-form">
                     <a-form-model ref="ruleForm" :model="loginForm" :rules="loginRules">
-                        <a-form-model-item label="账号" prop="username" :colon="false">
-                            <a-input v-model="loginForm.username" @keyup.enter="enterKey('login')" placeholder="请输入用户名或邮箱" type="text" autocomplete="off" />
+                        <a-form-model-item label="账号" prop="userName" :colon="false">
+                            <a-input v-model="loginForm.userName" @keyup.enter="enterKey('login')" placeholder="请输入用户名或邮箱" type="text" autocomplete="off" />
                         </a-form-model-item>
                         <a-form-model-item label="密码" prop="password" :colon="false">
                             <a-input v-model="loginForm.password" @keyup.enter="enterKey('login')" placeholder="请输入密码" type="password" autocomplete="off" />
@@ -37,11 +37,11 @@
                 <div class="logo-container register-logo">java学习</div>
                 <div class="form-container login-form">
                     <a-form-model ref="ruleForm" :model="registerForm" :rules="registerRules">
-                        <a-form-model-item label="账号" prop="username" :colon="false">
-                            <a-input v-model="registerForm.username" @keyup.enter="enterKey('register')" placeholder="4-16位字符，可使用_-符号" type="text" autocomplete="off" />
+                        <a-form-model-item label="账号" prop="userName" :colon="false">
+                            <a-input v-model="registerForm.userName" @keyup.enter="enterKey('register')" placeholder="4-16位字符，可使用_-符号" type="text" autocomplete="off" />
                         </a-form-model-item>
-                        <a-form-model-item label="邮箱" prop="email" :colon="false">
-                            <a-input v-model="registerForm.email" @keyup.enter="enterKey('register')" placeholder="请填写常用邮箱地址" type="text" autocomplete="off" />
+                        <a-form-model-item label="邮箱" prop="userEmail" :colon="false">
+                            <a-input v-model="registerForm.userEmail" @keyup.enter="enterKey('register')" placeholder="请填写常用邮箱地址" type="text" autocomplete="off" />
                         </a-form-model-item>
                         <a-form-model-item label="密码" prop="password" :colon="false">
                             <a-input-password v-model="registerForm.password" @keyup.enter="enterKey('register')" placeholder="6-20位字符，包含数字跟字母" type="password" autocomplete="off" />
@@ -67,20 +67,20 @@
                     <div class="email-check-tips mb-12">
                         <p class="m-0">
                             将会向您的邮箱
-                            <span class="text-primary">604595095@qq.com</span>
+                            <span class="text-primary">{{ userInfo.userEmail }}</span>
                             发送一条验证邮件，请注意查收！
                         </p>
                     </div>
                     <a-form-model ref="ruleForm" :model="emailForm" :rules="emailRules">
                         <a-form-model-item label="验证码" prop="code" :colon="false">
-                            <a-input v-model="emailForm.code" placeholder="请输入验证码" type="text" autocomplete="off">
-                                <a-button type="primary" slot="suffix" class="email-btn ant-btn-lg" @click="getCode" v-show="show">{{ btnMsg }}</a-button>
+                            <a-input v-model="emailForm.code" @keyup.enter="enterKey('registerActive')" placeholder="请输入验证码" type="text" autocomplete="off">
+                                <a-button type="primary" slot="suffix" class="email-btn ant-btn-lg" @click="sendEmail" v-show="show">{{ btnMsg }}</a-button>
                                 <a-button type="primary" slot="suffix" class="email-btn ant-btn-lg" v-show="!show" disabled>{{ count }}秒后重新发送</a-button>
                             </a-input>
                         </a-form-model-item>
                     </a-form-model>
                     <div class="button-container pt-14">
-                        <a-button type="primary" :loading="iconLoading" class="ant-btn-lg ant-btn-block" @click="login('ruleForm')">
+                        <a-button type="primary" :loading="iconLoading" class="ant-btn-lg ant-btn-block" @click="registerActive('ruleForm')">
                             确认
                         </a-button>
                     </div>
@@ -158,23 +158,23 @@ export default {
             iconLoading: false,
             // 登录
             loginForm: {
-                username: '',
+                userName: '',
                 password: ''
             },
             loginRules: {
-                username: [{ validator: validateUsername, trigger: 'blur' }],
+                userName: [{ validator: validateUsername, trigger: 'blur' }],
                 password: [{ validator: validatePassword, trigger: 'blur' }]
             },
             // 注册
             registerForm: {
-                username: '',
-                password: '',
-                email: ''
+                userName: 'fend',
+                password: '111111',
+                userEmail: '604595092@qq.com'
             },
             registerRules: {
-                username: [{ required: true, validator: validateRegisterUsername, trigger: 'blur' }],
+                userName: [{ required: true, validator: validateRegisterUsername, trigger: 'blur' }],
                 password: [{ required: true, validator: validateRegisterPassword, trigger: 'blur' }],
-                email: [{ required: true, validator: validateRegisterEmail, trigger: 'blur' }]
+                userEmail: [{ required: true, validator: validateRegisterEmail, trigger: 'blur' }]
             },
             // 邮箱验证
             emailForm: {
@@ -187,7 +187,9 @@ export default {
             btnMsg: '发送验证码',
             show: true,
             count: '',
-            intervalBtn: null
+            intervalBtn: null,
+            // 用户信息
+            userInfo: {}
         };
     },
     computed: {
@@ -201,21 +203,24 @@ export default {
     methods: {
         // 注册
         register(formName) {
+            const _this = this;
             this.iconLoading = true;
-            this.$refs[formName].validate(async valid => {
+            this.$refs[formName].validate(valid => {
                 if (valid) {
-                    // alert('submit!');
-                    let params = {
-                        userName: this.registerForm.username,
-                        userEmail: this.registerForm.email,
-                        password: this.registerForm.password
+                    let data = {
+                        params: _this.registerForm,
+                        _this
                     };
-                    let res = await this.$api['user/register'](params);
-                    console.log(res, 'res');
-                    this.iconLoading = false;
+                    _this.$store.dispatch('user/register', data).then(res => {
+                        console.log(res);
+                        if (res.code === 0) {
+                            _this.isEmail = true;
+                            _this.userInfo = res.data;
+                        }
+                        _this.iconLoading = false;
+                    });
                 } else {
-                    this.iconLoading = false;
-                    console.log('error submit!!');
+                    _this.iconLoading = false;
                     return false;
                 }
             });
@@ -223,34 +228,63 @@ export default {
 
         // 登录
         login(formName) {
+            const _this = this;
             this.iconLoading = true;
             this.$refs[formName].validate(async valid => {
                 if (valid) {
-                    let params = {
-                        userName: this.loginForm.username,
-                        password: this.loginForm.password
+                    let data = {
+                        params: _this.loginForm,
+                        _this
                     };
-                    let res = await this.$api['user/login'](params);
-                    console.log(res, 'res');
-                    this.iconLoading = false;
+                    _this.$store.dispatch('user/login', data).then(res => {
+                        console.log(res);
+                        _this.iconLoading = false;
+                    });
                 } else {
                     this.iconLoading = false;
-                    console.log('error submit!!');
                     return false;
                 }
             });
         },
 
-        // 回车键事件
-        enterKey(type) {
-            // 登录
-            if (type == 'login') {
-                this.login('ruleForm');
-            }
-            // 注册
-            if (type == 'register') {
-                this.register('ruleForm');
-            }
+        // 用户激活
+        registerActive(formName) {
+            const _this = this;
+            this.iconLoading = true;
+            this.$refs[formName].validate(async valid => {
+                if (valid) {
+                    let data = {
+                        params: {
+                            userId: _this.userInfo.id,
+                            vCode: _this.emailForm.code
+                        },
+                        _this
+                    };
+                    _this.$store.dispatch('user/registerActive', data).then(res => {
+                        console.log(res);
+                        _this.iconLoading = false;
+                    });
+                } else {
+                    this.iconLoading = false;
+                    return false;
+                }
+            });
+        },
+
+        // 发送激活邮件
+        sendEmail() {
+            const _this = this;
+            let data = {
+                params: {
+                    userId: _this.userInfo.id
+                },
+                _this
+            };
+            _this.$store.dispatch('user/sendEmail', data).then(res => {
+                if (res.code === 0) {
+                    _this.getCode();
+                }
+            });
         },
 
         // 发送验证码
@@ -269,6 +303,22 @@ export default {
                         this.intervalBtn = null;
                     }
                 }, 1000);
+            }
+        },
+
+        // 回车键事件
+        enterKey(type) {
+            // 登录
+            if (type == 'login') {
+                this.login('ruleForm');
+            }
+            // 注册
+            if (type == 'register') {
+                this.register('ruleForm');
+            }
+            // 激活
+            if (type == 'registerActive') {
+                this.registerActive('ruleForm');
             }
         },
 

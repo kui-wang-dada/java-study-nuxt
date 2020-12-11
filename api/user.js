@@ -12,9 +12,15 @@ export default [
         path: '/user/register'
     },
     {
+        name: 'sendEmail',
+        method: 'POST',
+        desc: '发送激活邮件',
+        path: '/user/register/sendEmail'
+    },
+    {
         name: 'registerActive',
-        method: 'GET',
+        method: 'POST',
         desc: '激活',
-        path: '/user/register'
+        path: '/user/register/activation'
     }
 ];
