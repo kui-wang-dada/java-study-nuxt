@@ -1,9 +1,7 @@
-// import { login, logout, getInfo } from '@/api/user'
-// import { getToken, setToken, removeToken } from '@/utils/auth'
-// import router, { resetRouter } from '@/router'
+import { getToken, setToken, removeToken } from '@/utils/auth';
 
 const state = {
-    // token: getToken(),
+    token: getToken(),
     userInfo: {}
 };
 
@@ -17,27 +15,13 @@ const mutations = {
 };
 
 const actions = {
-    // user login
-    // login({ commit }, userInfo) {
-    //   const { username, password } = userInfo
-    //   return new Promise((resolve, reject) => {
-    //     login({ userName: username.trim(), password: password }).then(response => {
-    //       const { data } = response
-    //       commit('SET_TOKEN', data.token)
-    //       setToken(data.token)
-    //       resolve()
-    //     }).catch(error => {
-    //       reject(error)
-    //     })
-    //   })
-    // },
-
     // 登录
     async login({ commit }, data) {
         let { params, _this } = data;
         let res = await _this.$api['user/login'](params);
         if (res.code === 0) {
-            commit('SET_USERINFO', res.data);
+            commit('SET_TOKEN', res.data.token);
+            setToken(res.data.token);
         }
         return res;
     },
@@ -46,9 +30,6 @@ const actions = {
     async register({ commit }, data) {
         let { params, _this } = data;
         let res = await _this.$api['user/register'](params);
-        // if (res.code === 0) {
-        //     commit('SET_USERINFO', res.data);
-        // }
         return res;
     },
 
@@ -56,6 +37,10 @@ const actions = {
     async registerActive({ commit }, data) {
         let { params, _this } = data;
         let res = await _this.$api['user/registerActive'](params);
+        if (res.code === 0) {
+            commit('SET_TOKEN', res.data.token);
+            setToken(res.data.token);
+        }
         return res;
     },
 
@@ -63,6 +48,16 @@ const actions = {
     async sendEmail({ commit }, data) {
         let { params, _this } = data;
         let res = await _this.$api['user/sendEmail'](params);
+        return res;
+    },
+
+    // 获取用户信息
+    async getUserInfo({ commit }, data) {
+        let { params, _this } = data;
+        let res = await _this.$api['user/findUserByToken'](params);
+        if (res.code === 0) {
+            commit('SET_USERINFO', res.data);
+        }
         return res;
     }
 };

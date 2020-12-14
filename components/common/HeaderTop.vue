@@ -6,14 +6,14 @@
                 <li v-for="(item, index) in list" :key="item.title" :class="active == index ? 'active' : ''" @click="changeMenu(index)" class="menu-item">
                     <router-link class="link" :to="item.link">{{ item.title }}</router-link>
                 </li>
-                <li class="menu-item personal-info" v-if="false">
+                <li class="menu-item personal-info" v-if="!dialoLoginVisible">
                     <div class="left flex-align">
                         <div class="head-box">
                             <img class="head" src="http://139.159.147.237/images/xuxiaofei.jpeg" alt="" />
                         </div>
                     </div>
                     <div class="right flex-c-direction">
-                        <p class="title">曾阿牛🐂</p>
+                        <p class="title">{{ userInfo.userName }}</p>
                         <p class="level">
                             <span>初学者</span>
                             <span>|</span>
@@ -29,13 +29,13 @@
                         </li>
                     </ul>
                 </li>
-                <li class="menu-item personal-info">
+                <li class="menu-item personal-info" v-else>
                     <a-button type="primary" @click="handleShowLogin">登录/注册</a-button>
                 </li>
             </ul>
         </div>
 
-        <login v-if="dialoLoginVisible" @close="handleCloseLogin" />
+        <login v-if="dialoLoginVisible" @success="handleSuccess" @close="handleCloseLogin" />
     </header>
 </template>
 
@@ -63,10 +63,6 @@ export default {
                     title: '资料下载',
                     link: '/download'
                 },
-                // {
-                //   title: '学习圈子',
-                //   link: '/comunication'
-                // },
                 {
                     title: '关于我们',
                     link: '/about'
@@ -74,8 +70,21 @@ export default {
             ]
         };
     },
+    computed: {
+        // token
+        getToken() {
+            return this.$store.state.user.token;
+        },
+
+        // userInfo
+        userInfo() {
+            return this.$store.state.user.userInfo;
+        }
+    },
     props: {},
-    created() {},
+    created() {
+        this.getUserInfo();
+    },
     mounted() {},
     methods: {
         changeMenu(index) {
@@ -94,6 +103,27 @@ export default {
         handleCloseLogin() {
             this.dialoLoginVisible = false;
             openScroll();
+        },
+
+        // 登录成功关闭弹窗
+        handleSuccess() {
+            this.dialoLoginVisible = false;
+            openScroll();
+            this.getUserInfo();
+        },
+
+        // 获取用户信息
+        getUserInfo() {
+            const _this = this;
+            let data = {
+                params: {
+                    token: _this.getToken
+                },
+                _this
+            };
+            _this.$store.dispatch('user/getUserInfo', data).then(res => {
+                _this.dialoLoginVisible = res.code === 0 ? false : true;
+            });
         }
     }
 };

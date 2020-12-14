@@ -22,5 +22,11 @@ export default [
         method: 'POST',
         desc: '激活',
         path: '/user/register/activation'
+    },
+    {
+        name: 'findUserByToken',
+        method: 'POST',
+        desc: '获取用户信息',
+        path: '/user/login/findUserByToken'
     }
 ];

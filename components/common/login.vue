@@ -158,8 +158,8 @@ export default {
             iconLoading: false,
             // 登录
             loginForm: {
-                userName: '',
-                password: ''
+                userName: 'fend',
+                password: '111111'
             },
             loginRules: {
                 userName: [{ validator: validateUsername, trigger: 'blur' }],
@@ -237,7 +237,10 @@ export default {
                         _this
                     };
                     _this.$store.dispatch('user/login', data).then(res => {
-                        console.log(res);
+                        if (res.code === 0) {
+                            _this.isEmail = false;
+                            _this.$emit('success');
+                        }
                         _this.iconLoading = false;
                     });
                 } else {
@@ -261,7 +264,10 @@ export default {
                         _this
                     };
                     _this.$store.dispatch('user/registerActive', data).then(res => {
-                        console.log(res);
+                        if (res.code === 0) {
+                            _this.isEmail = false;
+                            _this.$emit('success');
+                        }
                         _this.iconLoading = false;
                     });
                 } else {

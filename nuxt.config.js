@@ -38,6 +38,8 @@ export default {
         '~assets/icon/iconfont.css'
     ],
 
+    mode: 'spa',
+
     // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
     plugins: [
         '@/plugins/antd-ui',
@@ -46,6 +48,10 @@ export default {
         {
             src: '@plugins/vue-infinite-scroll', // vue-infinite-scroll名字和js文件名字对应就行
             ssr: false // 只在client被打包引用
+        },
+        {
+            src: '@/plugins/vuex-persistedstate',
+            ssr: false
         }
     ],
 

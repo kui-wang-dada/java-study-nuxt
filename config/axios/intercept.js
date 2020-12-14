@@ -1,6 +1,9 @@
 /** @format */
 
+import vue from 'vue';
 import axios from 'axios';
+import { getToken } from '@/utils/auth';
+import { message } from 'ant-design-vue';
 
 import { CONSOLE_REQUEST_ENABLE, CONSOLE_RESPONSE_ENABLE } from '../index';
 const CancelToken = axios.CancelToken;
@@ -16,6 +19,9 @@ export function requestSuccessFunc(req) {
     // if (CancelPromise[req.url]) {
     //   CancelPromise[req.url]()
     // }
+
+    // 设置请求头token
+    req.headers['Authorization'] = getToken();
 
     req.cancelToken = new CancelToken(c => {
         CancelPromise[req.url] = c;
@@ -52,8 +58,9 @@ export function responseSuccessFunc(response) {
     }
     if (response && response.data) {
         // 全局对code码进行处理
-
-        // console.log(response)
+        if (response.data.code !== 0) {
+            message.warning(response.data.msg);
+        }
         return response.data;
     } else {
         // 异常处理

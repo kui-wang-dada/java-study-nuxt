@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import persistedState from 'vuex-persistedstate';
 import getters from './getters';
-
 Vue.use(Vuex);
 
 const files = require.context('./modules', false, /\.js$/);
@@ -14,7 +14,8 @@ files.keys().forEach(key => {
 const store = () => {
     return new Vuex.Store({
         modules,
-        getters
+        getters,
+        plugins: [persistedState()]
     });
 };
 
