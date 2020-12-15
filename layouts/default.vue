@@ -18,6 +18,20 @@ export default {
     components: {
         HeaderTop,
         Footer
+    },
+    created() {
+        this.getUserInfo();
+    },
+    methods: {
+        // 获取用户信息
+        getUserInfo() {
+            const _this = this;
+            _this.$store.dispatch('user/getUserInfo').then(res => {
+                if (res.code !== 0) {
+                    _this.$store.dispatch('user/resetToken');
+                }
+            });
+        }
     }
 };
 </script>

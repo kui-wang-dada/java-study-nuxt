@@ -25,8 +25,8 @@
                         <li>
                             <span class="dropdown-link">个人主页</span>
                         </li>
-                        <li>
-                            <span class="dropdown-link" @click="logout">退出登陆</span>
+                        <li @click="logout">
+                            <span class="dropdown-link">退出登陆</span>
                         </li>
                     </ul>
                 </li>
@@ -90,16 +90,14 @@ export default {
         }
     },
     props: {},
-    created() {
-        this.getUserInfo();
-    },
+    created() {},
     methods: {
         // 获取用户信息
         getUserInfo() {
             const _this = this;
             _this.$store.dispatch('user/getUserInfo').then(res => {
                 if (res.code !== 0) {
-                    _this.logout();
+                    _this.$store.dispatch('user/resetToken');
                 }
             });
         },
@@ -126,8 +124,8 @@ export default {
         // 登录成功关闭弹窗
         handleSuccess() {
             this.dialoLoginVisible = false;
-            openScroll();
             this.getUserInfo();
+            openScroll();
         },
 
         // 退出登录
