@@ -34,6 +34,12 @@ export default {
             ]
         };
     },
+    async fetch({ store, params, query }) {
+        console.log(store, 'this.$router');
+        if (process.client) return;
+
+        await store.dispatch('home/GetHomeServerData');
+    },
     methods: {}
 };
 </script>

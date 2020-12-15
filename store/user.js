@@ -1,9 +1,10 @@
 import { getToken, setToken, removeToken } from '@/utils/auth';
+import $api from '@/config/axios/api';
 
-const state = {
+const state = () => ({
     token: getToken(),
     userInfo: {}
-};
+});
 
 const mutations = {
     SET_TOKEN: (state, token) => {
@@ -63,7 +64,6 @@ const actions = {
 };
 
 export default {
-    namespaced: true,
     state,
     mutations,
     actions
