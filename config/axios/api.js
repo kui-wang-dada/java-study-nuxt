@@ -62,7 +62,7 @@ class Api {
 
             Object.defineProperty(this.api, `${apiname}`, {
                 value(outerParams, outerOptions) {
-                    console.log(config, outerParams, outerOptions);
+                    // console.log(outerParams, outerOptions);
                     // let _data = _isEmpty(outerParams) ? params : _pick(_assign({}, params, outerParams), Object.keys(params));
                     let _data;
                     if (process.browser) {
@@ -113,7 +113,7 @@ function _normoalize(options, data) {
 
     if (options.method === 'POST' || options.method === 'PUT' || options.method === 'DELETE') {
         options.data = data;
-        
+
         // post 参数放请求头
         // if(options.desc == "注册" || options.desc == "登录" ) {
         //     options.params = Qs.parse(data);

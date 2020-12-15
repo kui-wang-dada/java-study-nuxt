@@ -5,6 +5,7 @@
         </div>
         <div class="modal-scroll">
             <div class="mask" @click.stop="handleClose"></div>
+            <!-- 登录 -->
             <div class="main" v-if="isLogin && !isEmail">
                 <div class="logo-container">java学习</div>
                 <div class="form-container login-form">
@@ -33,6 +34,7 @@
                 </div>
             </div>
 
+            <!-- 注册 -->
             <div class="main" v-if="!isLogin && !isEmail">
                 <div class="logo-container register-logo">java学习</div>
                 <div class="form-container login-form">
@@ -61,6 +63,7 @@
                 </div>
             </div>
 
+            <!-- 邮箱验证 -->
             <div class="main" v-if="isEmail">
                 <div class="logo-container email-logo">java学习</div>
                 <div class="form-container email-check-container">
@@ -158,8 +161,8 @@ export default {
             iconLoading: false,
             // 登录
             loginForm: {
-                userName: 'fend',
-                password: '111111'
+                userName: '',
+                password: ''
             },
             loginRules: {
                 userName: [{ validator: validateUsername, trigger: 'blur' }],
@@ -167,9 +170,9 @@ export default {
             },
             // 注册
             registerForm: {
-                userName: 'fend',
-                password: '111111',
-                userEmail: '604595092@qq.com'
+                userName: '',
+                password: '',
+                userEmail: ''
             },
             registerRules: {
                 userName: [{ required: true, validator: validateRegisterUsername, trigger: 'blur' }],
@@ -207,11 +210,8 @@ export default {
             this.iconLoading = true;
             this.$refs[formName].validate(valid => {
                 if (valid) {
-                    let data = {
-                        params: _this.registerForm,
-                        _this
-                    };
-                    _this.$store.dispatch('user/register', data).then(res => {
+                    let params = _this.registerForm;
+                    _this.$store.dispatch('user/register', params).then(res => {
                         console.log(res);
                         if (res.code === 0) {
                             _this.isEmail = true;
@@ -232,14 +232,13 @@ export default {
             this.iconLoading = true;
             this.$refs[formName].validate(async valid => {
                 if (valid) {
-                    let data = {
-                        params: _this.loginForm,
-                        _this
-                    };
-                    _this.$store.dispatch('user/login', data).then(res => {
+                    let params = _this.loginForm;
+                    _this.$store.dispatch('user/login', params).then(res => {
                         if (res.code === 0) {
                             _this.isEmail = false;
                             _this.$emit('success');
+                        } else {
+                            _this.$message.warning(res.msg);
                         }
                         _this.iconLoading = false;
                     });
@@ -256,17 +255,16 @@ export default {
             this.iconLoading = true;
             this.$refs[formName].validate(async valid => {
                 if (valid) {
-                    let data = {
-                        params: {
-                            userId: _this.userInfo.id,
-                            vCode: _this.emailForm.code
-                        },
-                        _this
+                    let params = {
+                        userId: _this.userInfo.id,
+                        vCode: _this.emailForm.code
                     };
-                    _this.$store.dispatch('user/registerActive', data).then(res => {
+                    _this.$store.dispatch('user/registerActive', params).then(res => {
                         if (res.code === 0) {
                             _this.isEmail = false;
                             _this.$emit('success');
+                        } else {
+                            _this.$message.warning(res.msg);
                         }
                         _this.iconLoading = false;
                     });
@@ -280,15 +278,14 @@ export default {
         // 发送激活邮件
         sendEmail() {
             const _this = this;
-            let data = {
-                params: {
-                    userId: _this.userInfo.id
-                },
-                _this
+            let params = {
+                userId: _this.userInfo.id
             };
-            _this.$store.dispatch('user/sendEmail', data).then(res => {
+            _this.$store.dispatch('user/sendEmail', params).then(res => {
                 if (res.code === 0) {
                     _this.getCode();
+                } else {
+                    _this.$message.warning(res.msg);
                 }
             });
         },

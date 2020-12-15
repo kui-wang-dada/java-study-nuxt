@@ -8,7 +8,7 @@ export default {
         token: state => state.user.token,
         userInfo: state => state.user.userInfo
     },
-    plugins: debug ? [createLogger()] : [],
+    plugins: debug ? [createLogger()] : [], // 开发环境下显示vuex的状态修改
     mutations: {},
     actions: {}
 };

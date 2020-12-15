@@ -58,9 +58,9 @@ export function responseSuccessFunc(response) {
     }
     if (response && response.data) {
         // 全局对code码进行处理
-        if (response.data.code !== 0) {
-            message.warning(response.data.msg);
-        }
+        // if (response.data.code !== 0) {
+        //     message.warning(response.data.msg);
+        // }
         return response.data;
     } else {
         // 异常处理

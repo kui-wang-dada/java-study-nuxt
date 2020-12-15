@@ -6,11 +6,12 @@
                 <li v-for="(item, index) in list" :key="item.title" :class="active == index ? 'active' : ''" @click="changeMenu(index)" class="menu-item">
                     <router-link class="link" :to="item.link">{{ item.title }}</router-link>
                 </li>
-                <li class="menu-item personal-info" v-if="!dialoLoginVisible">
+                <li class="menu-item personal-info" v-if="getToken">
                     <div class="left flex-align">
-                        <div class="head-box">
-                            <img class="head" src="http://139.159.147.237/images/xuxiaofei.jpeg" alt="" />
+                        <div class="head-box" v-if="userInfo.userImage">
+                            <img class="head" :src="userInfo.userImage" :alt="userInfo.userName" />
                         </div>
+                        <div class="head-box no-img" v-else>{{ firstUserName }}</div>
                     </div>
                     <div class="right flex-c-direction">
                         <p class="title">{{ userInfo.userName }}</p>
@@ -25,7 +26,7 @@
                             <span class="dropdown-link">个人主页</span>
                         </li>
                         <li>
-                            <span class="dropdown-link">退出登陆</span>
+                            <span class="dropdown-link" @click="logout">退出登陆</span>
                         </li>
                     </ul>
                 </li>
@@ -48,7 +49,7 @@ export default {
     },
     data() {
         return {
-            dialoLoginVisible: true,
+            dialoLoginVisible: false,
             active: 0,
             list: [
                 {
@@ -79,14 +80,31 @@ export default {
         // userInfo
         userInfo() {
             return this.$store.state.user.userInfo;
+        },
+
+        // 用户名首字母
+        firstUserName() {
+            if (this.$store.state.user.userInfo.userName) {
+                return this.$store.state.user.userInfo.userName.substring(0, 1).toUpperCase();
+            }
         }
     },
     props: {},
     created() {
         this.getUserInfo();
     },
-    mounted() {},
     methods: {
+        // 获取用户信息
+        getUserInfo() {
+            const _this = this;
+            _this.$store.dispatch('user/getUserInfo').then(res => {
+                if (res.code !== 0) {
+                    _this.logout();
+                }
+            });
+        },
+
+        // tab监听
         changeMenu(index) {
             if (index != this.active) {
                 this.active = index;
@@ -112,18 +130,10 @@ export default {
             this.getUserInfo();
         },
 
-        // 获取用户信息
-        getUserInfo() {
-            const _this = this;
-            let data = {
-                params: {
-                    token: _this.getToken
-                },
-                _this
-            };
-            _this.$store.dispatch('user/getUserInfo', data).then(res => {
-                _this.dialoLoginVisible = res.code === 0 ? false : true;
-            });
+        // 退出登录
+        logout() {
+            this.$store.dispatch('user/resetToken');
+            this.$message.success('退出成功!');
         }
     }
 };
@@ -223,18 +233,28 @@ export default {
                 margin-right: 10px;
 
                 .head-box {
-                    width: 40px;
-                    height: 40px;
+                    width: 32px;
+                    height: 32px;
                     // box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.15);
                     box-shadow: 0 0 0 2px rgba(65, 105, 226, 0.2);
                     border-radius: 50%;
 
                     .head {
                         width: 100%;
-                        height: 40px;
+                        height: 32px;
                         border-radius: 50%;
                         cursor: pointer;
                     }
+                }
+
+                .no-img {
+                    color: #fff;
+                    line-height: 32px;
+                    font-size: 14px;
+                    border-color: #4669e7;
+                    background-color: #4669e7;
+                    text-align: center;
+                    text-transform: uppercase;
                 }
             }
 
@@ -242,14 +262,14 @@ export default {
                 height: 100%;
 
                 .title {
-                    font-size: 16px;
+                    font-size: 14px;
                     color: #333;
                     font-weight: bold;
                     margin-bottom: 3px;
                 }
 
                 .level {
-                    font-size: 14px;
+                    font-size: 12px;
                     color: #666;
                     cursor: pointer;
                     margin: 0;

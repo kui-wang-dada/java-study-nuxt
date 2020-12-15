@@ -17,49 +17,54 @@ const mutations = {
 
 const actions = {
     // 登录
-    async login({ commit }, data) {
-        let { params, _this } = data;
-        let res = await _this.$api['user/login'](params);
+    async login({ commit }, params) {
+        let res = await $api['user/login'](params);
         if (res.code === 0) {
-            commit('SET_TOKEN', res.data.token);
-            setToken(res.data.token);
+            commit('SET_TOKEN', res.data);
+            setToken(res.data);
         }
         return res;
     },
 
     // 注册
-    async register({ commit }, data) {
-        let { params, _this } = data;
-        let res = await _this.$api['user/register'](params);
+    async register({ commit }, params) {
+        let res = await $api['user/register'](params);
         return res;
     },
 
     // 用户激活
-    async registerActive({ commit }, data) {
-        let { params, _this } = data;
-        let res = await _this.$api['user/registerActive'](params);
+    async registerActive({ commit }, params) {
+        let res = await $api['user/registerActive'](params);
         if (res.code === 0) {
-            commit('SET_TOKEN', res.data.token);
-            setToken(res.data.token);
+            commit('SET_TOKEN', res.data);
+            setToken(res.data);
         }
         return res;
     },
 
     // 发送激活邮件
-    async sendEmail({ commit }, data) {
-        let { params, _this } = data;
-        let res = await _this.$api['user/sendEmail'](params);
+    async sendEmail({ commit }, params) {
+        let res = await $api['user/sendEmail'](params);
         return res;
     },
 
     // 获取用户信息
-    async getUserInfo({ commit }, data) {
-        let { params, _this } = data;
-        let res = await _this.$api['user/findUserByToken'](params);
+    async getUserInfo({ commit }) {
+        let res = await $api['user/findUserByToken']();
         if (res.code === 0) {
             commit('SET_USERINFO', res.data);
         }
         return res;
+    },
+
+    // 退出登录
+    resetToken({ commit }) {
+        return new Promise(resolve => {
+            commit('SET_TOKEN', '');
+            commit('SET_USERINFO', '');
+            removeToken();
+            resolve();
+        });
     }
 };
 

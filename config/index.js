@@ -1,5 +1,5 @@
 /** @format */
-console.log('process', process.env);
+// console.log('process', process.env);
 // axios 默认配置
 export const AXIOS_DEFAULT_CONFIG = {
     timeout: 20000,

@@ -39,6 +39,8 @@ export default {
 
             let [res1, res2] = await Promise.all([getHomeOne, getHomeTwo]);
 
+            console.log(res1, res2);
+
             store.commit('SET_HOME_ONE', res1.message);
             store.commit('SET_HOME_TWO', res2.message);
         }
