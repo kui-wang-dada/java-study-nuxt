@@ -1,7 +1,6 @@
 @import 'reset';
 
 // 弹性布局
-
 .flex {
     display: flex;
 }
@@ -41,7 +40,6 @@
 }
 
 // 清除浮动
-
 .clearfix:after,
 .clearfix:before {
     content: '';
@@ -50,7 +48,6 @@
 }
 
 // 阴影
-
 .shadow {
     box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
@@ -612,8 +609,17 @@
     padding-bottom: 40px !important;
 }
 
-// 滚动条样式
+// 淡出 (fade) 效果
+.page-enter-active,
+.page-leave-active {
+    transition: opacity 0.5s;
+}
+.page-enter,
+.page-leave-active {
+    opacity: 0;
+}
 
+// 滚动条样式
 ::-webkit-scrollbar-track-piece {
     -webkit-border-radius: 0;
 }
