@@ -37,15 +37,18 @@
         </div>
 
         <login v-if="dialoLoginVisible" @success="handleSuccess" @close="handleCloseLogin" />
+        <auth @success="handleSuccess" @close="handleCloseLogin" />
     </header>
 </template>
 
 <script>
 import login from '@/components/common/login';
+import auth from '@/components/common/auth';
 import { disableScroll, openScroll } from '@/utils';
 export default {
     components: {
-        login
+        login,
+        auth
     },
     data() {
         return {
