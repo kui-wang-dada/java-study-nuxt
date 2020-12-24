@@ -37,7 +37,7 @@
         </div>
 
         <login v-if="dialoLoginVisible" @success="handleSuccess" @close="handleCloseLogin" />
-        <auth @success="handleSuccess" @close="handleCloseLogin" />
+        <!-- <auth @success="handleSuccess" @close="handleCloseLogin" /> -->
     </header>
 </template>
 

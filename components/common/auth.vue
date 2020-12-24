@@ -6,18 +6,30 @@
         <div class="modal-scroll">
             <div class="mask" @click.stop="handleClose"></div>
             <!-- 登录 -->
-            <div class="main ">
+            <div class="main flex-direction" style="justify-content: center;">
                 <div class="official-qrcode flex-justify">
                     <div class="qrcode-wrap">
                         <img src="http://139.159.147.237/images/kefu.jpeg" alt="客服" />
                     </div>
                 </div>
                 <div class="tips-wrap flex-justify">
-                    <span>
+                    <div class="tips">
                         tips：请扫码关注公众号回复关键字
-                        <span style="color: red;">"认证"</span>
+                        <span style="color: #f5222d;">“认证”</span>
                         获取认证码!
-                    </span>
+                    </div>
+                </div>
+                <div class="form-container flex-direction">
+                    <a-form-model ref="ruleForm" :model="authForm" :rules="authRules">
+                        <a-form-model-item prop="code" :colon="false">
+                            <a-input v-model="authForm.code" @keyup.enter="enterKey('auth')" placeholder="请输入认证码" type="text" autocomplete="off" />
+                        </a-form-model-item>
+                    </a-form-model>
+                    <div class="button-container pt-8">
+                        <a-button type="primary" :loading="iconLoading" class="ant-btn-lg" @click="login('ruleForm')">
+                            认证
+                        </a-button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -28,32 +40,22 @@
 export default {
     props: {},
     data() {
-        // 登录账号
-        const validateUsername = (rule, value, callback) => {
+        // 认证码
+        const validateAuthCode = (rule, value, callback) => {
             if (!value) {
-                callback(new Error('请输入用户名或邮箱'));
-            } else {
-                callback();
-            }
-        };
-        // 登录密码
-        const validatePassword = (rule, value, callback) => {
-            if (!value) {
-                callback(new Error('请输入密码'));
+                callback(new Error('请输入认证码'));
             } else {
                 callback();
             }
         };
 
         return {
-            // 登录
-            loginForm: {
-                userName: '',
-                password: ''
+            // 认证
+            authForm: {
+                code: ''
             },
-            loginRules: {
-                userName: [{ validator: validateUsername, trigger: 'blur' }],
-                password: [{ validator: validatePassword, trigger: 'blur' }]
+            authRules: {
+                code: [{ validator: validateAuthCode, trigger: 'blur' }]
             },
             // 用户信息
             userInfo: {}
@@ -157,12 +159,12 @@ export default {
 
         .main {
             position: absolute;
-            width: 380px;
-            height: 580px;
+            width: 340px;
+            height: 540px;
             left: 50%;
             top: 50%;
             margin-left: -170px;
-            margin-top: -290px;
+            margin-top: -270px;
             background-color: #fff;
             border-radius: 6px;
             z-index: 2002;
@@ -183,7 +185,48 @@ export default {
             }
 
             .tips-wrap {
-                width: 240px;
+                width: 100%;
+
+                .tips {
+                    width: 240px;
+                    padding: 8px 10px;
+                    color: #718096;
+                    font-size: 14px;
+                }
+            }
+
+            .form-container {
+                width: 100%;
+                padding: 8px 10px;
+
+                /deep/ .ant-input {
+                    width: 220px;
+                    border-radius: 4px;
+                    font-size: 14px;
+                    color: #2d3748;
+                }
+
+                /deep/ .ant-form-explain {
+                    font-size: 12px;
+                }
+
+                .button-container {
+                    .ant-btn-lg {
+                        width: 220px;
+                        height: 32px;
+                        padding: 0 15px;
+                        font-size: 14px;
+                        border-radius: 4px;
+                        background: @main-col;
+                        border-color: @main-col;
+                        transition: all 0.3s;
+                    }
+
+                    /deep/ button.ant-btn-primary:hover {
+                        background-color: #388ae8;
+                        box-shadow: 0 0 10px rgba(45, 55, 72, 0.5);
+                    }
+                }
             }
         }
     }

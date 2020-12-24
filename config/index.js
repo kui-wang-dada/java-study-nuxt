@@ -8,7 +8,7 @@ export const AXIOS_DEFAULT_CONFIG = {
         'Content-Type': 'application/x-www-form-urlencoded'
         // 'Content-Type': 'application/json;charset=UTF-8'
     },
-    baseURL: 'http://121.196.189.114:8010'
+    baseURL: 'http://121.196.189.114:8020'
 };
 
 // 开启请求参数打印

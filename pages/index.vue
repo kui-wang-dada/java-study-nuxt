@@ -1,7 +1,7 @@
 <template>
     <div class="mian">
-        <list />
-        <sidebar />
+        <list :list="list" :page-request="listQuery" :loading="loading" @loadMore="onLoadMore" />
+        <sidebar :labelList="labelList" />
     </div>
 </template>
 
@@ -15,7 +15,29 @@ export default {
         sidebar
     },
     data() {
-        return {};
+        return {
+            // 文章列表
+            // list: [],
+
+            // 热门标签
+            labelList: [],
+
+            // 加载更多loading
+            loading: false,
+
+            // 页码及每页条数
+            listQuery: {
+                page: 1,
+                pageSize: 10
+                // userId:
+            }
+        };
+    },
+    computed: {
+        // userInfo
+        list() {
+            return this.$store.state.home.list;
+        }
     },
     head() {
         return {
@@ -35,12 +57,45 @@ export default {
         };
     },
     async fetch({ store, params, query }) {
-        console.log(store, 'this.$router');
         if (process.client) return;
-
+        let data = this.listQuery;
+        await store.dispatch('home/selectHomeList', data);
         await store.dispatch('home/GetHomeServerData');
     },
-    methods: {}
+    mounted() {
+        // this.getSelectHomeList(this.listQuery);
+        // this.getSelectHotLabel();
+    },
+    methods: {
+        // 获取首页文章列表
+        getSelectHomeList(store, query) {
+            const _this = this;
+            let list = this.list;
+            let params = query;
+            store.dispatch('home/selectHomeList', params).then(res => {
+                if (res.code === 0) {
+                    _this.list = list.concat(res.data.list);
+                    _this.loading = false;
+                }
+            });
+        },
+
+        // 获取首页热门标签
+        getSelectHotLabel(store) {
+            const _this = this;
+            store.dispatch('home/selectHotLabel').then(res => {
+                if (res.code === 0) {
+                    _this.labelList = res.data;
+                }
+            });
+        },
+
+        // 加载更多数据
+        onLoadMore(query) {
+            this.loading = true;
+            this.getSelectHomeList(query);
+        }
+    }
 };
 </script>
 

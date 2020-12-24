@@ -23,7 +23,7 @@
             <div class="hot-m" style="padding: 0 20px 20px;">
                 <div class="content-block">
                     <div class="label-box flex-align">
-                        <a href="" class="label-tag flex-align" v-for="(tag, i) in labelArr" :key="i">#{{ tag }}</a>
+                        <a href="" class="label-tag flex-align" v-for="(tag, i) in labelList" :key="i">#{{ tag.labelName }}</a>
                     </div>
                 </div>
             </div>
@@ -35,10 +35,15 @@
 import { disableScroll, openScroll } from '@/utils';
 export default {
     components: {},
-    props: {},
+    props: {
+        labelList: {
+            type: Array,
+            default: []
+        }
+    },
     data() {
         return {
-            labelArr: ['前端', 'React', 'Vue', '后端', 'Springboot', 'Echarts', '微信小程序', 'java', 'c++', 'c', 'Element', 'Python', '工程化', '产品', '项目经理', '测试', '单文件测试']
+            // labelArr: ['前端', 'React', 'Vue', '后端', 'Springboot', 'Echarts', '微信小程序', 'java', 'c++', 'c', 'Element', 'Python', '工程化', '产品', '项目经理', '测试', '单文件测试']
         };
     },
     computed: {},

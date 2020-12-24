@@ -13,15 +13,42 @@
             <div class="item flex" v-for="(item, index) in list" :key="index">
                 <div class="info-box">
                     <h6 class="title ellipsis-2">
-                        <a :href="item.url">{{ item.title }}</a>
+                        <a :href="item.url" target="_blank">{{ item.title }}</a>
                     </h6>
+                    <!-- <div class="operations">
+                        <div class="flex-align flex-s-b pb-4 pt-4">
+                            <div class="flex-align">
+                                <a-tooltip placement="top" :title="item.createTime | createTimeFormat('YYMMDDHHMM')" arrow-point-at-center>
+                                    <div class="date">{{ item.createTime | createTimeFormat('MM/DD') }}</div>
+                                </a-tooltip>
+                            </div>
+                            <div class="flex-align collect">
+                                <i class="iconfont icon-shoucang" :class="index == 0 ? 'active ' : ''"></i>
+                                <span class="text-collect" :class="index == 0 ? 'active ' : ''">收藏</span>
+                            </div>
+                        </div>
+                        <div class="flex-align">
+                            <div class="flex-align ellipsis">
+                                <div class="label-box flex-align ellipsis">
+                                    <i class="iconfont icon-huati"></i>
+                                    <a href="" class="label-tag" v-for="(tag, i) in item.labelList" :key="i">{{ tag.labelName }}</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div> -->
                     <div class="operations flex-align flex-s-b">
                         <div class="flex-align">
-                            <div class="date">{{ item.date }}</div>
-                            <div class="break">~</div>
-                            <div class="label-box flex-align">
-                                <i class="iconfont icon-huati"></i>
-                                <a href="" class="label-tag" v-for="(tag, i) in item.tags" :key="i">{{ tag }}</a>
+                            <div class="flex-align">
+                                <a-tooltip placement="top" :title="item.createTime | createTimeFormat('YYMMDDHHMM')" arrow-point-at-center>
+                                    <div class="date">{{ item.createTime | createTimeFormat('MM/DD') }}</div>
+                                </a-tooltip>
+                            </div>
+                            <div class="flex-align ellipsis">
+                                <span class="break">~</span>
+                                <div class="label-box flex-align ellipsis">
+                                    <i class="iconfont icon-huati"></i>
+                                    <a href="" class="label-tag" v-for="(tag, i) in item.labelList" :key="i">{{ tag.labelName }}</a>
+                                </div>
                             </div>
                         </div>
                         <div class="flex-align collect">
@@ -31,162 +58,60 @@
                     </div>
                 </div>
                 <div class="image-box">
-                    <img :src="item.image" alt="封面" />
+                    <img :src="item.img1" alt="封面" />
                 </div>
             </div>
         </div>
         <!-- Loading -->
-        <div v-if="loading && !busy" class="loading-box flex-align-center shadow">
+        <div v-if="loading" class="loading-box flex-align-center shadow">
             <a-spin tip="Loading..." />
         </div>
         <div v-else class="loading-box flex-align-center shadow">
-            <a-button @click="onLoadMore">加载更多</a-button>
+            <a-button v-if="list.length > 10" @click="onLoadMore">加载更多</a-button>
+            <span class="no-more-data" v-else>暂无更多数据！</span>
         </div>
     </aside>
 </template>
 
 <script>
 import swiper from '@/components/home/swiper';
+import { formatTimer } from '@/utils';
 export default {
     components: {
         swiper
     },
-    props: {},
-    data() {
-        return {
-            loading: false,
-            busy: false,
-            list: [
-                {
-                    title: 'Springboot＋Vue实现富文本发表文章功能',
-                    date: '09/01',
-                    url: '',
-                    image: 'https://static001.geekbang.org/infoq/e5/e5233842e4f6b091b2c2fc1f9fd94fbc.png?x-oss-process=image/resize,w_416,h_234',
-                    tags: ['前端', 'React', 'Vue']
-                },
-                {
-                    title: 'Springboot+Vue实现仿百度搜索自动提示框匹配查询功能',
-                    date: '10/11',
-                    url: '',
-                    image: 'https://static001.infoq.cn/resource/image/55/b2/55ce76852d235f03f8304fefc10c1bb2.png?x-oss-process=image/crop,w_1066,h_598/resize,w_416,h_234',
-                    tags: ['前端', '后端', 'React', 'Vue', 'Springboot']
-                },
-                {
-                    title: 'Springboot+React实现从数据库中获取数据生成树状图在前端页面展示功能',
-                    date: '08/12',
-                    url: '',
-                    image: 'https://static001.infoq.cn/resource/image/a1/72/a19ec693c1dc102b0ef4f0cc8f53d172.jpg?x-oss-process=image/crop,y_56,w_1280,h_720/resize,w_416,h_234',
-                    tags: ['前端', 'React', 'Echarts']
-                },
-                {
-                    title: 'Springboot+Vue实现仿百度搜索自动提示框匹配查询功能',
-                    date: '10/11',
-                    url: '',
-                    image: 'https://static001.infoq.cn/resource/image/55/b2/55ce76852d235f03f8304fefc10c1bb2.png?x-oss-process=image/crop,w_1066,h_598/resize,w_416,h_234',
-                    tags: ['前端', '后端', 'React', 'Vue', 'Springboot']
-                },
-                {
-                    title: 'Springboot+React实现从数据库中获取数据生成树状图在前端页面展示功能',
-                    date: '08/12',
-                    url: '',
-                    image: 'https://static001.infoq.cn/resource/image/a1/72/a19ec693c1dc102b0ef4f0cc8f53d172.jpg?x-oss-process=image/crop,y_56,w_1280,h_720/resize,w_416,h_234',
-                    tags: ['前端', 'React', 'Echarts']
-                },
-                {
-                    title: 'Springboot＋Vue实现富文本发表文章功能',
-                    date: '09/01',
-                    url: '',
-                    image: 'https://static001.geekbang.org/infoq/e5/e5233842e4f6b091b2c2fc1f9fd94fbc.png?x-oss-process=image/resize,w_416,h_234',
-                    tags: ['前端', 'React', 'Vue']
-                },
-                {
-                    title: 'Springboot+Vue实现仿百度搜索自动提示框匹配查询功能',
-                    date: '10/11',
-                    url: '',
-                    image: 'https://static001.infoq.cn/resource/image/55/b2/55ce76852d235f03f8304fefc10c1bb2.png?x-oss-process=image/crop,w_1066,h_598/resize,w_416,h_234',
-                    tags: ['前端', '后端', 'React', 'Vue', 'Springboot']
-                },
-                {
-                    title: 'Springboot+React实现从数据库中获取数据生成树状图在前端页面展示功能',
-                    date: '08/12',
-                    url: '',
-                    image: 'https://static001.infoq.cn/resource/image/a1/72/a19ec693c1dc102b0ef4f0cc8f53d172.jpg?x-oss-process=image/crop,y_56,w_1280,h_720/resize,w_416,h_234',
-                    tags: ['前端', 'React', 'Echarts']
-                },
-                {
-                    title: 'Springboot+Vue实现仿百度搜索自动提示框匹配查询功能',
-                    date: '10/11',
-                    url: '',
-                    image: 'https://static001.infoq.cn/resource/image/55/b2/55ce76852d235f03f8304fefc10c1bb2.png?x-oss-process=image/crop,w_1066,h_598/resize,w_416,h_234',
-                    tags: ['前端', '后端', 'React', 'Vue', 'Springboot']
-                },
-                {
-                    title: 'Springboot+React实现从数据库中获取数据生成树状图在前端页面展示功能',
-                    date: '08/12',
-                    url: '',
-                    image: 'https://static001.infoq.cn/resource/image/a1/72/a19ec693c1dc102b0ef4f0cc8f53d172.jpg?x-oss-process=image/crop,y_56,w_1280,h_720/resize,w_416,h_234',
-                    tags: ['前端', 'React', 'Echarts']
-                }
-            ]
-        };
-    },
-    computed: {},
-    created() {},
-    mounted() {},
-    watch: {},
-    methods: {
-        loadMore() {
-            const data = this.list;
-            this.loading = true;
-            if (data.length > 24) {
-                this.$message.warning('暂无更多数据了哦!');
-                this.busy = true;
-                this.loading = false;
-                return;
-            }
-            setTimeout(() => {
-                this.list = data.concat([
-                    {
-                        title: 'Springboot＋Vue实现富文本发表文章功能',
-                        date: '09/01',
-                        url: '',
-                        image: 'https://static001.geekbang.org/infoq/e5/e5233842e4f6b091b2c2fc1f9fd94fbc.png?x-oss-process=image/resize,w_416,h_234',
-                        tags: ['前端', 'React', 'Vue']
-                    },
-                    {
-                        title: 'Springboot+Vue实现仿百度搜索自动提示框匹配查询功能',
-                        date: '10/11',
-                        url: '',
-                        image: 'https://static001.infoq.cn/resource/image/55/b2/55ce76852d235f03f8304fefc10c1bb2.png?x-oss-process=image/crop,w_1066,h_598/resize,w_416,h_234',
-                        tags: ['前端', '后端', 'React', 'Vue', 'Springboot']
-                    }
-                ]);
-                this.loading = false;
-            }, 1500);
+    props: {
+        list: {
+            type: Array,
+            default: []
         },
-
+        // 分页查询数据
+        pageRequest: {
+            type: Object,
+            default: () => ({
+                page: 1,
+                pageSize: 10
+            })
+        },
+        // loading
+        loading: {
+            type: Boolean,
+            default: false
+        }
+    },
+    data() {
+        return {};
+    },
+    filters: {
+        // 格式化时间
+        createTimeFormat(cellvalue, hours) {
+            return formatTimer(cellvalue / 1000, hours);
+        }
+    },
+    methods: {
         onLoadMore() {
-            const data = this.list;
-            this.loading = true;
-            setTimeout(() => {
-                this.list = data.concat([
-                    {
-                        title: 'Springboot＋Vue实现富文本发表文章功能',
-                        date: '09/01',
-                        url: '',
-                        image: 'https://static001.geekbang.org/infoq/e5/e5233842e4f6b091b2c2fc1f9fd94fbc.png?x-oss-process=image/resize,w_416,h_234',
-                        tags: ['前端', 'React', 'Vue']
-                    },
-                    {
-                        title: 'Springboot+Vue实现仿百度搜索自动提示框匹配查询功能',
-                        date: '10/11',
-                        url: '',
-                        image: 'https://static001.infoq.cn/resource/image/55/b2/55ce76852d235f03f8304fefc10c1bb2.png?x-oss-process=image/crop,w_1066,h_598/resize,w_416,h_234',
-                        tags: ['前端', '后端', 'React', 'Vue', 'Springboot']
-                    }
-                ]);
-                this.loading = false;
-            }, 1500);
+            this.pageRequest.page++;
+            this.$emit('loadMore', this.pageRequest);
         }
     }
 };
@@ -216,6 +141,10 @@ export default {
         /deep/ .ant-spin .ant-spin-dot-item {
             background-color: @main-col;
         }
+
+        .no-more-data {
+            color: #718096;
+        }
     }
 
     .list {
@@ -226,6 +155,7 @@ export default {
 
         .top-title {
             padding: 30px 30px 10px 30px;
+
             .section-title {
                 margin: 0;
                 line-height: 1;
@@ -245,7 +175,6 @@ export default {
                 flex: 1;
 
                 .title {
-                    line-height: 26px;
                     margin: 0;
 
                     a {
@@ -269,6 +198,7 @@ export default {
                     .date {
                         font-size: 14px;
                         color: #828a92;
+                        cursor: pointer;
                     }
 
                     .break {
