@@ -67,8 +67,9 @@
             <a-spin tip="Loading..." />
         </div>
         <div v-else class="loading-box flex-align-center shadow">
-            <a-button v-if="list.length > 10" @click="onLoadMore">加载更多</a-button>
-            <span class="no-more-data" v-else>暂无更多数据！</span>
+            <!--  v-if="list.length > 10" -->
+            <a-button @click="onLoadMore">加载更多</a-button>
+            <!-- <span class="no-more-data" v-else>暂无更多数据！</span> -->
         </div>
     </aside>
 </template>

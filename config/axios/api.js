@@ -55,7 +55,16 @@ class Api {
             const { name, desc, params, method, path, cache = true, headers } = api;
             const apiname = `${namespace}${sep}${name}`; // 接口调用名称 this.$api['apiname']()
             const url = path; // 接口地址
-            const baseURL = mock ? mockBaseURL : AXIOS_DEFAULT_CONFIG.baseURL; // 接口base地址
+            let baseURL = mock ? mockBaseURL : AXIOS_DEFAULT_CONFIG.baseURL; // 接口base地址
+
+            // 首页文章api
+            let articleApiList = ['selectHomeList', 'selectHotLabel'];
+            // 根据接口判断端口
+            if (articleApiList.includes(name)) {
+                baseURL = 'http://121.196.189.114:8020';
+            } else {
+                baseURL = 'http://121.196.189.114:8010';
+            }
 
             debug && assert(name, `${url} :接口name属性不能为空`);
             debug && assert(url.indexOf('/') === 0, `${url} :接口路径path，首字符应为/`);

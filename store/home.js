@@ -21,12 +21,13 @@ export default {
         }
     },
     actions: {
-        // 获取首页文章列表
+        //  获取首页文章列表
         async selectHomeList({ commit }, params) {
             let res = await $api['home/selectHomeList'](params);
             if (res.code === 0) {
                 commit('SET_LIST', res.data.list);
             }
+            return res;
         },
 
         // 获取首页热门标签
@@ -42,27 +43,17 @@ export default {
          * @param {type}
          * @return: promise
          */
-        async GetHomeServerData(store, { id }) {
-            let dataOne = {
-                limit_start: 0,
-                limit_page_length: 5
-            };
+        async GetHomeServerData(store, { params }) {
+            // let params = {
+            //     page: 1,
+            //     pageSize: 10
+            //     // userId:
+            // };
 
-            let dataTwo = {
-                limit_start: 0,
-                limit_page_length: 5,
-                id: id
-            };
-
-            let getHomeOne = $api['home/count'](dataOne).catch(() => Promise.resolve({}));
-            let getHomeTwo = $api['home/measure'](dataTwo).catch(() => Promise.resolve({}));
-
-            let [res1, res2] = await Promise.all([getHomeOne, getHomeTwo]);
-
-            console.log(res1, res2);
-
-            store.commit('SET_HOME_ONE', res1.message);
-            store.commit('SET_HOME_TWO', res2.message);
+            let selectHomeList = $api['home/selectHomeList'](params).catch(() => Promise.resolve({}));
+            let [res1] = await Promise.all([selectHomeList]);
+            console.log(res1);
+            store.commit('SET_LIST', res1.data.list);
         }
     }
 };

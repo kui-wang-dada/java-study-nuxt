@@ -8,6 +8,7 @@
 <script>
 import list from '@/components/home/list';
 import sidebar from '@/components/home/sidebar';
+import $api from '@/config/axios/api';
 
 export default {
     components: {
@@ -34,7 +35,7 @@ export default {
         };
     },
     computed: {
-        // userInfo
+        // list
         list() {
             return this.$store.state.home.list;
         }
@@ -58,32 +59,33 @@ export default {
     },
     async fetch({ store, params, query }) {
         if (process.client) return;
-        let data = this.listQuery;
-        await store.dispatch('home/selectHomeList', data);
-        await store.dispatch('home/GetHomeServerData');
+        let data = {
+            page: 1,
+            pageSize: 10
+        };
+        await store.dispatch('home/GetHomeServerData', { params: data });
     },
-    mounted() {
-        // this.getSelectHomeList(this.listQuery);
-        // this.getSelectHotLabel();
-    },
+    mounted() {},
     methods: {
         // 获取首页文章列表
-        getSelectHomeList(store, query) {
-            const _this = this;
-            let list = this.list;
-            let params = query;
-            store.dispatch('home/selectHomeList', params).then(res => {
-                if (res.code === 0) {
-                    _this.list = list.concat(res.data.list);
-                    _this.loading = false;
-                }
-            });
+        async getSelectHomeList(query) {
+            // const _this = this;
+            // let list = this.list;
+            // let params = query;
+            // _this.dispatch('home/selectHomeList', params).then(res => {
+            //     if (res.code === 0) {
+            //         _this.list = list.concat(res.data.list);
+            //         _this.loading = false;
+            //     }
+            // });
+            await this.dispatch('home/GetHomeServerData', { params: query });
+            this.loading = false;
         },
 
         // 获取首页热门标签
-        getSelectHotLabel(store) {
+        getSelectHotLabel() {
             const _this = this;
-            store.dispatch('home/selectHotLabel').then(res => {
+            _this.dispatch('home/selectHotLabel').then(res => {
                 if (res.code === 0) {
                     _this.labelList = res.data;
                 }
@@ -93,7 +95,7 @@ export default {
         // 加载更多数据
         onLoadMore(query) {
             this.loading = true;
-            this.getSelectHomeList(query);
+            // this.getSelectHomeList(query);
         }
     }
 };
