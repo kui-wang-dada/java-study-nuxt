@@ -1,41 +1,28 @@
 /** @format */
-
 import $api from '@/config/axios/api';
-import * as $utils from '@/utils/index.js';
 export default {
     state: () => ({
-        homeOne: [],
-        homeTwo: [],
-        list: []
+        list: [],
+        labelList: []
     }),
     mutations: {
-        // 设置用户信息
-        SET_HOME_ONE: (state, data) => {
-            state.homeOne = data;
-        },
-        SET_HOME_TWO: (state, data) => {
-            state.homeTwo = data;
-        },
+        // 文章列表
         SET_LIST: (state, data) => {
             state.list = data;
+        },
+        // 热门标签
+        SET_LABEL_List: (state, data) => {
+            state.labelList = data;
         }
     },
     actions: {
         //  获取首页文章列表
-        async selectHomeList({ commit }, params) {
+        async selectHomeList({ state, commit }, { params }) {
             let res = await $api['home/selectHomeList'](params);
             if (res.code === 0) {
-                commit('SET_LIST', res.data.list);
+                let list = state.list;
+                commit('SET_LIST', list.concat(res.data.list));
             }
-            return res;
-        },
-
-        // 获取首页热门标签
-        async selectHotLabel({ commit }) {
-            let res = await $api['home/selectHotLabel']();
-            if (res.code === 0) {
-            }
-            return res;
         },
 
         /**
@@ -44,16 +31,22 @@ export default {
          * @return: promise
          */
         async GetHomeServerData(store, { params }) {
-            // let params = {
-            //     page: 1,
-            //     pageSize: 10
-            //     // userId:
-            // };
-
+            let findUserByToken = $api['user/findUserByToken']().catch(() => Promise.resolve({}));
             let selectHomeList = $api['home/selectHomeList'](params).catch(() => Promise.resolve({}));
-            let [res1] = await Promise.all([selectHomeList]);
-            console.log(res1);
-            store.commit('SET_LIST', res1.data.list);
+            let selectHotLabel = $api['home/selectHotLabel']().catch(() => Promise.resolve({}));
+            let [res, res1, res2] = await Promise.all([findUserByToken, selectHomeList, selectHotLabel]);
+
+            console.log(res, '=9999');
+
+            // 首页文章
+            if (res1.code === 0) {
+                store.commit('SET_LIST', res1.data.list);
+            }
+
+            // 热门标签
+            if (res2.code === 0) {
+                store.commit('SET_LABEL_List', res2.data);
+            }
         }
     }
 };

@@ -1,6 +1,5 @@
 /** @format */
 
-import vue from 'vue';
 import axios from 'axios';
 import { getToken } from '@/utils/auth';
 import { message } from 'ant-design-vue';

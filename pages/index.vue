@@ -8,7 +8,6 @@
 <script>
 import list from '@/components/home/list';
 import sidebar from '@/components/home/sidebar';
-import $api from '@/config/axios/api';
 
 export default {
     components: {
@@ -21,7 +20,7 @@ export default {
             // list: [],
 
             // 热门标签
-            labelList: [],
+            // labelList: [],
 
             // 加载更多loading
             loading: false,
@@ -29,8 +28,8 @@ export default {
             // 页码及每页条数
             listQuery: {
                 page: 1,
-                pageSize: 10
-                // userId:
+                pageSize: 10,
+                userId: this.$store.state.user.userInfo.id
             }
         };
     },
@@ -38,6 +37,16 @@ export default {
         // list
         list() {
             return this.$store.state.home.list;
+        },
+
+        // labelList
+        labelList() {
+            return this.$store.state.home.labelList;
+        },
+
+        // userInfo
+        userInfo() {
+            return this.$store.state.user.userInfo;
         }
     },
     head() {
@@ -61,7 +70,8 @@ export default {
         if (process.client) return;
         let data = {
             page: 1,
-            pageSize: 10
+            pageSize: 10,
+            userId: store.state.user.userInfo.id
         };
         await store.dispatch('home/GetHomeServerData', { params: data });
     },
@@ -69,33 +79,14 @@ export default {
     methods: {
         // 获取首页文章列表
         async getSelectHomeList(query) {
-            // const _this = this;
-            // let list = this.list;
-            // let params = query;
-            // _this.dispatch('home/selectHomeList', params).then(res => {
-            //     if (res.code === 0) {
-            //         _this.list = list.concat(res.data.list);
-            //         _this.loading = false;
-            //     }
-            // });
-            await this.dispatch('home/GetHomeServerData', { params: query });
+            await this.$store.dispatch('home/selectHomeList', { params: query });
             this.loading = false;
-        },
-
-        // 获取首页热门标签
-        getSelectHotLabel() {
-            const _this = this;
-            _this.dispatch('home/selectHotLabel').then(res => {
-                if (res.code === 0) {
-                    _this.labelList = res.data;
-                }
-            });
         },
 
         // 加载更多数据
         onLoadMore(query) {
             this.loading = true;
-            // this.getSelectHomeList(query);
+            this.getSelectHomeList(query);
         }
     }
 };

@@ -42,14 +42,8 @@ export default {
         }
     },
     data() {
-        return {
-            // labelArr: ['前端', 'React', 'Vue', '后端', 'Springboot', 'Echarts', '微信小程序', 'java', 'c++', 'c', 'Element', 'Python', '工程化', '产品', '项目经理', '测试', '单文件测试']
-        };
+        return {};
     },
-    computed: {},
-    created() {},
-    mounted() {},
-    watch: {},
     methods: {
         // 上传规则
         handleAgreement() {
