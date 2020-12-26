@@ -1,6 +1,7 @@
 /** @format */
 
 import createLogger from 'vuex/dist/logger';
+import { getToken, setToken, removeToken } from '@/utils/auth';
 const debug = process.env.NODE_ENV !== 'production';
 export default {
     state: () => ({}),
@@ -10,5 +11,11 @@ export default {
     },
     plugins: debug ? [createLogger()] : [], // 开发环境下显示vuex的状态修改
     mutations: {},
-    actions: {}
+    actions: {
+        async nuxtServerInit({ commit, dispatch }, { req, store, app }) {
+            commit('user/SET_TOKEN', app.$cookies.get('java_study'));
+            let token = store.state.user.token;
+            await dispatch('user/getUserInfo', { token });
+        }
+    }
 };

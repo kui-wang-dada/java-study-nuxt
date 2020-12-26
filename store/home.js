@@ -25,24 +25,29 @@ export default {
             }
         },
 
+        //  收藏/取消收藏
+        async insetCollection({ state, commit }, { params, index }) {
+            let res = await $api['home/insetCollection'](params);
+            if (res.code === 0) {
+                let list = JSON.parse(JSON.stringify(state.list));
+                list[index].collection = !list[index].collection;
+                commit('SET_LIST', list);
+            }
+        },
+
         /**
          * @msg:拿到用户信息
          * @param {type}
          * @return: promise
          */
         async GetHomeServerData(store, { params }) {
-            let findUserByToken = $api['user/findUserByToken']().catch(() => Promise.resolve({}));
             let selectHomeList = $api['home/selectHomeList'](params).catch(() => Promise.resolve({}));
             let selectHotLabel = $api['home/selectHotLabel']().catch(() => Promise.resolve({}));
-            let [res, res1, res2] = await Promise.all([findUserByToken, selectHomeList, selectHotLabel]);
-
-            console.log(res, '=9999');
-
+            let [res1, res2] = await Promise.all([selectHomeList, selectHotLabel]);
             // 首页文章
             if (res1.code === 0) {
                 store.commit('SET_LIST', res1.data.list);
             }
-
             // 热门标签
             if (res2.code === 0) {
                 store.commit('SET_LABEL_List', res2.data);

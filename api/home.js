@@ -10,5 +10,11 @@ export default [
         method: 'GET',
         desc: '热门标签展示',
         path: '/article/home/selectHotLabel'
+    },
+    {
+        name: 'insetCollection',
+        method: 'POST',
+        desc: '收藏',
+        path: '/article/collection/insetCollection'
     }
 ];

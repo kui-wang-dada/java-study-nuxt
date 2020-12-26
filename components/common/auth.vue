@@ -21,12 +21,12 @@
                 </div>
                 <div class="form-container flex-direction">
                     <a-form-model ref="ruleForm" :model="authForm" :rules="authRules">
-                        <a-form-model-item prop="code" :colon="false">
-                            <a-input v-model="authForm.code" @keyup.enter="enterKey('auth')" placeholder="请输入认证码" type="text" autocomplete="off" />
+                        <a-form-model-item prop="authCode" :colon="false">
+                            <a-input v-model="authForm.authCode" @keyup.enter="enterKey" placeholder="请输入认证码" type="text" autocomplete="off" />
                         </a-form-model-item>
                     </a-form-model>
                     <div class="button-container pt-8">
-                        <a-button type="primary" :loading="iconLoading" class="ant-btn-lg" @click="login('ruleForm')">
+                        <a-button type="primary" :loading="iconLoading" class="ant-btn-lg" @click="submitAuth('ruleForm')">
                             认证
                         </a-button>
                     </div>
@@ -50,29 +50,34 @@ export default {
         };
 
         return {
+            iconLoading: false,
             // 认证
             authForm: {
-                code: ''
+                authCode: ''
             },
             authRules: {
-                code: [{ validator: validateAuthCode, trigger: 'blur' }]
-            },
-            // 用户信息
-            userInfo: {}
+                authCode: [{ validator: validateAuthCode, trigger: 'blur' }]
+            }
         };
     },
-    computed: {},
+    computed: {
+        // userInfo
+        userInfo() {
+            return this.$store.state.user.userInfo;
+        }
+    },
     methods: {
-        // 登录
-        login(formName) {
+        // 认证
+        submitAuth(formName) {
             const _this = this;
             this.iconLoading = true;
             this.$refs[formName].validate(async valid => {
                 if (valid) {
-                    let params = _this.loginForm;
-                    _this.$store.dispatch('user/login', params).then(res => {
+                    let params = _this.authForm;
+                    params.id = _this.userInfo.id;
+                    _this.$store.dispatch('user/userAuth', params).then(res => {
                         if (res.code === 0) {
-                            _this.isEmail = false;
+                            _this.$message.success('认证成功');
                             _this.$emit('success');
                         } else {
                             _this.$message.warning(res.msg);
@@ -88,18 +93,7 @@ export default {
 
         // 回车键事件
         enterKey(type) {
-            // 登录
-            if (type == 'login') {
-                this.login('ruleForm');
-            }
-            // 注册
-            if (type == 'register') {
-                this.register('ruleForm');
-            }
-            // 激活
-            if (type == 'registerActive') {
-                this.registerActive('ruleForm');
-            }
+            this.submitAuth('ruleForm');
         },
 
         // 关闭弹窗

@@ -1,6 +1,6 @@
 <template>
     <div class="mian">
-        <list :list="list" :page-request="listQuery" :loading="loading" @loadMore="onLoadMore" />
+        <list :list="list" :page-request="listQuery" :loading="loading" @loadMore="onLoadMore" @insetCollection="onInsetCollection" />
         <sidebar :labelList="labelList" />
     </div>
 </template>
@@ -16,12 +16,6 @@ export default {
     },
     data() {
         return {
-            // 文章列表
-            // list: [],
-
-            // 热门标签
-            // labelList: [],
-
             // 加载更多loading
             loading: false,
 
@@ -34,12 +28,12 @@ export default {
         };
     },
     computed: {
-        // list
+        // 文章列表
         list() {
             return this.$store.state.home.list;
         },
 
-        // labelList
+        // 热门标签
         labelList() {
             return this.$store.state.home.labelList;
         },
@@ -87,6 +81,17 @@ export default {
         onLoadMore(query) {
             this.loading = true;
             this.getSelectHomeList(query);
+        },
+
+        // 收藏/取消收藏
+        async onInsetCollection(query) {
+            let index = query.index; // 当前item 索引
+            let params = {
+                articleId: query.id,
+                articleType: 0,
+                userId: this.$store.state.user.userInfo.id
+            };
+            await this.$store.dispatch('home/insetCollection', { params, index });
         }
     }
 };

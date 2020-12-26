@@ -20,7 +20,7 @@ export default {
         Footer
     },
     created() {
-        this.getUserInfo();
+        // this.getUserInfo();
     },
     methods: {
         // 获取用户信息

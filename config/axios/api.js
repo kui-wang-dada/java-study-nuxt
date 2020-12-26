@@ -58,7 +58,7 @@ class Api {
             let baseURL = mock ? mockBaseURL : AXIOS_DEFAULT_CONFIG.baseURL; // 接口base地址
 
             // 首页文章api
-            let articleApiList = ['selectHomeList', 'selectHotLabel'];
+            let articleApiList = ['selectHomeList', 'selectHotLabel', 'insetCollection'];
             // 根据接口判断端口
             if (articleApiList.includes(name)) {
                 baseURL = 'http://121.196.189.114:8020';

@@ -33,6 +33,7 @@ export default {
         'ant-design-vue/lib/message/style',
         'ant-design-vue/lib/icon/style',
         'ant-design-vue/lib/tooltip/style',
+        'ant-design-vue/lib/empty/style',
 
         '@/assets/style/index.less',
         '~assets/icon/iconfont.css'
@@ -62,7 +63,7 @@ export default {
     buildModules: [],
 
     // Modules (https://go.nuxtjs.dev/config-modules)
-    modules: ['@nuxtjs/style-resources'],
+    modules: ['@nuxtjs/style-resources', '@nuxtjs/axios', 'cookie-universal-nuxt', ['cookie-universal-nuxt', { alias: 'cookiz' }]],
 
     styleResources: {
         less: '@/assets/style/theme.less'

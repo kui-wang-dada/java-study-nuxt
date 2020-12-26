@@ -18,7 +18,7 @@
                         <p class="level">
                             <span>初学者</span>
                             <span>|</span>
-                            <span>未认证</span>
+                            <span @click="goAuth">未认证</span>
                         </p>
                     </div>
                     <ul class="dropdown-menu">
@@ -36,8 +36,8 @@
             </ul>
         </div>
 
-        <login v-if="dialoLoginVisible" @success="handleSuccess" @close="handleCloseLogin" />
-        <!-- <auth @success="handleSuccess" @close="handleCloseLogin" /> -->
+        <login v-if="dialoLoginVisible" @success="handleLoginSuccess" @close="handleCloseLogin" />
+        <auth v-if="dialoAuthVisible" @success="handleAuthSuccess" @close="handleCloseAuth" />
     </header>
 </template>
 
@@ -53,6 +53,7 @@ export default {
     data() {
         return {
             dialoLoginVisible: false,
+            dialoAuthVisible: true,
             active: 0,
             list: [
                 {
@@ -98,7 +99,7 @@ export default {
         // 获取用户信息
         getUserInfo() {
             const _this = this;
-            _this.$store.dispatch('user/getUserInfo').then(res => {
+            _this.$store.dispatch('user/getUserInfo', { token: this.getToken }).then(res => {
                 if (res.code !== 0) {
                     _this.$store.dispatch('user/resetToken');
                 }
@@ -125,8 +126,27 @@ export default {
         },
 
         // 登录成功关闭弹窗
-        handleSuccess() {
+        handleLoginSuccess() {
             this.dialoLoginVisible = false;
+            this.getUserInfo();
+            openScroll();
+        },
+
+        // 用户认证
+        goAuth() {
+            this.dialoAuthVisible = true;
+            disableScroll();
+        },
+
+        // 关闭用户认证弹窗
+        handleCloseAuth() {
+            this.dialoAuthVisible = false;
+            openScroll();
+        },
+
+        // 认证成功关闭弹窗
+        handleAuthSuccess() {
+            this.dialoAuthVisible = false;
             this.getUserInfo();
             openScroll();
         },

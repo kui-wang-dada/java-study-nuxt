@@ -28,5 +28,11 @@ export default [
         method: 'POST',
         desc: '获取用户信息',
         path: '/user/login/findUserByToken'
+    },
+    {
+        name: 'userAuth',
+        method: 'POST',
+        desc: '用户认证',
+        path: '/user/userAuth'
     }
 ];

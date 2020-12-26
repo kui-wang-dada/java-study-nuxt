@@ -2,7 +2,7 @@ import { getToken, setToken, removeToken } from '@/utils/auth';
 import $api from '@/config/axios/api';
 
 const state = () => ({
-    token: getToken(),
+    token: '',
     userInfo: {}
 });
 
@@ -49,10 +49,18 @@ const actions = {
     },
 
     // 获取用户信息
-    async getUserInfo({ commit }) {
-        let res = await $api['user/findUserByToken']();
+    async getUserInfo({ commit }, params) {
+        let res = await $api['user/findUserByToken'](params);
         if (res.code === 0) {
             commit('SET_USERINFO', res.data);
+        }
+        return res;
+    },
+
+    // 获取用户信息
+    async userAuth({ commit }, params) {
+        let res = await $api['user/userAuth'](params);
+        if (res.code === 0) {
         }
         return res;
     },

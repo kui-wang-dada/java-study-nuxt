@@ -4,11 +4,9 @@
             <swiper />
         </div>
         <!-- v-infinite-scroll="loadMore" :infinite-scroll-disabled="busy" :infinite-scroll-distance="80" -->
-        <div class="list">
+        <div class="list" v-if="list.length">
             <div class="top-title flex-s-b">
-                <div>
-                    <h3 class="section-title">推荐文章</h3>
-                </div>
+                <h3 class="section-title">推荐文章</h3>
             </div>
             <div class="item flex" v-for="(item, index) in list" :key="index">
                 <div class="info-box">
@@ -51,9 +49,9 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="flex-align collect">
-                            <i class="iconfont icon-shoucang" :class="index == 0 ? 'active ' : ''"></i>
-                            <span class="text-collect" :class="index == 0 ? 'active ' : ''">收藏</span>
+                        <div class="flex-align collect" @click="insetCollection(item.id, index)">
+                            <i class="iconfont icon-shoucang" :class="item.collection ? 'active ' : ''"></i>
+                            <span class="text-collect" :class="item.collection ? 'active ' : ''">收藏</span>
                         </div>
                     </div>
                 </div>
@@ -66,10 +64,15 @@
         <div v-if="loading" class="loading-box flex-align-center shadow">
             <a-spin tip="Loading..." />
         </div>
-        <div v-else class="loading-box flex-align-center shadow">
-            <!--  v-if="list.length > 10" -->
-            <a-button @click="onLoadMore">加载更多</a-button>
-            <!-- <span class="no-more-data" v-else>暂无更多数据！</span> -->
+        <div v-if="!loading && list.length" class="loading-box flex-align-center shadow">
+            <a-button v-if="list.length > 10" @click="onLoadMore">加载更多</a-button>
+            <span class="no-more-data" v-if="list.length > 1">暂无更多数据！</span>
+        </div>
+
+        <div class="empty" v-if="!list.length">
+            <a-empty image="https://gw.alipayobjects.com/mdn/miniapp_social/afts/img/A*pevERLJC9v0AAAAAAAAAAABjAQAAAQ/original" :image-style="imageStyle">
+                <span slot="description" class="no-more-data">暂无数据!</span>
+            </a-empty>
         </div>
     </aside>
 </template>
@@ -101,7 +104,11 @@ export default {
         }
     },
     data() {
-        return {};
+        return {
+            imageStyle: {
+                height: '60px'
+            }
+        };
     },
     filters: {
         // 格式化时间
@@ -110,9 +117,18 @@ export default {
         }
     },
     methods: {
+        // 加载更多数据...
         onLoadMore() {
             this.pageRequest.page++;
             this.$emit('loadMore', this.pageRequest);
+        },
+
+        // 收藏/取消收藏
+        insetCollection(id, index) {
+            this.$emit('insetCollection', {
+                id,
+                index
+            });
         }
     }
 };
@@ -123,6 +139,12 @@ export default {
     width: 680px;
     transition: ease-in-out 0.5s;
     border-radius: 4px;
+
+    .empty {
+        background-color: #fff;
+        border-radius: 4px;
+        padding: 30px;
+    }
 
     .swiper {
         width: 680px;
