@@ -9,7 +9,7 @@
             <div class="main flex-direction" style="justify-content: center;">
                 <div class="official-qrcode flex-justify">
                     <div class="qrcode-wrap">
-                        <img src="http://139.159.147.237/images/kefu.jpeg" alt="客服" />
+                        <img src="http://121.196.189.114/static/images/auth.jpg" alt="公众号" />
                     </div>
                 </div>
                 <div class="tips-wrap flex-justify">

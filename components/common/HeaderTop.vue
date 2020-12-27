@@ -53,7 +53,7 @@ export default {
     data() {
         return {
             dialoLoginVisible: false,
-            dialoAuthVisible: true,
+            dialoAuthVisible: false,
             active: 0,
             list: [
                 {
