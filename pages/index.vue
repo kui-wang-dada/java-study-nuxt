@@ -8,7 +8,6 @@
 <script>
 import list from '@/components/home/list';
 import sidebar from '@/components/home/sidebar';
-
 export default {
     components: {
         list,
@@ -36,6 +35,11 @@ export default {
         // 热门标签
         labelList() {
             return this.$store.state.home.labelList;
+        },
+
+        // token
+        getToken() {
+            return this.$store.state.user.token;
         },
 
         // userInfo
@@ -85,13 +89,22 @@ export default {
 
         // 收藏/取消收藏
         async onInsetCollection(query) {
+            if (!this.isLogin()) {
+                this.$store.commit('SET_DIALO_LOGIN_VISIBLE', true);
+                return;
+            }
             let index = query.index; // 当前item 索引
             let params = {
                 articleId: query.id,
                 articleType: 0,
-                userId: this.$store.state.user.userInfo.id
+                userId: this.userInfo.id
             };
             await this.$store.dispatch('home/insetCollection', { params, index });
+        },
+
+        // 是否登录
+        isLogin() {
+            return this.getToken ? true : false;
         }
     }
 };

@@ -45,7 +45,7 @@
                                 <span class="break">~</span>
                                 <div class="label-box flex-align ellipsis">
                                     <i class="iconfont icon-huati"></i>
-                                    <a href="" class="label-tag" v-for="(tag, i) in item.labelList" :key="i">{{ tag.labelName }}</a>
+                                    <span class="label-tag" v-for="(tag, i) in item.labelList" :key="i">{{ tag.labelName }}</span>
                                 </div>
                             </div>
                         </div>
@@ -244,6 +244,7 @@ export default {
                         padding: 2px 6px;
                         transition: background-color 0.5s;
                         will-change: background-color;
+                        cursor: pointer;
 
                         &:hover {
                             background-color: rgba(67, 112, 245, 0.2);

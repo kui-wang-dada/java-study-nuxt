@@ -1,3 +1,5 @@
+import store from '../store';
+
 // 禁止页面滚动
 export function disableScroll() {
     let m = function(e) {

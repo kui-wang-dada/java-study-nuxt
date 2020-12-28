@@ -18,7 +18,10 @@
                         <p class="level">
                             <span>初学者</span>
                             <span>|</span>
-                            <span @click="goAuth">未认证</span>
+                            <span v-if="userInfo.auth == 0" @click="handleShowModal(AUTH)">未认证</span>
+                            <span v-else>
+                                <i class="iconfont icon-renzheng" title="已认证"></i>
+                            </span>
                         </p>
                     </div>
                     <ul class="dropdown-menu">
@@ -31,13 +34,13 @@
                     </ul>
                 </li>
                 <li class="menu-item personal-info" v-else>
-                    <a-button type="primary" @click="handleShowLogin">登录/注册</a-button>
+                    <a-button type="primary" @click="handleShowModal(LOGIN)">登录/注册</a-button>
                 </li>
             </ul>
         </div>
 
-        <login v-if="dialoLoginVisible" @success="handleLoginSuccess" @close="handleCloseLogin" />
-        <auth v-if="dialoAuthVisible" @success="handleAuthSuccess" @close="handleCloseAuth" />
+        <login v-if="dialoLoginVisible" @success="handleSuccess(LOGIN)" @close="handleCloseModal(LOGIN)" />
+        <auth v-if="dialoAuthVisible" @success="handleSuccess(AUTH)" @close="handleCloseModal(AUTH)" />
     </header>
 </template>
 
@@ -52,8 +55,6 @@ export default {
     },
     data() {
         return {
-            dialoLoginVisible: false,
-            dialoAuthVisible: false,
             active: 0,
             list: [
                 {
@@ -72,7 +73,15 @@ export default {
                     title: '关于我们',
                     link: '/about'
                 }
-            ]
+            ],
+            AUTH: 'SET_DIALO_AUTH_VISIBLE',
+            LOGIN: 'SET_DIALO_LOGIN_VISIBLE',
+
+            // 页码及每页条数
+            listQuery: {
+                page: 1,
+                pageSize: 10
+            }
         };
     },
     computed: {
@@ -91,19 +100,29 @@ export default {
             if (this.$store.state.user.userInfo.userName) {
                 return this.$store.state.user.userInfo.userName.substring(0, 1).toUpperCase();
             }
+        },
+
+        // 是否显示登录弹窗
+        dialoLoginVisible() {
+            return this.$store.state.dialoLoginVisible;
+        },
+
+        // 是否显示认证弹窗
+        dialoAuthVisible() {
+            return this.$store.state.dialoAuthVisible;
         }
     },
     props: {},
     created() {},
     methods: {
         // 获取用户信息
-        getUserInfo() {
-            const _this = this;
-            _this.$store.dispatch('user/getUserInfo', { token: this.getToken }).then(res => {
-                if (res.code !== 0) {
-                    _this.$store.dispatch('user/resetToken');
-                }
-            });
+        async getUserInfo() {
+            await this.$store.dispatch('user/getUserInfo', { token: this.getToken });
+        },
+
+        // 获取首页文章列表
+        async getSelectHomeList(query) {
+            await this.$store.dispatch('home/selectHomeList', { params: query });
         },
 
         // tab监听
@@ -113,47 +132,38 @@ export default {
             }
         },
 
-        // 登录弹窗
-        handleShowLogin() {
-            this.dialoLoginVisible = true;
+        // 显示弹窗
+        handleShowModal(type) {
+            this.$store.commit(type, true);
             disableScroll();
         },
 
-        // 关闭登录弹窗
-        handleCloseLogin() {
-            this.dialoLoginVisible = false;
+        // 关闭弹窗
+        handleCloseModal(type) {
+            this.$store.commit(type, false);
             openScroll();
         },
 
-        // 登录成功关闭弹窗
-        handleLoginSuccess() {
-            this.dialoLoginVisible = false;
-            this.getUserInfo();
+        // 成功后关闭弹窗
+        async handleSuccess(type) {
+            this.$store.commit(type, false);
             openScroll();
-        },
+            await this.getUserInfo();
 
-        // 用户认证
-        goAuth() {
-            this.dialoAuthVisible = true;
-            disableScroll();
-        },
-
-        // 关闭用户认证弹窗
-        handleCloseAuth() {
-            this.dialoAuthVisible = false;
-            openScroll();
-        },
-
-        // 认证成功关闭弹窗
-        handleAuthSuccess() {
-            this.dialoAuthVisible = false;
-            this.getUserInfo();
-            openScroll();
+            // 登录成功后刷新列表
+            if (type == this.LOGIN) {
+                this.$store.commit('home/SET_LIST', []); // 清空列表
+                let params = JSON.parse(JSON.stringify(this.listQuery));
+                params.userId = this.userInfo.id; // 赋值id
+                this.getSelectHomeList(params); // 重新请求
+            }
         },
 
         // 退出登录
-        logout() {
-            this.$store.dispatch('user/resetToken');
+        async logout() {
+            await this.$store.dispatch('user/resetToken');
+            this.$store.commit('home/SET_LIST', []); // 清空列表
+            this.getSelectHomeList(this.listQuery); // 重新请求
             this.$message.success('退出成功!');
         }
     }
@@ -294,6 +304,11 @@ export default {
                     color: #666;
                     cursor: pointer;
                     margin: 0;
+
+                    .icon-renzheng {
+                        color: @main-col;
+                        vertical-align: bottom;
+                    }
                 }
             }
 

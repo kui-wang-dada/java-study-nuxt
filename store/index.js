@@ -1,7 +1,6 @@
 /** @format */
 
 import createLogger from 'vuex/dist/logger';
-import { getToken, setToken, removeToken } from '@/utils/auth';
 const debug = process.env.NODE_ENV !== 'production';
 export default {
     state: () => ({
@@ -19,7 +18,7 @@ export default {
         },
         SET_DIALO_AUTH_VISIBLE(state, data) {
             state.dialoAuthVisible = data;
-        },
+        }
     },
     actions: {
         async nuxtServerInit({ commit, dispatch }, { req, store, app }) {

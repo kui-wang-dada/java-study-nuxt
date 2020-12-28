@@ -49,12 +49,13 @@ const actions = {
     },
 
     // 获取用户信息
-    async getUserInfo({ commit }, params) {
+    async getUserInfo({ commit, dispatch }, params) {
         let res = await $api['user/findUserByToken'](params);
         if (res.code === 0) {
             commit('SET_USERINFO', res.data);
+        } else {
+            dispatch('resetToken');
         }
-        return res;
     },
 
     // 获取用户信息
