@@ -15,10 +15,11 @@
                     </div>
                     <div class="right flex-c-direction">
                         <p class="title">{{ userInfo.userName }}</p>
-                        <p class="level">
-                            <span>初学者</span>
-                            <span>|</span>
-                            <span v-if="userInfo.auth == 0" @click="handleShowModal(AUTH)">未认证</span>
+                        <p class="level flex-align">
+                            <span class="level-text">初学者</span>
+                            <span v-if="userInfo.auth == 0" @click="handleShowModal(AUTH)">
+                                <i class="iconfont icon-renzheng not" title="未认证"></i>
+                            </span>
                             <span v-else>
                                 <i class="iconfont icon-renzheng" title="已认证"></i>
                             </span>
@@ -305,9 +306,16 @@ export default {
                     cursor: pointer;
                     margin: 0;
 
+                    .level-text {
+                        margin-right: 5px;
+                    }
+
                     .icon-renzheng {
                         color: @main-col;
                         vertical-align: bottom;
+                    }
+                     .icon-renzheng.not {
+                        color: #c0c4cc;
                     }
                 }
             }
