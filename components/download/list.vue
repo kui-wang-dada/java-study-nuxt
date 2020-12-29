@@ -185,6 +185,10 @@ export default {
     created() {},
     mounted() {
         this.handleData();
+
+        let reg = /((?:https?:\/\/)?(?:yun|pan|eyun)\.baidu\.com\/(?:s\/\w*(((-)?\w*)*)?|share\/\S*\d\w*))/;
+        let str = '复制这段内容后打开百度网盘手机App，操作更方便哦 链接：https://pan.baidu.com/s/1K_HmdnsUofe_TnYFpFNdgA 提取码：6098 --来自百度网盘超级会员V5的分享';
+        console.log(str.match(reg)[0], 'cccc0000');
     },
     watch: {},
     methods: {

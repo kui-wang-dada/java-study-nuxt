@@ -314,7 +314,7 @@ export default {
                         color: @main-col;
                         vertical-align: bottom;
                     }
-                     .icon-renzheng.not {
+                    .icon-renzheng.not {
                         color: #c0c4cc;
                     }
                 }
