@@ -87,7 +87,7 @@ export default {
     },
     created() {},
     methods: {
-        // 收藏/取消收藏
+        // 点赞/取消点赞
         async onInsetInspire(query) {
             // if (!this.isLogin()) {
             //     this.$store.commit('SET_DIALO_LOGIN_VISIBLE', true);

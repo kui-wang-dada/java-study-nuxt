@@ -9,14 +9,14 @@
                     <div class="download-item flex">
                         <div class="left">
                             <div class="avatar-wrap">
-                                <img src="https://mirror-gold-cdn.xitu.io/168e09bdb66bcf662a4?imageView2/1/w/100/h/100/q/85/format/webp/interlace/1" alt="用户头像" class="avatar" />
+                                <img :src="item.headImg" alt="用户头像" class="avatar" />
                             </div>
                         </div>
                         <div class="right">
                             <div class="info-row flex-s-b">
                                 <div class="flex-align">
-                                    <div class="user-name">fend.</div>
-                                    <div class="public-time">今天11:41</div>
+                                    <div class="user-name">{{ item.userName }}</div>
+                                    <div class="public-time">{{ item.createTime | formatTimeStamp }}</div>
                                 </div>
                             </div>
                             <div class="title">
@@ -29,15 +29,15 @@
                                 <div class="btns flex-align">
                                     <div class="btn">
                                         <i class="iconfont icon-xiazailiang"></i>
-                                        <span class="btn-text">{{ item.downloadNum }}</span>
+                                        <span class="btn-text" v-if="parseInt(item.downloadNum) > 0">{{ item.downloadNum }}</span>
                                     </div>
                                     <div class="btn" @click="insetInspire(item.id, index)">
                                         <i class="iconfont icon-dianzan3"></i>
-                                        <span class="btn-text">{{ item.inspireNum }}</span>
+                                        <span class="btn-text" v-if="parseInt(item.inspireNum) > 0">{{ item.inspireNum }}</span>
                                     </div>
                                     <div class="btn" @click="showCommentForm(item)">
                                         <i class="iconfont icon-pinglun1"></i>
-                                        <span class="btn-text">8</span>
+                                        <span class="btn-text" v-if="item.commentList.length > 0">{{ item.commentList.length }}</span>
                                     </div>
                                 </div>
                                 <div class="btn-column">
@@ -88,7 +88,7 @@
 </template>
 
 <script>
-import { disableScroll, openScroll } from '@/utils';
+import { disableScroll, openScroll, formatTime } from '@/utils';
 import EditDiv from './EditDiv';
 import InquiryDialog from './InquiryDialog';
 import search from './search';
@@ -198,6 +198,11 @@ export default {
             index: '', // 当前索引
             btnText: '评论'
         };
+    },
+    filters: {
+        formatTimeStamp(val) {
+            return formatTime(val);
+        }
     },
     computed: {},
     created() {},

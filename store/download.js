@@ -23,12 +23,11 @@ export default {
         //  点赞/取消取消
         async insetInspire({ state, commit }, { params, index }) {
             let res = await $api['download/insetInspire'](params);
-            console.log(res);
-            // if (res.code === 0) {
-            //     let list = JSON.parse(JSON.stringify(state.list));
-            //     list[index].collection = !list[index].collection;
-            //     commit('SET_LIST', list);
-            // }
+            if (res.code === 0) {
+                let list = JSON.parse(JSON.stringify(state.list));
+                list[index].inspireNum = res.data;
+                commit('SET_LIST', list);
+            }
         },
 
         /**
