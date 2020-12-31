@@ -9,7 +9,7 @@
                     <div class="download-item flex">
                         <div class="left">
                             <div class="avatar-wrap">
-                                <img :src="item.head" alt="用户头像" class="avatar" />
+                                <img src="https://mirror-gold-cdn.xitu.io/168e09bdb66bcf662a4?imageView2/1/w/100/h/100/q/85/format/webp/interlace/1" alt="用户头像" class="avatar" />
                             </div>
                         </div>
                         <div class="right">
@@ -23,17 +23,17 @@
                                 <span class="tag" :class="'tag' + (index + 1)" v-if="index + 1 <= 3">
                                     <i class="iconfont icon-redu1"></i>
                                 </span>
-                                <span>【{{ item.id }}】{{ item.title }}</span>
+                                <span>【AA001】{{ item.title }}</span>
                             </div>
                             <div class="operations flex-s-b">
                                 <div class="btns flex-align">
                                     <div class="btn">
                                         <i class="iconfont icon-xiazailiang"></i>
-                                        <span class="btn-text">88</span>
+                                        <span class="btn-text">{{ item.downloadNum }}</span>
                                     </div>
-                                    <div class="btn">
+                                    <div class="btn" @click="insetInspire(item.id, index)">
                                         <i class="iconfont icon-dianzan3"></i>
-                                        <span class="btn-text">5</span>
+                                        <span class="btn-text">{{ item.inspireNum }}</span>
                                     </div>
                                     <div class="btn" @click="showCommentForm(item)">
                                         <i class="iconfont icon-pinglun1"></i>
@@ -98,85 +98,103 @@ export default {
         InquiryDialog,
         EditDiv
     },
-    props: {},
+    props: {
+        list: {
+            type: Array,
+            default: []
+        },
+        // 分页查询数据
+        pageRequest: {
+            type: Object,
+            default: () => ({
+                page: 1,
+                pageSize: 10
+            })
+        },
+        // loading
+        loading: {
+            type: Boolean,
+            default: false
+        }
+    },
     data() {
         return {
             dialogInquiryVisible: false,
-            list: [
-                {
-                    id: 'AA001',
-                    head: 'https://mirror-gold-cdn.xitu.io/168e09bdb66bcf662a4?imageView2/1/w/100/h/100/q/85/format/webp/interlace/1',
-                    title: 'SpringBoot+ ElasticSearch实现全文搜索功能-源码',
-                    date: '1小时前',
-                    downloadNum: 89,
-                    integral: 4,
-                    isForm: false,
-                    content: '链接: https://pan.baidu.com/s/1-6EupUOaH6mEKj2kWnL52A  密码: v0ca --来自百度网盘超级会员V5的分享',
-                    childs: [
-                        {
-                            id: 2,
-                            head: '//static001.geekbang.org/account/avatar/00/0f/f7/6e/04f9a672.jpg?x-oss-process=image/resize,w_200,h_200',
-                            name: '阿牛',
-                            content: '网络喷子原型？',
-                            date: '一天前',
-                            like: 0,
-                            at: '谋生',
-                            isReply: false,
-                            placeholderText: '11'
-                        },
-                        {
-                            id: 3,
-                            head: 'https://static.woshipm.com/TTW_USER_202004_20200414140658_1283.jpg?imageView2/2/w/80/size-limit/5k!?imageView2/2/w/80/size-limit/5k!',
-                            name: '谋生',
-                            content: '这不是有手就行？',
-                            date: '一周前',
-                            like: 1,
-                            isReply: false,
-                            placeholderText: '11'
-                        }
-                    ]
-                },
-                {
-                    id: 'AC783',
-                    head: 'https://static.woshipm.com/WX_U_202007_20200716143737_5864.jpg?imageView2/2/w/80/size-limit/5k!?imageView2/2/w/80/size-limit/5k!',
-                    title: 'LeetCode刷题实战60道-源码',
-                    date: '15小时前',
-                    downloadNum: 78,
-                    isForm: false,
-                    integral: 3,
-                    content: '复制这段内容后打开百度网盘手机App，操作更方便哦 链接：https://pan.baidu.com/s/1uaSy5GUUwJfudH63-vVRIA 提取码：15PT --来自百度网盘超级会员V5的分享'
-                },
-                {
-                    id: 'GA045',
-                    head: 'https://static.woshipm.com/TTW_USER_202004_20200424094658_6148.jpg?imageView2/2/w/80/size-limit/5k!?imageView2/2/w/80/size-limit/5k!',
-                    title: 'SpringBoot+Vue前后端分离实现邮件定时发送功能-全套视频',
-                    date: '一天前',
-                    downloadNum: 67,
-                    isForm: false,
-                    integral: 10,
-                    content: '链接：https://pan.baidu.com/s/1FUQctOm7_jWPoVituGnxvg 提取码：xj21 复制这段内容后打开百度网盘手机App，操作更方便哦'
-                },
-                {
-                    id: 'HA883',
-                    head: 'https://static.woshipm.com/TTW_USER_R201706_20170602174604_6218.jpg?imageView2/2/w/80/size-limit/5k!?imageView2/2/w/80/size-limit/5k!',
-                    title: 'Springboot+Vue前后端分离实现Excle文件导入并在前端页面回显功能-源码',
-                    date: '一周前',
-                    downloadNum: 40,
-                    isForm: false,
-                    integral: 8,
-                    content: '复制这段内容后打开百度网盘手机App，操作更方便哦 链接：https://pan.baidu.com/s/1K_HmdnsUofe_TnYFpFNdgA 提取码：6098 --来自百度网盘超级会员V5的分享'
-                },
-                {
-                    id: 'Y0089',
-                    head: 'https://static.woshipm.com/WX_U_202010_20201009070042_2416.jpg?imageView2/2/w/80/size-limit/5k!?imageView2/2/w/80/size-limit/5k!',
-                    title: '前端开发核心知识进阶',
-                    date: '2020-09-22 22:00',
-                    downloadNum: 16,
-                    isForm: false,
-                    integral: 9,
-                    content: '复制这段内容后打开百度网盘手机App，操作更方便哦 链接:https://pan.baidu.com/s/1a9iL8PTDft8qs6iBm3kZZg 提取码:oa64'
-                }
-            ],
+            // list: [
+            //     {
+            //         id: 'AA001',
+            //         head: 'https://mirror-gold-cdn.xitu.io/168e09bdb66bcf662a4?imageView2/1/w/100/h/100/q/85/format/webp/interlace/1',
+            //         title: 'SpringBoot+ ElasticSearch实现全文搜索功能-源码',
+            //         date: '1小时前',
+            //         downloadNum: 89,
+            //         integral: 4,
+            //         isForm: false,
+            //         content: '链接: https://pan.baidu.com/s/1-6EupUOaH6mEKj2kWnL52A  密码: v0ca --来自百度网盘超级会员V5的分享',
+            //         childs: [
+            //             {
+            //                 id: 2,
+            //                 head: '//static001.geekbang.org/account/avatar/00/0f/f7/6e/04f9a672.jpg?x-oss-process=image/resize,w_200,h_200',
+            //                 name: '阿牛',
+            //                 content: '网络喷子原型？',
+            //                 date: '一天前',
+            //                 like: 0,
+            //                 at: '谋生',
+            //                 isReply: false,
+            //                 placeholderText: '11'
+            //             },
+            //             {
+            //                 id: 3,
+            //                 head: 'https://static.woshipm.com/TTW_USER_202004_20200414140658_1283.jpg?imageView2/2/w/80/size-limit/5k!?imageView2/2/w/80/size-limit/5k!',
+            //                 name: '谋生',
+            //                 content: '这不是有手就行？',
+            //                 date: '一周前',
+            //                 like: 1,
+            //                 isReply: false,
+            //                 placeholderText: '11'
+            //             }
+            //         ]
+            //     },
+            //     {
+            //         id: 'AC783',
+            //         head: 'https://static.woshipm.com/WX_U_202007_20200716143737_5864.jpg?imageView2/2/w/80/size-limit/5k!?imageView2/2/w/80/size-limit/5k!',
+            //         title: 'LeetCode刷题实战60道-源码',
+            //         date: '15小时前',
+            //         downloadNum: 78,
+            //         isForm: false,
+            //         integral: 3,
+            //         content: '复制这段内容后打开百度网盘手机App，操作更方便哦 链接：https://pan.baidu.com/s/1uaSy5GUUwJfudH63-vVRIA 提取码：15PT --来自百度网盘超级会员V5的分享'
+            //     },
+            //     {
+            //         id: 'GA045',
+            //         head: 'https://static.woshipm.com/TTW_USER_202004_20200424094658_6148.jpg?imageView2/2/w/80/size-limit/5k!?imageView2/2/w/80/size-limit/5k!',
+            //         title: 'SpringBoot+Vue前后端分离实现邮件定时发送功能-全套视频',
+            //         date: '一天前',
+            //         downloadNum: 67,
+            //         isForm: false,
+            //         integral: 10,
+            //         content: '链接：https://pan.baidu.com/s/1FUQctOm7_jWPoVituGnxvg 提取码：xj21 复制这段内容后打开百度网盘手机App，操作更方便哦'
+            //     },
+            //     {
+            //         id: 'HA883',
+            //         head: 'https://static.woshipm.com/TTW_USER_R201706_20170602174604_6218.jpg?imageView2/2/w/80/size-limit/5k!?imageView2/2/w/80/size-limit/5k!',
+            //         title: 'Springboot+Vue前后端分离实现Excle文件导入并在前端页面回显功能-源码',
+            //         date: '一周前',
+            //         downloadNum: 40,
+            //         isForm: false,
+            //         integral: 8,
+            //         content: '复制这段内容后打开百度网盘手机App，操作更方便哦 链接：https://pan.baidu.com/s/1K_HmdnsUofe_TnYFpFNdgA 提取码：6098 --来自百度网盘超级会员V5的分享'
+            //     },
+            //     {
+            //         id: 'Y0089',
+            //         head: 'https://static.woshipm.com/WX_U_202010_20201009070042_2416.jpg?imageView2/2/w/80/size-limit/5k!?imageView2/2/w/80/size-limit/5k!',
+            //         title: '前端开发核心知识进阶',
+            //         date: '2020-09-22 22:00',
+            //         downloadNum: 16,
+            //         isForm: false,
+            //         integral: 9,
+            //         content: '复制这段内容后打开百度网盘手机App，操作更方便哦 链接:https://pan.baidu.com/s/1a9iL8PTDft8qs6iBm3kZZg 提取码:oa64'
+            //     }
+            // ],
             index: '', // 当前索引
             btnText: '评论'
         };
@@ -184,7 +202,7 @@ export default {
     computed: {},
     created() {},
     mounted() {
-        this.handleData();
+        // this.handleData();
 
         let reg = /((?:https?:\/\/)?(?:yun|pan|eyun)\.baidu\.com\/(?:s\/\w*(((-)?\w*)*)?|share\/\S*\d\w*))/;
         let str = '复制这段内容后打开百度网盘手机App，操作更方便哦 链接：https://pan.baidu.com/s/1K_HmdnsUofe_TnYFpFNdgA 提取码：6098 --来自百度网盘超级会员V5的分享';
@@ -263,6 +281,14 @@ export default {
         handleClose() {
             this.dialogInquiryVisible = false;
             openScroll();
+        },
+
+        // 点赞/取消点赞
+        insetInspire(id, index) {
+            this.$emit('insetInspire', {
+                id,
+                index
+            });
         }
     }
 };
