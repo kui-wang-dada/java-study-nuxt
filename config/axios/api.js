@@ -63,7 +63,7 @@ class Api {
             if (articleApiList.includes(name)) {
                 baseURL = 'http://121.196.189.114:8020';
             } else {
-                baseURL = 'http://121.196.189.114:8010';
+                baseURL = 'http://121.196.189.114:9000';
             }
 
             debug && assert(name, `${url} :接口name属性不能为空`);
