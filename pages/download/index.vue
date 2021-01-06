@@ -1,6 +1,6 @@
 <template>
     <div class="mian">
-        <list :list="list" @insetInspire="onInsetInspire" />
+        <list :list="list" @insetInspire="onInsetInspire" @insetComment="onInsetComment" @showComment="showCommentForm" />
         <sidebar />
     </div>
 </template>
@@ -81,7 +81,8 @@ export default {
         if (process.client) return;
         let data = {
             page: 1,
-            pageSize: 10
+            pageSize: 10,
+            userId: store.state.user.userInfo.id
         };
         await store.dispatch('download/GetDownloadServerData', { params: data });
     },
@@ -100,6 +101,37 @@ export default {
                 userId: this.userInfo.id
             };
             await this.$store.dispatch('download/insetInspire', { params, index });
+        },
+
+        // 评论
+        async onInsetComment(query) {
+            if (!this.isLogin()) {
+                this.$store.commit('SET_DIALO_LOGIN_VISIBLE', true);
+                return;
+            }
+            let params = {
+                articleId: query.id,
+                articleType: 2,
+                content: query.content,
+                userId: this.userInfo.id
+            };
+            let pageRequest = this.listQuery;
+            await this.$store.dispatch('download/insetComment', { params, pageRequest });
+            this.showCommentForm(query.index);
+        },
+
+        // 设置评论显示隐藏
+        showCommentForm(index) {
+            let list = JSON.parse(JSON.stringify(this.list));
+            let item = Object.assign({}, list[index]);
+            item.isForm = !item.isForm;
+            this.$set(list, index, item);
+            this.$store.commit('download/SET_LIST', list);
+        },
+
+        // 是否登录
+        isLogin() {
+            return this.getToken ? true : false;
         }
     }
 };

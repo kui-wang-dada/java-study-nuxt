@@ -1,9 +1,12 @@
 <template>
     <div>
         <div class="comment-form flex">
-            <div class="avatar-box">
-                <a-avatar :size="32" src="https://static.woshipm.com/WX_U_202010_20201009070042_2416.jpg?imageView2/2/w/80/size-limit/5k!?imageView2/2/w/80/size-limit/5k!" />
-            </div>
+            <template v-if="userInfo.userImage">
+                <div class="avatar-box" v-if="userInfo.userImage">
+                    <a-avatar :size="32" :src="userInfo.userImage" />
+                </div>
+                <div class="avatar-box no-img" v-else>{{ firstUserName }}</div>
+            </template>
             <a-textarea class="comment-textarea" v-model="content" @change="onChange" :placeholder="placeholderText" :maxLength="maxLength" :auto-size="{ maxRows: 4 }" />
         </div>
         <div class="comment-operation">
@@ -35,7 +38,19 @@ export default {
             maxNum: 0
         };
     },
-    computed: {},
+    computed: {
+        // userInfo
+        userInfo() {
+            return this.$store.state.user.userInfo;
+        },
+
+        // 用户名首字母
+        firstUserName() {
+            if (this.$store.state.user.userInfo.userName) {
+                return this.$store.state.user.userInfo.userName.substring(0, 1).toUpperCase();
+            }
+        }
+    },
     created() {
         // 初始化最大输入字符串
         this.maxNum = this.maxLength;
@@ -70,9 +85,20 @@ export default {
         border-radius: 50%;
     }
 
+    .no-img {
+        color: #fff;
+        line-height: 32px;
+        font-size: 14px;
+        border-color: #4669e7;
+        background-color: #4669e7;
+        text-align: center;
+        text-transform: uppercase;
+    }
+
     .comment-textarea {
         resize: none;
         color: #333;
+        flex: 1;
     }
 
     .comment-textarea:focus {

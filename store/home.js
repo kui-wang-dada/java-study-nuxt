@@ -44,6 +44,9 @@ export default {
             let selectHomeList = $api['home/selectHomeList'](params).catch(() => Promise.resolve({}));
             let selectHotLabel = $api['home/selectHotLabel']().catch(() => Promise.resolve({}));
             let [res1, res2] = await Promise.all([selectHomeList, selectHotLabel]);
+
+            console.log(res1, '================================');
+
             // 首页文章
             if (res1.code === 0) {
                 store.commit('SET_LIST', res1.data.list);

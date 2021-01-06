@@ -26,7 +26,17 @@ export default {
             if (res.code === 0) {
                 let list = JSON.parse(JSON.stringify(state.list));
                 list[index].inspireNum = res.data;
+                list[index].likeIt = res.msg === '点赞成功' ? true : false;
                 commit('SET_LIST', list);
+            }
+        },
+
+        //  评论
+        async insetComment({ state, commit, dispatch }, { params, pageRequest }) {
+            let res = await $api['download/insetComment'](params);
+            if (res.code === 0) {
+                commit('SET_LIST', []);
+                await dispatch('selectArticleDownLoad', { params: pageRequest });
             }
         },
 
@@ -36,7 +46,7 @@ export default {
          */
         async GetDownloadServerData(store, { params }) {
             let res = await $api['download/selectArticleDownLoad'](params).catch(() => Promise.resolve({}));
-            console.log(res.data, '====-----------+++++=');
+            console.log(res, 'cccccccccccccc');
             if (res.code === 0) {
                 store.commit('SET_LIST', res.data.list);
             }

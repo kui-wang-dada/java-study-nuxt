@@ -51,6 +51,7 @@ const actions = {
     // 获取用户信息
     async getUserInfo({ commit, dispatch }, params) {
         let res = await $api['user/findUserByToken'](params);
+        console.log(res, 'mmmmmmmmmmmmmmmmmmmmmmmmmmmm----------------===');
         if (res.code === 0) {
             commit('SET_USERINFO', res.data);
         } else {
@@ -58,7 +59,7 @@ const actions = {
         }
     },
 
-    // 获取用户信息
+    // 用户认证
     async userAuth({ commit }, params) {
         let res = await $api['user/userAuth'](params);
         if (res.code === 0) {

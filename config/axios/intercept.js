@@ -19,11 +19,9 @@ export function requestSuccessFunc(req) {
     //   CancelPromise[req.url]()
     // }
 
-    if (req.name != 'findUserByToken') {
-        // 设置请求头token
-        if (getToken()) {
-            req.headers['Authorization'] = getToken();
-        }
+    // 设置请求头token
+    if (getToken()) {
+        req.headers['Authorization'] = getToken();
     }
 
     req.cancelToken = new CancelToken(c => {

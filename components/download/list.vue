@@ -8,9 +8,10 @@
                 <li v-for="(item, index) in list" :key="item.id">
                     <div class="download-item flex">
                         <div class="left">
-                            <div class="avatar-wrap">
-                                <img :src="item.headImg" alt="用户头像" class="avatar" />
+                            <div class="avatar-box" v-if="item.headImg">
+                                <a-avatar :size="42" :src="item.headImg" :alt="item.userName" />
                             </div>
+                            <div class="avatar-box no-img" v-else>{{ item.userName | firstUserName }}</div>
                         </div>
                         <div class="right">
                             <div class="info-row flex-s-b">
@@ -31,11 +32,11 @@
                                         <i class="iconfont icon-xiazailiang"></i>
                                         <span class="btn-text" v-if="parseInt(item.downloadNum) > 0">{{ item.downloadNum }}</span>
                                     </div>
-                                    <div class="btn" @click="insetInspire(item.id, index)">
+                                    <div class="btn" :class="item.likeIt ? 'active' : ''" @click="insetInspire(item.id, index)">
                                         <i class="iconfont icon-dianzan3"></i>
                                         <span class="btn-text" v-if="parseInt(item.inspireNum) > 0">{{ item.inspireNum }}</span>
                                     </div>
-                                    <div class="btn" @click="showCommentForm(item)">
+                                    <div class="btn" @click="showCommentForm(index)">
                                         <i class="iconfont icon-pinglun1"></i>
                                         <span class="btn-text" v-if="item.commentList.length > 0">{{ item.commentList.length }}</span>
                                     </div>
@@ -47,31 +48,32 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="reply-form" v-if="item.isForm">
-                                <edit-div @submit="onSubmit" :maxLength="200" :btnText="btnText" />
-                            </div>
-                            <div class="reply-list" v-if="item.childs && item.childs.length > 0">
-                                <div class="reply-item flex" v-for="child in item.childs" :key="child.id">
-                                    <div class="left">
-                                        <div class="avatar-wrap">
-                                            <img :src="child.head" alt="用户头像" class="avatar" />
-                                        </div>
-                                    </div>
-                                    <div class="right">
-                                        <div class="info-row flex-s-b">
-                                            <div class="flex-align">
-                                                <div class="reply-name">fend.</div>
-                                                <div class="public-time">今天11:41</div>
+                            <div v-if="item.isForm">
+                                <div class="reply-form">
+                                    <edit-div @submit="onSubmit($event, item, index)" :maxLength="200" :btnText="btnText" />
+                                </div>
+                                <div class="reply-list" v-if="item.commentList && item.commentList.length > 0">
+                                    <div class="reply-item flex" v-for="child in item.commentList" :key="child.id">
+                                        <div class="left">
+                                            <div class="avatar-box" v-if="child.headImg">
+                                                <a-avatar :size="32" :src="child.headImg" :alt="child.userName" />
                                             </div>
+                                            <div class="avatar-box no-img" v-else>{{ child.userName | firstUserName }}</div>
                                         </div>
-                                        <div class="desc_para">
-                                            开发者说的是软件版本不是系统版本
-                                        </div>
-                                        <div class="operations">
-                                            <div class="btns flex-align">
-                                                <div class="btn">
-                                                    <i class="iconfont icon-dianzan3"></i>
-                                                    <span class="btn-text">点赞</span>
+                                        <div class="right">
+                                            <div class="info-row flex-s-b">
+                                                <div class="flex-align">
+                                                    <div class="reply-name">{{ child.userName }}</div>
+                                                    <div class="public-time">{{ child.createTime | formatTimeStamp }}</div>
+                                                </div>
+                                            </div>
+                                            <div class="desc_para">{{ child.commentContent }}</div>
+                                            <div class="operations">
+                                                <div class="btns flex-align">
+                                                    <div class="btn">
+                                                        <i class="iconfont icon-dianzan3"></i>
+                                                        <span class="btn-text">赞</span>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -88,7 +90,7 @@
 </template>
 
 <script>
-import { disableScroll, openScroll, formatTime } from '@/utils';
+import { disableScroll, openScroll, timestampFormat } from '@/utils';
 import EditDiv from './EditDiv';
 import InquiryDialog from './InquiryDialog';
 import search from './search';
@@ -120,95 +122,24 @@ export default {
     data() {
         return {
             dialogInquiryVisible: false,
-            // list: [
-            //     {
-            //         id: 'AA001',
-            //         head: 'https://mirror-gold-cdn.xitu.io/168e09bdb66bcf662a4?imageView2/1/w/100/h/100/q/85/format/webp/interlace/1',
-            //         title: 'SpringBoot+ ElasticSearch实现全文搜索功能-源码',
-            //         date: '1小时前',
-            //         downloadNum: 89,
-            //         integral: 4,
-            //         isForm: false,
-            //         content: '链接: https://pan.baidu.com/s/1-6EupUOaH6mEKj2kWnL52A  密码: v0ca --来自百度网盘超级会员V5的分享',
-            //         childs: [
-            //             {
-            //                 id: 2,
-            //                 head: '//static001.geekbang.org/account/avatar/00/0f/f7/6e/04f9a672.jpg?x-oss-process=image/resize,w_200,h_200',
-            //                 name: '阿牛',
-            //                 content: '网络喷子原型？',
-            //                 date: '一天前',
-            //                 like: 0,
-            //                 at: '谋生',
-            //                 isReply: false,
-            //                 placeholderText: '11'
-            //             },
-            //             {
-            //                 id: 3,
-            //                 head: 'https://static.woshipm.com/TTW_USER_202004_20200414140658_1283.jpg?imageView2/2/w/80/size-limit/5k!?imageView2/2/w/80/size-limit/5k!',
-            //                 name: '谋生',
-            //                 content: '这不是有手就行？',
-            //                 date: '一周前',
-            //                 like: 1,
-            //                 isReply: false,
-            //                 placeholderText: '11'
-            //             }
-            //         ]
-            //     },
-            //     {
-            //         id: 'AC783',
-            //         head: 'https://static.woshipm.com/WX_U_202007_20200716143737_5864.jpg?imageView2/2/w/80/size-limit/5k!?imageView2/2/w/80/size-limit/5k!',
-            //         title: 'LeetCode刷题实战60道-源码',
-            //         date: '15小时前',
-            //         downloadNum: 78,
-            //         isForm: false,
-            //         integral: 3,
-            //         content: '复制这段内容后打开百度网盘手机App，操作更方便哦 链接：https://pan.baidu.com/s/1uaSy5GUUwJfudH63-vVRIA 提取码：15PT --来自百度网盘超级会员V5的分享'
-            //     },
-            //     {
-            //         id: 'GA045',
-            //         head: 'https://static.woshipm.com/TTW_USER_202004_20200424094658_6148.jpg?imageView2/2/w/80/size-limit/5k!?imageView2/2/w/80/size-limit/5k!',
-            //         title: 'SpringBoot+Vue前后端分离实现邮件定时发送功能-全套视频',
-            //         date: '一天前',
-            //         downloadNum: 67,
-            //         isForm: false,
-            //         integral: 10,
-            //         content: '链接：https://pan.baidu.com/s/1FUQctOm7_jWPoVituGnxvg 提取码：xj21 复制这段内容后打开百度网盘手机App，操作更方便哦'
-            //     },
-            //     {
-            //         id: 'HA883',
-            //         head: 'https://static.woshipm.com/TTW_USER_R201706_20170602174604_6218.jpg?imageView2/2/w/80/size-limit/5k!?imageView2/2/w/80/size-limit/5k!',
-            //         title: 'Springboot+Vue前后端分离实现Excle文件导入并在前端页面回显功能-源码',
-            //         date: '一周前',
-            //         downloadNum: 40,
-            //         isForm: false,
-            //         integral: 8,
-            //         content: '复制这段内容后打开百度网盘手机App，操作更方便哦 链接：https://pan.baidu.com/s/1K_HmdnsUofe_TnYFpFNdgA 提取码：6098 --来自百度网盘超级会员V5的分享'
-            //     },
-            //     {
-            //         id: 'Y0089',
-            //         head: 'https://static.woshipm.com/WX_U_202010_20201009070042_2416.jpg?imageView2/2/w/80/size-limit/5k!?imageView2/2/w/80/size-limit/5k!',
-            //         title: '前端开发核心知识进阶',
-            //         date: '2020-09-22 22:00',
-            //         downloadNum: 16,
-            //         isForm: false,
-            //         integral: 9,
-            //         content: '复制这段内容后打开百度网盘手机App，操作更方便哦 链接:https://pan.baidu.com/s/1a9iL8PTDft8qs6iBm3kZZg 提取码:oa64'
-            //     }
-            // ],
             index: '', // 当前索引
             btnText: '评论'
         };
     },
     filters: {
+        // 时间格式化
         formatTimeStamp(val) {
-            return formatTime(val);
+            return timestampFormat(val / 1000);
+        },
+
+        // 用户名首字母
+        firstUserName(val) {
+            return val.substring(0, 1).toUpperCase();
         }
     },
     computed: {},
     created() {},
     mounted() {
-        // this.handleData();
-
         let reg = /((?:https?:\/\/)?(?:yun|pan|eyun)\.baidu\.com\/(?:s\/\w*(((-)?\w*)*)?|share\/\S*\d\w*))/;
         let str = '复制这段内容后打开百度网盘手机App，操作更方便哦 链接：https://pan.baidu.com/s/1K_HmdnsUofe_TnYFpFNdgA 提取码：6098 --来自百度网盘超级会员V5的分享';
         console.log(str.match(reg)[0], 'cccc0000');
@@ -216,14 +147,15 @@ export default {
     watch: {},
     methods: {
         // 评论按钮
-        onSubmit(content) {
-            console.log(content);
+        onSubmit(content, item, index) {
+            item.content = content; // 评论内容
+            item.index = index; // 索引
+            this.$emit('insetComment', item);
         },
 
-        // 是否显示评论表单
-        showCommentForm(item) {
-            console.log(item);
-            item.isForm = !item.isForm;
+        // 是否显示评论模块
+        showCommentForm(index) {
+            this.$emit('showComment', index);
         },
 
         // 处理列表数据
@@ -326,14 +258,21 @@ export default {
             .left {
                 margin-right: 15px;
 
-                .avatar-wrap {
-                    .avatar {
-                        width: 42px;
-                        height: 42px;
-                        display: block;
-                        background: #d0d4d7;
-                        border-radius: 100%;
-                    }
+                .avatar-box {
+                    width: 42px;
+                    height: 42px;
+                    box-shadow: 0 0 0 2px rgba(65, 105, 226, 0.2);
+                    border-radius: 50%;
+                }
+
+                .no-img {
+                    color: #fff;
+                    line-height: 42px;
+                    font-size: 14px;
+                    border-color: #4669e7;
+                    background-color: #4669e7;
+                    text-align: center;
+                    text-transform: uppercase;
                 }
             }
 
@@ -430,6 +369,14 @@ export default {
                                 vertical-align: middle;
                             }
                         }
+
+                        .btn.active {
+                            color: @main-col;
+
+                            .iconfont {
+                                color: @main-col;
+                            }
+                        }
                     }
 
                     .btn-column {
@@ -475,14 +422,21 @@ export default {
                         .left {
                             margin-right: 8px;
 
-                            .avatar-wrap {
-                                .avatar {
-                                    width: 32px;
-                                    height: 32px;
-                                    display: block;
-                                    background: #d0d4d7;
-                                    border-radius: 100%;
-                                }
+                            .avatar-box {
+                                width: 32px;
+                                height: 32px;
+                                box-shadow: 0 0 0 2px rgba(65, 105, 226, 0.2);
+                                border-radius: 50%;
+                            }
+
+                            .no-img {
+                                color: #fff;
+                                line-height: 32px;
+                                font-size: 14px;
+                                border-color: #4669e7;
+                                background-color: #4669e7;
+                                text-align: center;
+                                text-transform: uppercase;
                             }
                         }
 

@@ -80,34 +80,73 @@ export function formatTimer(val, hours) {
 }
 
 /**
- * @param {number} time
+ * @param {number} timestamp
  * @param {string} option
  * @returns {string}
  */
-export function formatTime(time, option) {
-    if (('' + time).length === 10) {
-        time = parseInt(time) * 1000;
-    } else {
-        time = +time;
+export function timestampFormat(timestamp) {
+    function zeroize(num) {
+        return (String(num).length == 1 ? '0' : '') + num;
     }
-    const d = new Date(time);
-    const now = Date.now();
 
-    const diff = (now - d) / 1000;
+    var curTimestamp = parseInt(new Date().getTime() / 1000); //当前时间戳
+    var timestampDiff = curTimestamp - timestamp; // 参数时间戳与当前时间戳相差秒数
 
-    if (diff < 30) {
+    var curDate = new Date(curTimestamp * 1000); // 当前时间日期对象
+    var tmDate = new Date(timestamp * 1000); // 参数时间戳转换成的日期对象
+
+    var Y = tmDate.getFullYear(),
+        m = tmDate.getMonth() + 1,
+        d = tmDate.getDate();
+    var H = tmDate.getHours(),
+        i = tmDate.getMinutes(),
+        s = tmDate.getSeconds();
+
+    if (timestampDiff < 60) {
+        // 一分钟以内
         return '刚刚';
-    } else if (diff < 3600) {
-        // less 1 hour
-        return Math.ceil(diff / 60) + '分钟前';
-    } else if (diff < 3600 * 24) {
-        return Math.ceil(diff / 3600) + '小时前';
-    } else if (diff < 3600 * 24 * 2) {
-        return '1天前';
-    }
-    if (option) {
-        return parseTime(time, option);
+    } else if (timestampDiff < 3600) {
+        // 一小时前之内
+        return Math.floor(timestampDiff / 60) + '分钟前';
+    } else if (curDate.getFullYear() == Y && curDate.getMonth() + 1 == m && curDate.getDate() == d) {
+        return '今天' + zeroize(H) + ':' + zeroize(i);
     } else {
-        return d.getMonth() + 1 + '月' + d.getDate() + '日' + d.getHours() + '时' + d.getMinutes() + '分';
+        var newDate = new Date((curTimestamp - 86400) * 1000); // 参数中的时间戳加一天转换成的日期对象
+        if (newDate.getFullYear() == Y && newDate.getMonth() + 1 == m && newDate.getDate() == d) {
+            return '昨天' + zeroize(H) + ':' + zeroize(i);
+        } else if (curDate.getFullYear() == Y) {
+            return zeroize(m) + '月' + zeroize(d) + '日 ' + zeroize(H) + ':' + zeroize(i);
+        } else {
+            return Y + '年' + zeroize(m) + '月' + zeroize(d) + '日 ' + zeroize(H) + ':' + zeroize(i);
+        }
     }
 }
+
+// export function dateFilter(time) {
+//     let date = new Date();
+//     let now = date.getTime();
+//     let diffS = Math.ceil((now - time) / 1000);
+//     let s = 60;
+//     let m = 60 * 60;
+//     let h = 60 * 60 * 24;
+//     let d = 60 * 60 * 24 * 3;
+//     let unit = {
+//         s: '秒前',
+//         m: '分钟前',
+//         h: '小时前',
+//         d: '天前'
+//     };
+//     if (diffS < s) {
+//         return `${Math.ceil(diffS)}${unit['s']}`;
+//     }
+//     if (s < diffS && diffS < m) {
+//         return `${Math.floor(diffS / s)}${unit['m']}`;
+//     }
+//     if (m < diffS && diffS < h) {
+//         return `${Math.floor(diffS / m)}${unit['h']}`;
+//     }
+//     if (h < diffS && diffS < d) {
+//         return `${Math.floor(diffS / h)}${unit['d']}`;
+//     }
+//     return `${new Date(time).getFullYear()}-${new Date(time).getMonth() + 1}-${new Date(time).getDate()}`;
+// }
