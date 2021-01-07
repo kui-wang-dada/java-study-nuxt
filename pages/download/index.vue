@@ -1,6 +1,6 @@
 <template>
     <div class="mian">
-        <list :list="list" @insetInspire="onInsetInspire" @insetComment="onInsetComment" @showComment="showCommentForm" @deleteComment="showDeleteConfirm" @download="handleConfirm" />
+        <list :list="list" @insetInspire="onInsetInspire" @commentInspire="onCommentInspire" @insetComment="onInsetComment" @showComment="showCommentForm" @deleteComment="showDeleteConfirm" @download="handleConfirm" />
         <sidebar />
     </div>
 </template>
@@ -91,10 +91,10 @@ export default {
     methods: {
         // 点赞/取消点赞
         async onInsetInspire(query) {
-            // if (!this.isLogin()) {
-            //     this.$store.commit('SET_DIALO_LOGIN_VISIBLE', true);
-            //     return;
-            // }
+            if (!this.isLogin()) {
+                this.$store.commit('SET_DIALO_LOGIN_VISIBLE', true);
+                return;
+            }
             let index = query.index; // 当前item 索引
             let params = {
                 articleId: query.id,
@@ -119,6 +119,22 @@ export default {
             };
             await this.$store.dispatch('download/insetComment', { params, pageRequest });
             this.showCommentForm(query.index);
+        },
+
+        // 评论点赞/取消点赞
+        async onCommentInspire(query) {
+            if (!this.isLogin()) {
+                this.$store.commit('SET_DIALO_LOGIN_VISIBLE', true);
+                return;
+            }
+            let index = query.index; // 当前item 索引
+            let c_index = query.c_index; // 当前item 评论索引
+            let params = {
+                commentId: query.id,
+                commentType: 2,
+                userId: this.userInfo.id
+            };
+            await this.$store.dispatch('download/commentInspire', { params, index, c_index });
         },
 
         // 删除评论对话框
@@ -154,23 +170,20 @@ export default {
         },
 
         // 下载
-        handleConfirm(query) {
-            console.log(query);
-            const that = this;
+        async handleConfirm(query) {
             let pageRequest = this.listQuery;
             let params = {
                 id: query.id
             };
-            let urlReg = /((?:https?:\/\/)?(?:yun|pan|eyun)\.baidu\.com\/(?:s\/\w*(((-)?\w*)*)?|share\/\S*\d\w*))/;
-            let codeReg = /(?<=\s*(密|提取)码[：:]?\s*)[A-Za-z0-9]+/;
-            let articleUrl = '链接：https://pan.baidu.com/s/1TeiV04iEZHldqts-Kl3Zwg 提取码：zp0p 复制这段内容后打开百度网盘手机App，操作更方便哦';
-            let url = this.regValue(urlReg, articleUrl);
-            let code = this.regValue(codeReg, articleUrl);
-            this.copyCode(code, url);
-
-            // await that.$store.dispatch('download/dataDownLoad', { params, pageRequest });
-            // that.showCommentForm(query.index);
-            // that.$message.success('删除成功');
+            let res = await this.$store.dispatch('download/dataDownLoad', { params, pageRequest });
+            if(res.code === 0) {
+                let articleUrl = res.data.articleUrl;
+                let urlReg = /((?:https?:\/\/)?(?:yun|pan|eyun)\.baidu\.com\/(?:s\/\w*(((-)?\w*)*)?|share\/\S*\d\w*))/;
+                let codeReg = /(?<=\s*(密|提取)码[：:]?\s*)[A-Za-z0-9]+/;
+                let url = this.regValue(urlReg, articleUrl);
+                let code = this.regValue(codeReg, articleUrl);
+                this.copyCode(code, url);
+            }
         },
 
         // 返回正则内容
@@ -186,15 +199,13 @@ export default {
             input.select(); // 选择实例内容
             document.execCommand('Copy'); // 执行复制
             document.body.removeChild(input); // 删除临时实例
-            setTimeout(() => {
-                window.open(url, '_blank');
-            }, 1000);
+            window.open(url, '_blank');
         },
 
         // 是否登录
         isLogin() {
             return this.getToken ? true : false;
-        }
+        },
     }
 };
 </script>

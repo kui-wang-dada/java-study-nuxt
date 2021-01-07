@@ -53,6 +53,7 @@ const actions = {
         let res = await $api['user/findUserByToken'](params);
         if (res.code === 0) {
             commit('SET_USERINFO', res.data);
+            commit('SET_TOKEN', params.token);
         }
         return res;
     },

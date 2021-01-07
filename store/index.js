@@ -27,6 +27,7 @@ export default {
             if (res.code === 0) {
                 console.log(res.data, '验证成功');
             } else {
+                app.$cookies.remove('java_study');
                 await dispatch('user/resetToken');
                 console.log(res, '验证失败');
             }

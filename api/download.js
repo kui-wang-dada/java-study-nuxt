@@ -25,8 +25,14 @@ export default [
     },
     {
         name: 'dataDownLoad',
-        method: 'POST',
+        method: 'GET',
         desc: '资料下载',
         path: '/article/article/download/dataDownLoad'
-    }
+    },
+    {
+        name: 'commentInspire',
+        method: 'POST',
+        desc: '评论点赞',
+        path: '/article/article/inspire/commentInspire'
+    },
 ];

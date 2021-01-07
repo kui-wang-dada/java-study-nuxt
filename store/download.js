@@ -20,12 +20,23 @@ export default {
             }
         },
 
-        //  点赞/取消取消
+        //  点赞/取消点赞
         async insetInspire({ state, commit }, { params, index }) {
             let res = await $api['download/insetInspire'](params);
             if (res.code === 0) {
                 let list = JSON.parse(JSON.stringify(state.list));
                 list[index].inspireNum = res.data;
+                list[index].likeIt = res.msg === '点赞成功' ? true : false;
+                commit('SET_LIST', list);
+            }
+        },
+
+           //  评论点赞/取消点赞
+        async commentInspire({ state, commit }, { params, index, c_index }) {
+            let res = await $api['download/commentInspire'](params);
+            if (res.code === 0) {
+                let list = JSON.parse(JSON.stringify(state.list));
+                list[index].commentList[c_index].inspireNum = res.data;
                 list[index].likeIt = res.msg === '点赞成功' ? true : false;
                 commit('SET_LIST', list);
             }
@@ -52,7 +63,7 @@ export default {
         // 下载资料
         async dataDownLoad({ state, commit, dispatch }, { params, pageRequest }) {
             let res = await $api['download/dataDownLoad'](params);
-            console.log(res);
+            return res;
         },
 
         /**
@@ -60,10 +71,10 @@ export default {
          * @return: promise
          */
         async GetDownloadServerData(store, { params }) {
-            // let res = await $api['download/selectArticleDownLoad'](params).catch(() => Promise.resolve({}));
-            // if (res.code === 0) {
-            //     store.commit('SET_LIST', res.data.list);
-            // }
+            let res = await $api['download/selectArticleDownLoad'](params).catch(() => Promise.resolve({}));
+            if (res.code === 0) {
+                store.commit('SET_LIST', res.data.list);
+            }
         }
     }
 };

@@ -53,7 +53,7 @@
                                     <edit-div @submit="onSubmit($event, item, index)" :maxLength="200" :btnText="btnText" />
                                 </div>
                                 <div class="reply-list" v-if="item.commentList && item.commentList.length > 0">
-                                    <div class="reply-item flex" v-for="child in item.commentList" :key="child.id">
+                                    <div class="reply-item flex" v-for="(child, C) in item.commentList" :key="child.id">
                                         <div class="left">
                                             <div class="avatar-box" v-if="child.headImg">
                                                 <a-avatar :size="32" :src="child.headImg" :alt="child.userName" />
@@ -74,9 +74,9 @@
                                                         <i class="iconfont icon-ashbin" title="删除"></i>
                                                         <span class="btn-text"></span>
                                                     </div>
-                                                    <div class="btn ml-8">
+                                                    <div class="btn ml-8" @click="commentInspire(child.id, index, C)">
                                                         <i class="iconfont icon-dianzan3" title="赞一个"></i>
-                                                        <span class="btn-text"></span>
+                                                        <span class="btn-text" v-if="parseInt(child.inspireNum) > 0">{{ child.inspireNum }}</span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -145,7 +145,12 @@ export default {
         // userInfo
         userInfo() {
             return this.$store.state.user.userInfo;
-        }
+        },
+
+        // token
+        getToken() {
+            return this.$store.state.user.token;
+        },
     },
     created() {},
     mounted() {},
@@ -169,51 +174,21 @@ export default {
             this.$emit('deleteComment', e);
         },
 
-        // 处理列表数据
-        handleData() {
-            this.list.forEach(item => {
-                item.code = this.handleCode(item);
-                item.link = this.handleLink(item);
-            });
-        },
-
-        // 提取链接
-        handleLink(item) {
-            let reg = /(https?|http|ftp|file):\/\/[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]/g;
-            return item.content.match(reg).join('');
-        },
-
-        // 提取提取码
-        handleCode(item) {
-            let pwd = item.content.match(/密码: (\S*) --/);
-            let code = item.content.match(/提取码：(\S*) --/);
-            let code1 = item.content.match(/提取码：(\S*) 复制/);
-            let code2 = item.content.match(/提取码:(\S*)/);
-            // 密码
-            if (pwd && pwd.length) {
-                return pwd[1];
-            }
-            // 提取码
-            if (code && code.length) {
-                return code[1];
-            }
-            // 提取码1
-            if (code1 && code1.length) {
-                return code1[1];
-            }
-            // 提取码2
-            if (code2 && code2.length) {
-                return code2[1];
-            }
-        },
-
         // 下载按钮事件
         handleDownload(index) {
+            if (!this.isLogin()) {
+                this.$store.commit('SET_DIALO_LOGIN_VISIBLE', true);
+                return;
+            }
+
+            if (!this.isAuth()) {
+                this.$message.warning('请先关注公众号进行认证');
+                this.$store.commit('SET_DIALO_AUTH_VISIBLE', true);
+                return;
+            }
+
             this.dialogInquiryVisible = true;
             this.inquiry = this.list[index];
-            // this.$emit('download', this.list[index]);
-
-            // disableScroll();
         },
 
         // 确定下载
@@ -229,11 +204,30 @@ export default {
         },
 
         // 点赞/取消点赞
+        commentInspire(id, index, c_index) {
+            this.$emit('commentInspire', {
+                id,
+                index,
+                c_index
+            });
+        },
+
+          // 点赞/取消点赞
         insetInspire(id, index) {
             this.$emit('insetInspire', {
                 id,
                 index
             });
+        },
+
+        // 是否登录
+        isLogin() {
+            return this.getToken ? true : false;
+        },
+
+         // 是否认证
+        isAuth() {
+            return this.userInfo.auth === '1' ? true : false;
         }
     }
 };

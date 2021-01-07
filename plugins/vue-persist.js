@@ -9,7 +9,7 @@ export default ({ store }) => {
             reducer(val) {
                 return {
                     // 只储存state中的assessmentData
-                    user: val.user
+                    // user: val.user
                 };
             }
         })(store);
