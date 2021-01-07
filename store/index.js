@@ -22,9 +22,14 @@ export default {
     },
     actions: {
         async nuxtServerInit({ commit, dispatch }, { req, store, app }) {
-            commit('user/SET_TOKEN', app.$cookies.get('java_study'));
-            let token = store.state.user.token;
-            await dispatch('user/getUserInfo', { token });
+            let token = app.$cookies.get('java_study');
+            let res = await dispatch('user/getUserInfo', { token });
+            if (res.code === 0) {
+                console.log(res.data, '验证成功');
+            } else {
+                await dispatch('user/resetToken');
+                console.log(res, '验证失败');
+            }
         }
     }
 };

@@ -31,7 +31,7 @@ export default {
             }
         },
 
-        //  评论
+        // 评论
         async insetComment({ state, commit, dispatch }, { params, pageRequest }) {
             let res = await $api['download/insetComment'](params);
             if (res.code === 0) {
@@ -40,16 +40,30 @@ export default {
             }
         },
 
+        // 删除评论
+        async deleteComment({ state, commit, dispatch }, { params, pageRequest }) {
+            let res = await $api['download/deleteComment'](params);
+            if (res.code === 0) {
+                commit('SET_LIST', []);
+                await dispatch('selectArticleDownLoad', { params: pageRequest });
+            }
+        },
+
+        // 下载资料
+        async dataDownLoad({ state, commit, dispatch }, { params, pageRequest }) {
+            let res = await $api['download/dataDownLoad'](params);
+            console.log(res);
+        },
+
         /**
          * @msg:获取列表数据
          * @return: promise
          */
         async GetDownloadServerData(store, { params }) {
-            let res = await $api['download/selectArticleDownLoad'](params).catch(() => Promise.resolve({}));
-            console.log(res, 'cccccccccccccc');
-            if (res.code === 0) {
-                store.commit('SET_LIST', res.data.list);
-            }
+            // let res = await $api['download/selectArticleDownLoad'](params).catch(() => Promise.resolve({}));
+            // if (res.code === 0) {
+            //     store.commit('SET_LIST', res.data.list);
+            // }
         }
     }
 };

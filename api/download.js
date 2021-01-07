@@ -9,12 +9,24 @@ export default [
         name: 'insetInspire',
         method: 'POST',
         desc: '点赞',
-        path: '/article/java/inspire/insetInspire'
+        path: '/article/article/inspire/insetInspire'
     },
     {
         name: 'insetComment',
         method: 'POST',
         desc: '评论',
-        path: '/article/java/comment/insetComment'
+        path: '/article/article/comment/insetComment'
+    },
+    {
+        name: 'deleteComment',
+        method: 'POST',
+        desc: '删除评论',
+        path: '/article/article/comment/deleteComment'
+    },
+    {
+        name: 'dataDownLoad',
+        method: 'POST',
+        desc: '资料下载',
+        path: '/article/article/download/dataDownLoad'
     }
 ];

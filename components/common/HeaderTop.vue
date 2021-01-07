@@ -6,7 +6,7 @@
                 <li v-for="(item, index) in list" :key="item.title" :class="active == index ? 'active' : ''" @click="changeMenu(index)" class="menu-item">
                     <router-link class="link" :to="item.link">{{ item.title }}</router-link>
                 </li>
-                <li class="menu-item personal-info" v-if="getToken">
+                <li class="menu-item personal-info" v-if="userInfo.id">
                     <div class="left flex-align">
                         <div class="head-box" v-if="userInfo.userImage">
                             <img class="head" :src="userInfo.userImage" :alt="userInfo.userName" />
@@ -62,18 +62,18 @@ export default {
                     title: '首页',
                     link: '/'
                 },
-                {
-                    title: 'java学习',
-                    link: '/study'
-                },
+                // {
+                //     title: 'java学习',
+                //     link: '/study'
+                // },
                 {
                     title: '资料下载',
                     link: '/download'
-                },
-                {
-                    title: '关于我们',
-                    link: '/about'
                 }
+                // {
+                //     title: '关于我们',
+                //     link: '/about'
+                // }
             ],
             AUTH: 'SET_DIALO_AUTH_VISIBLE',
             LOGIN: 'SET_DIALO_LOGIN_VISIBLE',

@@ -2,7 +2,7 @@
     <dialog-panel @close="handleClose">
         <template #inquiry>
             <div class="inquiry-block">
-                <div class="title">确定要消耗{{ inquiry.integral }}学习币下载资料吗?</div>
+                <div class="title">确定要下载资料吗?</div>
                 <div class="buttons flex-align-center clearfix">
                     <div class="confirm btn" @click="handleConfirm(inquiry)" :data-clipboard-text="inquiry.code">确定</div>
                     <div class="cancel" @click.stop="handleClose">取消</div>

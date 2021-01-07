@@ -24,7 +24,7 @@
                                 <span class="tag" :class="'tag' + (index + 1)" v-if="index + 1 <= 3">
                                     <i class="iconfont icon-redu1"></i>
                                 </span>
-                                <span>【AA001】{{ item.title }}</span>
+                                <span>【{{ item.number }}】{{ item.title }}</span>
                             </div>
                             <div class="operations flex-s-b">
                                 <div class="btns flex-align">
@@ -33,7 +33,7 @@
                                         <span class="btn-text" v-if="parseInt(item.downloadNum) > 0">{{ item.downloadNum }}</span>
                                     </div>
                                     <div class="btn" :class="item.likeIt ? 'active' : ''" @click="insetInspire(item.id, index)">
-                                        <i class="iconfont icon-dianzan3"></i>
+                                        <i class="iconfont icon-dianzan3" title="赞一个"></i>
                                         <span class="btn-text" v-if="parseInt(item.inspireNum) > 0">{{ item.inspireNum }}</span>
                                     </div>
                                     <div class="btn" @click="showCommentForm(index)">
@@ -70,9 +70,13 @@
                                             <div class="desc_para">{{ child.commentContent }}</div>
                                             <div class="operations">
                                                 <div class="btns flex-align">
-                                                    <div class="btn">
-                                                        <i class="iconfont icon-dianzan3"></i>
-                                                        <span class="btn-text">赞</span>
+                                                    <div class="btn ashbin-btn" v-if="child.creator === userInfo.id" @click="onDeleteComment(child, index)">
+                                                        <i class="iconfont icon-ashbin" title="删除"></i>
+                                                        <span class="btn-text"></span>
+                                                    </div>
+                                                    <div class="btn ml-8">
+                                                        <i class="iconfont icon-dianzan3" title="赞一个"></i>
+                                                        <span class="btn-text"></span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -137,13 +141,14 @@ export default {
             return val.substring(0, 1).toUpperCase();
         }
     },
-    computed: {},
-    created() {},
-    mounted() {
-        let reg = /((?:https?:\/\/)?(?:yun|pan|eyun)\.baidu\.com\/(?:s\/\w*(((-)?\w*)*)?|share\/\S*\d\w*))/;
-        let str = '复制这段内容后打开百度网盘手机App，操作更方便哦 链接：https://pan.baidu.com/s/1K_HmdnsUofe_TnYFpFNdgA 提取码：6098 --来自百度网盘超级会员V5的分享';
-        console.log(str.match(reg)[0], 'cccc0000');
+    computed: {
+        // userInfo
+        userInfo() {
+            return this.$store.state.user.userInfo;
+        }
     },
+    created() {},
+    mounted() {},
     watch: {},
     methods: {
         // 评论按钮
@@ -156,6 +161,12 @@ export default {
         // 是否显示评论模块
         showCommentForm(index) {
             this.$emit('showComment', index);
+        },
+
+        // 删除评论
+        onDeleteComment(e, index) {
+            e.index = index; // 索引
+            this.$emit('deleteComment', e);
         },
 
         // 处理列表数据
@@ -200,18 +211,15 @@ export default {
         handleDownload(index) {
             this.dialogInquiryVisible = true;
             this.inquiry = this.list[index];
-            console.log(this.inquiry);
+            // this.$emit('download', this.list[index]);
 
-            disableScroll();
+            // disableScroll();
         },
 
         // 确定下载
         handleConfirm(item) {
-            console.log(item);
-            setTimeout(() => {
-                this.dialogInquiryVisible = false;
-                window.open(item.link, '_blank');
-            }, 1000);
+            this.$emit('download', item);
+            this.dialogInquiryVisible = false;
         },
 
         // 关闭
@@ -248,7 +256,7 @@ export default {
 
         .download-item {
             border-top: 1px solid #f2f2f2;
-            padding: 30px;
+            padding: 20px 30px;
             position: relative;
 
             // &:hover {
@@ -409,7 +417,7 @@ export default {
                 .reply-list {
                     position: relative;
                     box-sizing: border-box;
-                    background-color: rgba(0, 0, 0, 0.02);
+                    background-color: rgba(0, 0, 0, 0.01);
                     border-radius: 4px;
                     padding: 0 20px;
                     margin-top: 30px;
@@ -417,7 +425,15 @@ export default {
                     .reply-item {
                         position: relative;
                         border-bottom: 0.5px solid #f0f1f3;
-                        padding: 20px 0;
+                        padding: 14px 0;
+
+                        &:hover {
+                            .operations {
+                                .ashbin-btn {
+                                    display: block;
+                                }
+                            }
+                        }
 
                         .left {
                             margin-right: 8px;
@@ -453,7 +469,11 @@ export default {
                         }
 
                         .operations {
-                            margin: 8px 0 0 0;
+                            margin: 4px 0 0 0;
+
+                            .ashbin-btn {
+                                display: none;
+                            }
                         }
 
                         &:last-child {

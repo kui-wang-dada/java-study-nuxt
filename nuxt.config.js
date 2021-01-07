@@ -34,6 +34,7 @@ export default {
         'ant-design-vue/lib/icon/style',
         'ant-design-vue/lib/tooltip/style',
         'ant-design-vue/lib/empty/style',
+        'ant-design-vue/lib/modal/style',
 
         '@/assets/style/index.less',
         '~assets/icon/iconfont.css'
