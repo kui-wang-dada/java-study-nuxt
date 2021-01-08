@@ -1,9 +1,9 @@
 <template>
     <aside class="aside-left">
         <div class="search-block flex-align">
-            <search />
+            <search @search="onSearch" />
         </div>
-        <div class="download-list">
+        <div class="download-list" v-if="list.length">
             <ul class="list-ul">
                 <li v-for="(item, index) in list" :key="item.id">
                     <div class="download-item flex">
@@ -17,7 +17,7 @@
                             <div class="info-row flex-s-b">
                                 <div class="flex-align">
                                     <div class="user-name">{{ item.userName }}</div>
-                                    <div class="public-time">{{ item.createTime | formatTimeStamp }}</div>
+                                    <div class="public-time" :title="item.createTime | formatTimers">{{ item.createTime | formatTimeStamp }}</div>
                                 </div>
                             </div>
                             <div class="title">
@@ -33,11 +33,11 @@
                                         <span class="btn-text" v-if="parseInt(item.downloadNum) > 0">{{ item.downloadNum }}</span>
                                     </div>
                                     <div class="btn" :class="item.likeIt ? 'active' : ''" @click="insetInspire(item.id, index)">
-                                        <i class="iconfont icon-dianzan3" title="赞一个"></i>
+                                        <i class="iconfont icon-dianzan3" title="点赞"></i>
                                         <span class="btn-text" v-if="parseInt(item.inspireNum) > 0">{{ item.inspireNum }}</span>
                                     </div>
                                     <div class="btn" @click="showCommentForm(index)">
-                                        <i class="iconfont icon-pinglun1"></i>
+                                        <i class="iconfont icon-pinglun1" title="评论"></i>
                                         <span class="btn-text" v-if="item.commentList.length > 0">{{ item.commentList.length }}</span>
                                     </div>
                                 </div>
@@ -64,19 +64,59 @@
                                             <div class="info-row flex-s-b">
                                                 <div class="flex-align">
                                                     <div class="reply-name">{{ child.userName }}</div>
-                                                    <div class="public-time">{{ child.createTime | formatTimeStamp }}</div>
                                                 </div>
                                             </div>
-                                            <div class="desc_para">{{ child.commentContent }}</div>
-                                            <div class="operations">
+                                            <div class="desc_para" v-html="child.commentContent"></div>
+                                            <div class="operations flex-s-b">
+                                                <div class="public-time" :title="child.createTime | formatTimers">{{ child.createTime | formatTimeStamp }}</div>
                                                 <div class="btns flex-align">
-                                                    <div class="btn ashbin-btn" v-if="child.creator === userInfo.id" @click="onDeleteComment(child, index)">
+                                                    <div class="btn ashbin-btn" v-if="child.creator === userInfo.id" @click="onDeleteComment(child, index, 'deleteComment')">
                                                         <i class="iconfont icon-ashbin" title="删除"></i>
-                                                        <span class="btn-text"></span>
                                                     </div>
-                                                    <div class="btn ml-8" @click="commentInspire(child.id, index, C)">
-                                                        <i class="iconfont icon-dianzan3" title="赞一个"></i>
+                                                    <div class="btn" :class="child.likeIt ? 'active' : ''" @click="commentInspire(child.id, index, C)">
+                                                        <i class="iconfont icon-dianzan3" title="点赞"></i>
                                                         <span class="btn-text" v-if="parseInt(child.inspireNum) > 0">{{ child.inspireNum }}</span>
+                                                    </div>
+                                                    <div class="btn" v-if="item.creator === userInfo.id" @click="showReplyCommentForm(child.id, index, C)">
+                                                        <i class="iconfont icon-changyonghuifu" title="回复"></i>
+                                                        <span class="btn-text" v-if="child.replyList.length > 0">{{ child.replyList.length }}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div class="reply-form" v-if="child.isReplyForm">
+                                                    <edit-div
+                                                        @submit="onReplySubmit($event, child, C)"
+                                                        :placeholderText="child.placeholderText"
+                                                        :isReplyForm="true"
+                                                        :maxLength="200"
+                                                        :btnText="btnText"
+                                                    />
+                                                </div>
+                                                <div class="reply-list" v-if="child.replyList && child.replyList.length > 0" style="background-color: rgba(0, 0, 0, 0.01);">
+                                                    <div class="reply-item flex reply-two" v-for="reply in child.replyList" :key="reply.id">
+                                                        <div class="left">
+                                                            <div class="avatar-box" v-if="reply.headImg">
+                                                                <a-avatar :size="32" :src="reply.headImg" :alt="reply.userName" />
+                                                            </div>
+                                                            <div class="avatar-box no-img" v-else>{{ reply.userName | firstUserName }}</div>
+                                                        </div>
+                                                        <div class="right">
+                                                            <div class="info-row flex-s-b">
+                                                                <div class="flex-align">
+                                                                    <div class="reply-name">{{ reply.userName }}</div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="desc_para" v-html="reply.commentContent"></div>
+                                                            <div class="operations flex-s-b">
+                                                                <div class="public-time" :title="reply.createTime | formatTimers">{{ reply.createTime | formatTimeStamp }}</div>
+                                                                <div class="btns flex-align">
+                                                                    <div class="btn ashbin-btn-two" v-if="reply.creator === userInfo.id" @click="onDeleteComment(reply, index, 'deleteCommentReply')">
+                                                                        <i class="iconfont icon-ashbin" title="删除"></i>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -89,20 +129,23 @@
                 </li>
             </ul>
         </div>
+        <empty v-if="!list.length" />
         <inquiry-dialog v-if="dialogInquiryVisible" :inquiry="inquiry" @close="handleClose" @confirm="handleConfirm" />
     </aside>
 </template>
 
 <script>
-import { disableScroll, openScroll, timestampFormat } from '@/utils';
+import { disableScroll, openScroll, timestampFormat, formatTimer } from '@/utils';
 import EditDiv from './EditDiv';
 import InquiryDialog from './InquiryDialog';
 import search from './search';
+import empty from '@/components/common/emptyTwo';
 export default {
     components: {
         search,
         InquiryDialog,
-        EditDiv
+        EditDiv,
+        empty
     },
     props: {
         list: {
@@ -127,13 +170,19 @@ export default {
         return {
             dialogInquiryVisible: false,
             index: '', // 当前索引
-            btnText: '评论'
+            btnText: '评论',
+            inquiryIndex: ''
         };
     },
     filters: {
         // 时间格式化
         formatTimeStamp(val) {
             return timestampFormat(val / 1000);
+        },
+
+        // 格式化时间
+        formatTimers(val) {
+            return formatTimer(val / 1000, 'YYMMDDHHMM');
         },
 
         // 用户名首字母
@@ -150,7 +199,7 @@ export default {
         // token
         getToken() {
             return this.$store.state.user.token;
-        },
+        }
     },
     created() {},
     mounted() {},
@@ -163,14 +212,31 @@ export default {
             this.$emit('insetComment', item);
         },
 
+        // 回复评论按钮
+        onReplySubmit(content, item, index) {
+            item.content = content; // 评论内容
+            item.index = index; // 索引
+            this.$emit('insetCommentReply', item);
+        },
+
         // 是否显示评论模块
         showCommentForm(index) {
             this.$emit('showComment', index);
         },
 
+        // 是否显示回复评论模块
+        showReplyCommentForm(id, index, c_index) {
+            this.$emit('showReplyComment', {
+                id: id,
+                index,
+                c_index
+            });
+        },
+
         // 删除评论
-        onDeleteComment(e, index) {
+        onDeleteComment(e, index, type) {
             e.index = index; // 索引
+            e.type = type;
             this.$emit('deleteComment', e);
         },
 
@@ -189,12 +255,19 @@ export default {
 
             this.dialogInquiryVisible = true;
             this.inquiry = this.list[index];
+            this.inquiryIndex = index;
+        },
+
+        // 搜索
+        onSearch(e) {
+            this.$emit('search', e);
         },
 
         // 确定下载
         handleConfirm(item) {
-            this.$emit('download', item);
             this.dialogInquiryVisible = false;
+            item.index = this.inquiryIndex;
+            this.$emit('download', item);
         },
 
         // 关闭
@@ -204,6 +277,14 @@ export default {
         },
 
         // 点赞/取消点赞
+        insetInspire(id, index) {
+            this.$emit('insetInspire', {
+                id,
+                index
+            });
+        },
+
+        // 评论点赞/取消点赞
         commentInspire(id, index, c_index) {
             this.$emit('commentInspire', {
                 id,
@@ -212,20 +293,12 @@ export default {
             });
         },
 
-          // 点赞/取消点赞
-        insetInspire(id, index) {
-            this.$emit('insetInspire', {
-                id,
-                index
-            });
-        },
-
         // 是否登录
         isLogin() {
             return this.getToken ? true : false;
         },
 
-         // 是否认证
+        // 是否认证
         isAuth() {
             return this.userInfo.auth === '1' ? true : false;
         }
@@ -236,13 +309,12 @@ export default {
 <style scoped lang="less">
 .aside-left {
     width: 680px;
-    min-height: 400px;
     transition: ease-in-out 0.5s;
     background-color: #fff;
     border-radius: 4px;
 
     .search-block {
-        height: 70px;
+        height: 55px;
     }
 
     .download-list {
@@ -294,6 +366,7 @@ export default {
                     .public-time {
                         font-size: 12px;
                         color: #b2b2b2;
+                        cursor: pointer;
                     }
                 }
 
@@ -411,10 +484,20 @@ export default {
                 .reply-list {
                     position: relative;
                     box-sizing: border-box;
-                    background-color: rgba(0, 0, 0, 0.01);
+                    // background-color: rgba(0, 0, 0, 0.01);
                     border-radius: 4px;
                     padding: 0 20px;
-                    margin-top: 30px;
+                    margin-top: 20px;
+
+                    .reply-two {
+                        &:hover {
+                            .operations {
+                                .btn.ashbin-btn-two {
+                                    visibility: visible;
+                                }
+                            }
+                        }
+                    }
 
                     .reply-item {
                         position: relative;
@@ -423,14 +506,14 @@ export default {
 
                         &:hover {
                             .operations {
-                                .ashbin-btn {
-                                    display: block;
+                                .btn.ashbin-btn {
+                                    visibility: visible;
                                 }
                             }
                         }
 
                         .left {
-                            margin-right: 8px;
+                            margin-right: 10px;
 
                             .avatar-box {
                                 width: 32px;
@@ -452,7 +535,7 @@ export default {
 
                         .right {
                             .info-row {
-                                margin: 5px 0 6px 0;
+                                margin: 2px 0;
 
                                 .reply-name {
                                     font-size: 14px;
@@ -463,10 +546,34 @@ export default {
                         }
 
                         .operations {
-                            margin: 4px 0 0 0;
+                            margin: 8px 0 0 0;
 
-                            .ashbin-btn {
-                                display: none;
+                            .public-time {
+                                font-size: 12px;
+                                color: #b2b2b2;
+                                cursor: pointer;
+                            }
+
+                            .btns {
+                                .btn {
+                                    display: flex;
+                                    align-items: center;
+
+                                    .iconfont {
+                                        width: 16px;
+                                        height: 16px;
+                                        font-size: 16px;
+                                    }
+
+                                    .btn-text {
+                                        margin-left: 2px;
+                                    }
+                                }
+                            }
+
+                            .btn.ashbin-btn,
+                            .btn.ashbin-btn-two {
+                                visibility: hidden;
                             }
                         }
 

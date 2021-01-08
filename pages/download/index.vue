@@ -1,6 +1,17 @@
 <template>
     <div class="mian">
-        <list :list="list" @insetInspire="onInsetInspire" @commentInspire="onCommentInspire" @insetComment="onInsetComment" @showComment="showCommentForm" @deleteComment="showDeleteConfirm" @download="handleConfirm" />
+        <list
+            :list="list"
+            @insetInspire="onInsetInspire"
+            @commentInspire="onCommentInspire"
+            @showReplyComment="showReplyCommentForm"
+            @insetComment="onInsetComment"
+            @insetCommentReply="onInsetCommentReply"
+            @showComment="showCommentForm"
+            @deleteComment="showDeleteConfirm"
+            @download="handleConfirm"
+            @search="onSearch"
+        />
         <sidebar />
     </div>
 </template>
@@ -61,23 +72,6 @@ export default {
             return this.$store.state.user.userInfo;
         }
     },
-    head() {
-        return {
-            title: 'java学习网',
-            meta: [
-                {
-                    hid: 'description',
-                    name: 'description',
-                    content: 'java学习网seo简介'
-                },
-                {
-                    hid: 'keywords',
-                    name: 'keywords',
-                    content: 'java学习网seo关键词'
-                }
-            ]
-        };
-    },
     async fetch({ store, params, query }) {
         if (process.client) return;
         let data = {
@@ -89,6 +83,19 @@ export default {
     },
     created() {},
     methods: {
+        // 重置列表数据
+        resetList() {
+            this.$store.commit('download/SET_LIST', []);
+        },
+
+        // 搜索
+        async onSearch(e) {
+            let params = this.listQuery;
+            params.title = e;
+            this.resetList();
+            await this.$store.dispatch('download/selectArticleDownLoad', { params });
+        },
+
         // 点赞/取消点赞
         async onInsetInspire(query) {
             if (!this.isLogin()) {
@@ -102,6 +109,22 @@ export default {
                 userId: this.userInfo.id
             };
             await this.$store.dispatch('download/insetInspire', { params, index });
+        },
+
+        // 评论点赞/取消点赞
+        async onCommentInspire(query) {
+            if (!this.isLogin()) {
+                this.$store.commit('SET_DIALO_LOGIN_VISIBLE', true);
+                return;
+            }
+            let index = query.index; // 当前item 索引
+            let c_index = query.c_index; // 评论item
+            let params = {
+                commentId: query.id,
+                commentType: 2,
+                userId: this.userInfo.id
+            };
+            await this.$store.dispatch('download/commentInspire', { params, index, c_index });
         },
 
         // 评论
@@ -121,20 +144,21 @@ export default {
             this.showCommentForm(query.index);
         },
 
-        // 评论点赞/取消点赞
-        async onCommentInspire(query) {
+        // 回复评论
+        async onInsetCommentReply(query) {
+            console.log(query);
             if (!this.isLogin()) {
                 this.$store.commit('SET_DIALO_LOGIN_VISIBLE', true);
                 return;
             }
-            let index = query.index; // 当前item 索引
-            let c_index = query.c_index; // 当前item 评论索引
+            let pageRequest = this.listQuery;
             let params = {
                 commentId: query.id,
-                commentType: 2,
+                content: query.content,
                 userId: this.userInfo.id
             };
-            await this.$store.dispatch('download/commentInspire', { params, index, c_index });
+            await this.$store.dispatch('download/insetCommentReply', { params, pageRequest });
+            this.showCommentForm(query.index);
         },
 
         // 删除评论对话框
@@ -151,7 +175,7 @@ export default {
                 okText: '确认',
                 cancelText: '取消',
                 async onOk() {
-                    await that.$store.dispatch('download/deleteComment', { params, pageRequest });
+                    await that.$store.dispatch(`download/${query.type}`, { params, pageRequest });
                     that.showCommentForm(query.index);
                     that.$message.success('删除成功');
                     return;
@@ -163,20 +187,34 @@ export default {
         // 设置评论显示隐藏
         showCommentForm(index) {
             let list = JSON.parse(JSON.stringify(this.list));
-            let item = Object.assign({}, list[index]);
+            let item = list[index];
             item.isForm = !item.isForm;
             this.$set(list, index, item);
+            this.$store.commit('download/SET_LIST', list);
+        },
+
+        // 设置回复评论显示隐藏
+        showReplyCommentForm(query) {
+            let list = JSON.parse(JSON.stringify(this.list)); // 资料列表
+            let item = list[query.index]; // 资料item
+            let commentList = item.commentList; // 评论列表
+            let commentItem = commentList[query.c_index]; // 评论item
+            commentItem.isReplyForm = !commentItem.isReplyForm;
+            commentItem.placeholderText = `回复${commentItem.userName}`;
+            this.$set(item, 'commentList', commentList);
+            this.$set(list, query.index, item);
             this.$store.commit('download/SET_LIST', list);
         },
 
         // 下载
         async handleConfirm(query) {
             let pageRequest = this.listQuery;
+            let index = query.index;
             let params = {
                 id: query.id
             };
-            let res = await this.$store.dispatch('download/dataDownLoad', { params, pageRequest });
-            if(res.code === 0) {
+            let res = await this.$store.dispatch('download/dataDownLoad', { params, index, pageRequest });
+            if (res.code === 0) {
                 let articleUrl = res.data.articleUrl;
                 let urlReg = /((?:https?:\/\/)?(?:yun|pan|eyun)\.baidu\.com\/(?:s\/\w*(((-)?\w*)*)?|share\/\S*\d\w*))/;
                 let codeReg = /(?<=\s*(密|提取)码[：:]?\s*)[A-Za-z0-9]+/;
@@ -205,7 +243,7 @@ export default {
         // 是否登录
         isLogin() {
             return this.getToken ? true : false;
-        },
+        }
     }
 };
 </script>

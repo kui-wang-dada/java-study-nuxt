@@ -31,13 +31,13 @@ export default {
             }
         },
 
-           //  评论点赞/取消点赞
+        //  评论点赞/取消点赞
         async commentInspire({ state, commit }, { params, index, c_index }) {
             let res = await $api['download/commentInspire'](params);
             if (res.code === 0) {
                 let list = JSON.parse(JSON.stringify(state.list));
                 list[index].commentList[c_index].inspireNum = res.data;
-                list[index].likeIt = res.msg === '点赞成功' ? true : false;
+                list[index].commentList[c_index].likeIt = res.msg === '点赞成功' ? true : false;
                 commit('SET_LIST', list);
             }
         },
@@ -45,6 +45,15 @@ export default {
         // 评论
         async insetComment({ state, commit, dispatch }, { params, pageRequest }) {
             let res = await $api['download/insetComment'](params);
+            if (res.code === 0) {
+                commit('SET_LIST', []);
+                await dispatch('selectArticleDownLoad', { params: pageRequest });
+            }
+        },
+
+        // 回复评论
+        async insetCommentReply({ state, commit, dispatch }, { params, pageRequest }) {
+            let res = await $api['download/insetCommentReply'](params);
             if (res.code === 0) {
                 commit('SET_LIST', []);
                 await dispatch('selectArticleDownLoad', { params: pageRequest });
@@ -60,9 +69,23 @@ export default {
             }
         },
 
+        // 删除回复评论
+        async deleteCommentReply({ state, commit, dispatch }, { params, pageRequest }) {
+            let res = await $api['download/deleteCommentReply'](params);
+            if (res.code === 0) {
+                commit('SET_LIST', []);
+                await dispatch('selectArticleDownLoad', { params: pageRequest });
+            }
+        },
+
         // 下载资料
-        async dataDownLoad({ state, commit, dispatch }, { params, pageRequest }) {
+        async dataDownLoad({ state, commit, dispatch }, { params, index }) {
             let res = await $api['download/dataDownLoad'](params);
+            if (res.code === 0) {
+                let list = JSON.parse(JSON.stringify(state.list));
+                list[index].downloadNum = res.data.downloadNum;
+                commit('SET_LIST', list);
+            }
             return res;
         },
 

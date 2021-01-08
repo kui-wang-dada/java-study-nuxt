@@ -24,9 +24,7 @@ export default {
         async nuxtServerInit({ commit, dispatch }, { req, store, app }) {
             let token = app.$cookies.get('java_study');
             let res = await dispatch('user/getUserInfo', { token });
-            if (res.code === 0) {
-                console.log(res.data, '验证成功');
-            } else {
+            if (res.code !== 0) {
                 app.$cookies.remove('java_study');
                 await dispatch('user/resetToken');
                 console.log(res, '验证失败');

@@ -3,7 +3,7 @@
         <div class="container flex-align">
             <a class="logo-font">java学习网</a>
             <ul id="nav">
-                <li v-for="(item, index) in list" :key="item.title" :class="active == index ? 'active' : ''" @click="changeMenu(index)" class="menu-item">
+                <li v-for="(item, index) in routeMenu" :key="item.title" :class="routeMenuActive == index ? 'active' : ''" @click="changeRouteMenu(index)" class="menu-item">
                     <router-link class="link" :to="item.link">{{ item.title }}</router-link>
                 </li>
                 <li class="menu-item personal-info" v-if="userInfo.id">
@@ -56,28 +56,8 @@ export default {
     },
     data() {
         return {
-            active: 0,
-            list: [
-                {
-                    title: '首页',
-                    link: '/'
-                },
-                // {
-                //     title: 'java学习',
-                //     link: '/study'
-                // },
-                {
-                    title: '资料下载',
-                    link: '/download'
-                }
-                // {
-                //     title: '关于我们',
-                //     link: '/about'
-                // }
-            ],
             AUTH: 'SET_DIALO_AUTH_VISIBLE',
             LOGIN: 'SET_DIALO_LOGIN_VISIBLE',
-
             // 页码及每页条数
             listQuery: {
                 page: 1,
@@ -113,8 +93,20 @@ export default {
             return this.$store.state.dialoAuthVisible;
         }
     },
-    props: {},
-    created() {},
+    props: {
+        // 路由数组
+        routeMenu: {
+            type: Array,
+            default: []
+        },
+
+        // 路由索引
+        routeMenuActive: {
+            type: Number,
+            default: 0
+        }
+    },
+    mounted() {},
     methods: {
         // 获取用户信息
         async getUserInfo() {
@@ -126,45 +118,62 @@ export default {
             await this.$store.dispatch('home/selectHomeList', { params: query });
         },
 
-        // tab监听
-        changeMenu(index) {
-            if (index != this.active) {
-                this.active = index;
+        // 路由菜单切换
+        changeRouteMenu(index) {
+            if (index != this.routeMenuActive) {
+                this.$emit('routeMenu', index);
             }
         },
 
         // 显示弹窗
         handleShowModal(type) {
-            this.$store.commit(type, true);
             disableScroll();
+            this.$store.commit(type, true);
         },
 
         // 关闭弹窗
         handleCloseModal(type) {
-            this.$store.commit(type, false);
             openScroll();
+            this.$store.commit(type, false);
         },
 
         // 成功后关闭弹窗
         async handleSuccess(type) {
-            this.$store.commit(type, false);
             openScroll();
-            await this.getUserInfo();
+            this.$store.commit(type, false);
+            await this.getUserInfo({ token: this.getToken });
 
             // 登录成功后刷新列表
             if (type == this.LOGIN) {
+                this.refreshList();
+            }
+        },
+
+        // 根据当前路由刷新对应的列表
+        async refreshList() {
+            let params = JSON.parse(JSON.stringify(this.listQuery));
+            if (this.userInfo.id) {
+                params.userId = this.userInfo.id;
+            }
+
+            // 首页
+            if (this.$route.path == '/') {
                 this.$store.commit('home/SET_LIST', []); // 清空列表
-                let params = JSON.parse(JSON.stringify(this.listQuery));
-                params.userId = this.userInfo.id; // 赋值id
                 this.getSelectHomeList(params); // 重新请求
+            }
+
+            // 资料下载
+            if (this.$route.path == '/download') {
+                this.$store.commit('download/SET_LIST', []); // 清空列表
+                await this.$store.dispatch('download/selectArticleDownLoad', { params });
             }
         },
 
         // 退出登录
         async logout() {
             await this.$store.dispatch('user/resetToken');
-            this.$store.commit('home/SET_LIST', []); // 清空列表
-            this.getSelectHomeList(this.listQuery); // 重新请求
+            this.$store.commit('download/SET_LIST', []); // 清空列表
+            this.refreshList(); // 刷新列表数据
             this.$message.success('退出成功!');
         }
     }

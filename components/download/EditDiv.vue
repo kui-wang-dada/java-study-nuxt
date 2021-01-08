@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="comment-form flex">
-            <template v-if="userInfo.userImage">
+            <template v-if="userInfo.userName && !isReplyForm">
                 <div class="avatar-box" v-if="userInfo.userImage">
                     <a-avatar :size="32" :src="userInfo.userImage" />
                 </div>
@@ -10,7 +10,7 @@
             <a-textarea class="comment-textarea" v-model="content" @change="onChange" :placeholder="placeholderText" :maxLength="maxLength" :auto-size="{ maxRows: 4 }" />
         </div>
         <div class="comment-operation">
-            <span class="max">还能输入{{ maxNum }}个字符</span>
+            <span class="max" :style="maxStyle">还能输入{{ maxNum }}个字符</span>
             <a-button :disabled="!content" type="primary" class="comment-btn" @click="submit">{{ btnText }}</a-button>
         </div>
     </div>
@@ -30,6 +30,10 @@ export default {
         maxLength: {
             type: Number,
             default: 200
+        },
+        isReplyForm: {
+            type: Boolean,
+            default: false
         }
     },
     data() {
@@ -49,6 +53,12 @@ export default {
             if (this.$store.state.user.userInfo.userName) {
                 return this.$store.state.user.userInfo.userName.substring(0, 1).toUpperCase();
             }
+        },
+
+        maxStyle() {
+            return {
+                marginLeft: this.isReplyForm ? '0' : ''
+            };
         }
     },
     created() {
@@ -61,6 +71,10 @@ export default {
         // 提交评论
         submit() {
             if (this.content) {
+                this.content = this.content
+                    .replace(/\r\n/g, '<br/>')
+                    .replace(/\n/g, '<br/>')
+                    .replace(/\s/g, '&nbsp;');
                 this.$emit('submit', this.content);
             }
         },

@@ -26,9 +26,7 @@
                         </a-form-model-item>
                     </a-form-model>
                     <div class="button-container pt-8">
-                        <a-button type="primary" :loading="iconLoading" class="ant-btn-lg" @click="submitAuth('ruleForm')">
-                            认证
-                        </a-button>
+                        <a-button type="primary" :loading="iconLoading" class="ant-btn-lg" @click="submitAuth('ruleForm')">认证</a-button>
                     </div>
                 </div>
             </div>

@@ -18,10 +18,22 @@ export default [
         path: '/article/article/comment/insetComment'
     },
     {
+        name: 'insetCommentReply',
+        method: 'POST',
+        desc: '回复评论',
+        path: '/article/article/comment/insetCommentReply'
+    },
+    {
         name: 'deleteComment',
         method: 'POST',
         desc: '删除评论',
         path: '/article/article/comment/deleteComment'
+    },
+    {
+        name: 'deleteCommentReply',
+        method: 'POST',
+        desc: '删除回复评论',
+        path: '/article/article/comment/deleteCommentReply'
     },
     {
         name: 'dataDownLoad',
@@ -34,5 +46,5 @@ export default [
         method: 'POST',
         desc: '评论点赞',
         path: '/article/article/inspire/commentInspire'
-    },
+    }
 ];

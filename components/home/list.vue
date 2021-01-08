@@ -69,20 +69,18 @@
             <span class="no-more-data" v-if="list.length > 1">暂无更多数据！</span>
         </div>
 
-        <div class="empty" v-if="!list.length">
-            <a-empty image="https://gw.alipayobjects.com/mdn/miniapp_social/afts/img/A*pevERLJC9v0AAAAAAAAAAABjAQAAAQ/original" :image-style="imageStyle">
-                <span slot="description" class="no-more-data">暂无数据!</span>
-            </a-empty>
-        </div>
+        <empty v-if="!list.length" />
     </aside>
 </template>
 
 <script>
 import swiper from '@/components/home/swiper';
+import empty from '@/components/common/emptyTwo';
 import { formatTimer } from '@/utils';
 export default {
     components: {
-        swiper
+        swiper,
+        empty
     },
     props: {
         list: {
