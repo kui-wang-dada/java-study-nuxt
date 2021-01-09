@@ -39,6 +39,10 @@ import { disableScroll, openScroll, timestampFormat, formatTimer } from '@/utils
 export default {
     components: {},
     props: {
+        item: {
+            type: Object,
+            default: {}
+        },
         list: {
             type: Array,
             default: []

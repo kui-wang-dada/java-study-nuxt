@@ -1,8 +1,11 @@
 <template>
     <aside class="aside-left">
+        <!-- 搜索模块 -->
         <div class="search-block flex-align">
             <search @search="onSearch" />
         </div>
+
+        <!-- 列表模块 -->
         <div class="download-list" v-if="list.length">
             <ul class="list-ul">
                 <li v-for="(item, index) in list" :key="item.id">
@@ -77,9 +80,10 @@
                                                         <i class="iconfont icon-dianzan3" title="点赞"></i>
                                                         <span class="btn-text" v-if="parseInt(child.inspireNum) > 0">{{ child.inspireNum }}</span>
                                                     </div>
-                                                    <div class="btn" v-if="item.creator === userInfo.id" @click="showReplyCommentForm(child.id, index, C)">
+                                                    <!--  v-if="item.creator === userInfo.id" -->
+                                                    <div class="btn" @click="showReplyCommentForm(child.id, index, C)">
                                                         <i class="iconfont icon-changyonghuifu" title="回复"></i>
-                                                        <span class="btn-text" v-if="child.replyList.length > 0">{{ child.replyList.length }}</span>
+                                                        <span class="btn-text">回复</span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -104,7 +108,10 @@
                                                         <div class="right">
                                                             <div class="info-row flex-s-b">
                                                                 <div class="flex-align">
-                                                                    <div class="reply-name">{{ reply.userName }}</div>
+                                                                    <div class="reply-name">
+                                                                        {{ reply.userName }}
+                                                                        <span class="author" v-if="isAuthor(item.creator, reply.creator)">{{ isAuthor(item.creator, reply.creator) }}</span>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                             <div class="desc_para" v-html="reply.commentContent"></div>
@@ -114,6 +121,10 @@
                                                                     <div class="btn ashbin-btn-two" v-if="reply.creator === userInfo.id" @click="onDeleteComment(reply, index, 'deleteCommentReply')">
                                                                         <i class="iconfont icon-ashbin" title="删除"></i>
                                                                     </div>
+                                                                    <!-- <div class="btn" @click="showReplyCommentForm(child.id, index, C)">
+                                                                        <i class="iconfont icon-changyonghuifu" title="回复"></i>
+                                                                        <span class="btn-text">回复</span>
+                                                                    </div> -->
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -199,6 +210,13 @@ export default {
         // token
         getToken() {
             return this.$store.state.user.token;
+        },
+
+        // 判断是否是作者
+        isAuthor(id, replyId) {
+            return function(id, replyId) {
+                return id === replyId ? '(作者)' : '';
+            };
         }
     },
     created() {},
@@ -541,6 +559,12 @@ export default {
                                     font-size: 14px;
                                     color: #2e3135;
                                     margin-right: 10px;
+
+                                    .author {
+                                        font-size: 14px;
+                                        color: #2e3135;
+                                        margin-left: 2px;
+                                    }
                                 }
                             }
                         }
