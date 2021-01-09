@@ -155,7 +155,8 @@ export default {
             let params = {
                 commentId: query.id,
                 content: query.content,
-                userId: this.userInfo.id
+                creator: this.userInfo.id,
+                userId: query.userId
             };
             await this.$store.dispatch('download/insetCommentReply', { params, pageRequest });
             this.showCommentForm(query.index);
@@ -199,8 +200,18 @@ export default {
             let item = list[query.index]; // 资料item
             let commentList = item.commentList; // 评论列表
             let commentItem = commentList[query.c_index]; // 评论item
-            commentItem.isReplyForm = !commentItem.isReplyForm;
-            commentItem.placeholderText = `回复${commentItem.userName}`;
+            let replyItem = commentList[query.c_index].commentList[query.R_index]; // 回复评论item
+            // 评论
+            if (!replyItem) {
+                commentItem.isReplyForm = !commentItem.isReplyForm;
+                commentItem.placeholderText = `回复${commentItem.userName}`;
+            }
+            // 回复评论
+            if (replyItem) {
+                console.log(replyItem);
+                replyItem.isReplyForm = !replyItem.isReplyForm;
+                replyItem.placeholderText = `回复${replyItem.userName}`;
+            }
             this.$set(item, 'commentList', commentList);
             this.$set(list, query.index, item);
             this.$store.commit('download/SET_LIST', list);

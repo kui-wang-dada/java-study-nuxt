@@ -1,33 +1,51 @@
 <template>
-    <div class="reply-list" v-if="list && list.length > 0">
-        <div class="reply-item flex" v-for="(item, index) in list" :key="item.id">
+    <div class="reply-list" :style="showBackground">
+        <div class="reply-item flex" :class="isReply ? 'reply-two' : ''" v-for="(child, C) in list" :key="child.id">
             <div class="left">
-                <div class="avatar-box" v-if="item.headImg">
-                    <a-avatar :size="32" :src="item.headImg" :alt="item.userName" />
+                <div class="avatar-box" v-if="child.headImg">
+                    <a-avatar :size="32" :src="child.headImg" :alt="child.userName" />
                 </div>
-                <div class="avatar-box no-img" v-else>{{ item.userName | firstUserName }}</div>
+                <div class="avatar-box no-img" v-else>{{ child.userName | firstUserName }}</div>
             </div>
             <div class="right">
                 <div class="info-row flex-s-b">
                     <div class="flex-align">
-                        <div class="reply-name">{{ item.userName }}</div>
+                        <div class="reply-name">
+                            {{ child.userName }}
+                            <!-- <span class="author">{{ isAuthor(id, child.creator) }}</span> -->
+                        </div>
                     </div>
                 </div>
-                <div class="desc_para" v-html="item.commentContent"></div>
+                <div class="desc_para" v-html="child.commentContent"></div>
                 <div class="operations flex-s-b">
-                    <div class="public-time" :title="item.createTime | formatTimers">{{ item.createTime | formatTimeStamp }}</div>
-                    <div class="btns flex-align">
-                        <div class="btn ashbin-btn" v-if="item.creator === userInfo.id" @click="onDeleteComment(item, index)">
+                    <div class="public-time" :title="child.createTime | formatTimers">{{ child.createTime | formatTimeStamp }}</div>
+                    <!-- 评论列表 -->
+                    <div class="btns flex-align" v-if="!isReply">
+                        <div class="btn ashbin-btn" v-if="child.creator === userInfo.id" @click="onDeleteComment(child, index, 'deleteComment')">
                             <i class="iconfont icon-ashbin" title="删除"></i>
                         </div>
-                        <div class="btn" @click="commentInspire(item.id, index)">
+                        <div class="btn" :class="child.likeIt ? 'active' : ''" @click="commentInspire(child.id, index, C)">
                             <i class="iconfont icon-dianzan3" title="点赞"></i>
-                            <span class="btn-text" v-if="parseInt(item.inspireNum) > 0">{{ item.inspireNum }}</span>
+                            <span class="btn-text" v-if="parseInt(child.inspireNum) > 0">{{ child.inspireNum }}</span>
                         </div>
-                        <div class="btn" v-if="item.creator === userInfo.id" @click="showReplyCommentForm(item.id, index)">
+                        <div class="btn" @click="showReplyCommentForm(child.id, index, C)">
                             <i class="iconfont icon-changyonghuifu" title="回复"></i>
+                            <span class="btn-text">回复</span>
                         </div>
                     </div>
+                    <!-- 回复评论 -->
+                    <div class="btns flex-align" v-else>
+                        <div class="btn ashbin-btn-two" v-if="child.creator === userInfo.id" @click="onDeleteComment(child, index, 'deleteCommentReply')">
+                            <i class="iconfont icon-ashbin" title="删除"></i>
+                        </div>
+                        <div class="btn" @click="showReplyCommentForm(child.id, index, C)">
+                            <i class="iconfont icon-changyonghuifu" title="回复"></i>
+                            <span class="btn-text">回复</span>
+                        </div>
+                    </div>
+                </div>
+                <div v-if="child.commentList && child.commentList.length">
+                    <reply-list :isReply="true" :item="child" :list="child.commentList" />
                 </div>
             </div>
         </div>
@@ -37,19 +55,50 @@
 <script>
 import { disableScroll, openScroll, timestampFormat, formatTimer } from '@/utils';
 export default {
+    name: 'replyList',
     components: {},
     props: {
         item: {
             type: Object,
             default: {}
         },
+
         list: {
             type: Array,
             default: []
+        },
+
+        // 是否是回复列表
+        isReply: {
+            type: Boolean,
+            default: false
         }
     },
     data() {
         return {};
+    },
+    computed: {
+        // userInfo
+        userInfo() {
+            return this.$store.state.user.userInfo;
+        },
+
+        // token
+        getToken() {
+            return this.$store.state.user.token;
+        },
+
+        // 回复评论:显示作者
+        isAuthor(id, replyId) {
+            return function(id, replyId) {
+                return id === replyId ? '(作者)' : '';
+            };
+        },
+
+        // 回复评论:显示背景色
+        showBackground() {
+            return this.isReply ? 'background-color: rgba(0, 0, 0, 0.01);' : '';
+        }
     },
     filters: {
         // 时间格式化
@@ -65,17 +114,6 @@ export default {
         // 用户名首字母
         firstUserName(val) {
             return val.substring(0, 1).toUpperCase();
-        }
-    },
-    computed: {
-        // userInfo
-        userInfo() {
-            return this.$store.state.user.userInfo;
-        },
-
-        // token
-        getToken() {
-            return this.$store.state.user.token;
         }
     },
     created() {},
@@ -219,7 +257,6 @@ export default {
 
             .iconfont {
                 color: @main-col;
-                transform: scale(1.5, 1.5);
             }
         }
     }
@@ -253,7 +290,17 @@ export default {
     // background-color: rgba(0, 0, 0, 0.01);
     border-radius: 4px;
     padding: 0 20px;
-    margin-top: 30px;
+    margin-top: 20px;
+
+    .reply-two {
+        &:hover {
+            .operations {
+                .btn.ashbin-btn-two {
+                    visibility: visible;
+                }
+            }
+        }
+    }
 
     .reply-item {
         position: relative;
@@ -298,6 +345,12 @@ export default {
                     font-size: 14px;
                     color: #2e3135;
                     margin-right: 10px;
+
+                    .author {
+                        font-size: 14px;
+                        color: #2e3135;
+                        margin-left: 2px;
+                    }
                 }
             }
         }
@@ -328,7 +381,8 @@ export default {
                 }
             }
 
-            .btn.ashbin-btn {
+            .btn.ashbin-btn,
+            .btn.ashbin-btn-two {
                 visibility: hidden;
             }
         }

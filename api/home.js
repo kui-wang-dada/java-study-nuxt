@@ -15,6 +15,6 @@ export default [
         name: 'insetCollection',
         method: 'POST',
         desc: '收藏',
-        path: '/article/java/collection/insetCollection'
+        path: '/article/article/collection/insetCollection'
     }
 ];

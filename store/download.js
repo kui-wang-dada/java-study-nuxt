@@ -16,7 +16,11 @@ export default {
             let res = await $api['download/selectArticleDownLoad'](params);
             if (res.code === 0) {
                 let list = state.list;
-                commit('SET_LIST', list.concat(res.data.list));
+                if (params.page > 1) {
+                    commit('SET_LIST', list.concat(res.data.list));
+                } else {
+                    commit('SET_LIST', res.data.list);
+                }
             }
         },
 
@@ -43,37 +47,33 @@ export default {
         },
 
         // 评论
-        async insetComment({ state, commit, dispatch }, { params, pageRequest }) {
+        async insetComment({ dispatch }, { params, pageRequest }) {
             let res = await $api['download/insetComment'](params);
             if (res.code === 0) {
-                commit('SET_LIST', []);
                 await dispatch('selectArticleDownLoad', { params: pageRequest });
             }
         },
 
         // 回复评论
-        async insetCommentReply({ state, commit, dispatch }, { params, pageRequest }) {
+        async insetCommentReply({ dispatch }, { params, pageRequest }) {
             let res = await $api['download/insetCommentReply'](params);
             if (res.code === 0) {
-                commit('SET_LIST', []);
                 await dispatch('selectArticleDownLoad', { params: pageRequest });
             }
         },
 
         // 删除评论
-        async deleteComment({ state, commit, dispatch }, { params, pageRequest }) {
+        async deleteComment({ dispatch }, { params, pageRequest }) {
             let res = await $api['download/deleteComment'](params);
             if (res.code === 0) {
-                commit('SET_LIST', []);
                 await dispatch('selectArticleDownLoad', { params: pageRequest });
             }
         },
 
         // 删除回复评论
-        async deleteCommentReply({ state, commit, dispatch }, { params, pageRequest }) {
+        async deleteCommentReply({ dispatch }, { params, pageRequest }) {
             let res = await $api['download/deleteCommentReply'](params);
             if (res.code === 0) {
-                commit('SET_LIST', []);
                 await dispatch('selectArticleDownLoad', { params: pageRequest });
             }
         },

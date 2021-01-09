@@ -80,7 +80,6 @@
                                                         <i class="iconfont icon-dianzan3" title="点赞"></i>
                                                         <span class="btn-text" v-if="parseInt(child.inspireNum) > 0">{{ child.inspireNum }}</span>
                                                     </div>
-                                                    <!--  v-if="item.creator === userInfo.id" -->
                                                     <div class="btn" @click="showReplyCommentForm(child.id, index, C)">
                                                         <i class="iconfont icon-changyonghuifu" title="回复"></i>
                                                         <span class="btn-text">回复</span>
@@ -90,15 +89,15 @@
                                             <div>
                                                 <div class="reply-form" v-if="child.isReplyForm">
                                                     <edit-div
-                                                        @submit="onReplySubmit($event, child, C)"
+                                                        @submit="onReplySubmit($event, child, C, 'comment')"
                                                         :placeholderText="child.placeholderText"
                                                         :isReplyForm="true"
                                                         :maxLength="200"
                                                         :btnText="btnText"
                                                     />
                                                 </div>
-                                                <div class="reply-list" v-if="child.replyList && child.replyList.length > 0" style="background-color: rgba(0, 0, 0, 0.01);">
-                                                    <div class="reply-item flex reply-two" v-for="reply in child.replyList" :key="reply.id">
+                                                <div class="reply-list" v-if="child.commentList && child.commentList.length > 0" style="background-color: rgba(0, 0, 0, 0.01);">
+                                                    <div class="reply-item flex reply-two" v-for="(reply, R) in child.commentList" :key="reply.id">
                                                         <div class="left">
                                                             <div class="avatar-box" v-if="reply.headImg">
                                                                 <a-avatar :size="32" :src="reply.headImg" :alt="reply.userName" />
@@ -115,16 +114,27 @@
                                                                 </div>
                                                             </div>
                                                             <div class="desc_para" v-html="reply.commentContent"></div>
-                                                            <div class="operations flex-s-b">
+                                                            <div class="operations flex-s-b" style="margin-top: 4px;">
                                                                 <div class="public-time" :title="reply.createTime | formatTimers">{{ reply.createTime | formatTimeStamp }}</div>
                                                                 <div class="btns flex-align">
                                                                     <div class="btn ashbin-btn-two" v-if="reply.creator === userInfo.id" @click="onDeleteComment(reply, index, 'deleteCommentReply')">
                                                                         <i class="iconfont icon-ashbin" title="删除"></i>
                                                                     </div>
-                                                                    <!-- <div class="btn" @click="showReplyCommentForm(child.id, index, C)">
+                                                                    <div class="btn" @click="showReplyCommentForm(reply.id, index, C, R)">
                                                                         <i class="iconfont icon-changyonghuifu" title="回复"></i>
                                                                         <span class="btn-text">回复</span>
-                                                                    </div> -->
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div>
+                                                                <div class="reply-form" style="margin-top: 10px;" v-if="reply.isReplyForm">
+                                                                    <edit-div
+                                                                        @submit="onReplySubmit($event, reply, C, 'reply')"
+                                                                        :placeholderText="reply.placeholderText"
+                                                                        :isReplyForm="true"
+                                                                        :maxLength="200"
+                                                                        :btnText="btnText"
+                                                                    />
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -231,9 +241,10 @@ export default {
         },
 
         // 回复评论按钮
-        onReplySubmit(content, item, index) {
+        onReplySubmit(content, item, index, type) {
             item.content = content; // 评论内容
             item.index = index; // 索引
+            item.type = type; // 类型 comment回复评论 reqly回复二层的评论
             this.$emit('insetCommentReply', item);
         },
 
@@ -243,11 +254,12 @@ export default {
         },
 
         // 是否显示回复评论模块
-        showReplyCommentForm(id, index, c_index) {
+        showReplyCommentForm(id, index, c_index, R_index) {
             this.$emit('showReplyComment', {
-                id: id,
+                id,
                 index,
-                c_index
+                c_index,
+                R_index
             });
         },
 
@@ -496,7 +508,7 @@ export default {
                 }
 
                 .reply-form {
-                    margin-top: 30px;
+                    margin-top: 20px;
                 }
 
                 .reply-list {
@@ -505,7 +517,7 @@ export default {
                     // background-color: rgba(0, 0, 0, 0.01);
                     border-radius: 4px;
                     padding: 0 20px;
-                    margin-top: 20px;
+                    margin-top: 10px;
 
                     .reply-two {
                         &:hover {
@@ -557,11 +569,11 @@ export default {
 
                                 .reply-name {
                                     font-size: 14px;
-                                    color: #2e3135;
+                                    color: #333;
                                     margin-right: 10px;
 
                                     .author {
-                                        font-size: 14px;
+                                        font-size: 12px;
                                         color: #2e3135;
                                         margin-left: 2px;
                                     }

@@ -158,13 +158,11 @@ export default {
 
             // 首页
             if (this.$route.path == '/') {
-                this.$store.commit('home/SET_LIST', []); // 清空列表
                 this.getSelectHomeList(params); // 重新请求
             }
 
             // 资料下载
             if (this.$route.path == '/download') {
-                this.$store.commit('download/SET_LIST', []); // 清空列表
                 await this.$store.dispatch('download/selectArticleDownLoad', { params });
             }
         },
@@ -172,7 +170,6 @@ export default {
         // 退出登录
         async logout() {
             await this.$store.dispatch('user/resetToken');
-            this.$store.commit('download/SET_LIST', []); // 清空列表
             this.refreshList(); // 刷新列表数据
             this.$message.success('退出成功!');
         }
