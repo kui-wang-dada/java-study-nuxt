@@ -4,7 +4,6 @@
         <div class="search-block flex-align">
             <search @search="onSearch" />
         </div>
-
         <!-- 列表模块 -->
         <div class="download-list" v-if="list.length">
             <ul class="list-ul">
@@ -89,7 +88,7 @@
                                             <div>
                                                 <div class="reply-form" v-if="child.isReplyForm">
                                                     <edit-div
-                                                        @submit="onReplySubmit($event, child, C, 'comment')"
+                                                        @submit="onReplySubmit($event, child, index, 'comment')"
                                                         :placeholderText="child.placeholderText"
                                                         :isReplyForm="true"
                                                         :maxLength="200"
@@ -113,7 +112,7 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <div class="desc_para" v-html="reply.commentContent"></div>
+                                                            <div class="desc_para" v-html="replyContent(item, reply)"></div>
                                                             <div class="operations flex-s-b" style="margin-top: 4px;">
                                                                 <div class="public-time" :title="reply.createTime | formatTimers">{{ reply.createTime | formatTimeStamp }}</div>
                                                                 <div class="btns flex-align">
@@ -129,7 +128,7 @@
                                                             <div>
                                                                 <div class="reply-form" style="margin-top: 10px;" v-if="reply.isReplyForm">
                                                                     <edit-div
-                                                                        @submit="onReplySubmit($event, reply, C, 'reply')"
+                                                                        @submit="onReplySubmit($event, reply, index, 'reply')"
                                                                         :placeholderText="reply.placeholderText"
                                                                         :isReplyForm="true"
                                                                         :maxLength="200"
@@ -226,6 +225,18 @@ export default {
         isAuthor(id, replyId) {
             return function(id, replyId) {
                 return id === replyId ? '(作者)' : '';
+            };
+        },
+
+        // 拼接回复内容
+        replyContent(item, replyItem) {
+            return function(item, replyItem) {
+                let content = `回复 <span style="color: #7183ab;">@${replyItem.nickName}</span>: ${replyItem.commentContent}`;
+                if (item.creator === replyItem.creator) {
+                    return replyItem.commentContent;
+                } else {
+                    return content;
+                }
             };
         }
     },

@@ -153,10 +153,10 @@ export default {
             }
             let pageRequest = this.listQuery;
             let params = {
-                commentId: query.id,
+                commentId: query.type === 'comment' ? query.id : query.commentId,
                 content: query.content,
                 creator: this.userInfo.id,
-                userId: query.userId
+                userId: query.creator
             };
             await this.$store.dispatch('download/insetCommentReply', { params, pageRequest });
             this.showCommentForm(query.index);
