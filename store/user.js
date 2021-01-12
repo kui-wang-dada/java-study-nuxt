@@ -61,6 +61,10 @@ const actions = {
     // 用户认证
     async userAuth({ commit }, params) {
         let res = await $api['user/userAuth'](params);
+        if (res.code === 0) {
+            commit('SET_TOKEN', res.data);
+            setToken(res.data);
+        }
         return res;
     },
 
