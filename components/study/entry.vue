@@ -39,8 +39,8 @@
                 <operation />
                 <prevnext />
             </div>
+            <!-- <article-comment /> -->
         </div>
-        <article-comment />
     </div>
 </template>
 
@@ -69,11 +69,14 @@ export default {
 <style scoped lang="less">
 .entry {
     transition: ease-in-out 0.5s;
-    padding: 40px;
     background-color: #fff;
     min-height: 400px;
     border-radius: 4px;
-    box-shadow: 0px 3px 10px 0px rgba(153, 153, 153, 0.1);
+    max-width: 750px;
+    margin: 0 auto;
+    padding: 100px 0 50px 0;
+
+    // box-shadow: 0px 3px 10px 0px rgba(153, 153, 153, 0.1);
 
     .article_header {
         margin-bottom: 20px;

@@ -112,7 +112,10 @@ export default {
 
 <style scoped lang="less">
 .mian {
+    width: 1000px;
+    padding: 90px 0 30px 0;
     display: flex;
     justify-content: space-between;
+    margin: 0 auto;
 }
 </style>

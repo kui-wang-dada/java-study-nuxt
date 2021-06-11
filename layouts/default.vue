@@ -63,19 +63,7 @@ export default {
     }
 };
 </script>
-<style lang="less" scoped>
-.main {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.main-body {
-    width: 1000px;
-    margin: 81px 0 60px 0;
-    // padding-bottom: 30px;
-}
-</style>
+<style lang="less" scoped></style>
 <style>
 *,
 *::before,

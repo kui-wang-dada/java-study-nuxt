@@ -28,11 +28,11 @@ export default {
 
 <style scoped lang="less">
 .home-wrap {
-    display: flex;
-    flex-direction: row;
+    height: 100vh;
+    background-color: #fff;
     .home-main {
-        flex: 1;
-        margin-left: 20px;
+        background-color: #fff;
+        // padding-left: 320px;
     }
 }
 </style>

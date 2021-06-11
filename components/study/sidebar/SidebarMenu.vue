@@ -1,223 +1,138 @@
 <template>
-    <aside class="sidebar">
-        <div class="sidebar-inner">
-            <div class="list">
-                <ul class="menu-root">
-                    <li>
-                        <h3>java学习路线</h3>
-                    </li>
-                    <li v-for="(menu, index) in menus" :key="index">
-                        <i class="iconfont icon-arrow-right-bold" :class="menuIndex == index ? 'arrow-down' : ''" />
-                        <a @click.prevent="clickEvent(index)" href="" class="sidebar-link" :class="menuIndex == index ? 'current' : ''">
-                            {{ menu.title }}
-                        </a>
-                        <sidebar-menu-item v-if="menuIndex == index && menu.childs" :active="active" :item="menu" @select="onSelectItem" />
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </aside>
+    <div class="sidebar-inner">
+        <my-tree :treeMenu="tree" @selectnode="selectnode"></my-tree>
+    </div>
 </template>
-
 <script>
-import SidebarMenuItem from './SidebarMenuItem';
+import MyTree from './SidebarMenuItem';
 export default {
     components: {
-        SidebarMenuItem
+        MyTree
     },
     data() {
         return {
-            menuIndex: 0, // 第一层索引
-            active: -1, // 第二层索引
-            menus: [
+            tree: [
                 {
-                    href: '/home/list-1',
-                    title: '第一阶段(java基础)'
-                },
-                {
-                    href: '/home/list-2',
-                    title: '第一章(java基础语法)'
-                },
-                {
-                    href: '/props',
-                    title: '环境搭建+入门',
-                    childs: [
+                    id: 1,
+                    label: '1级目录1',
+                    children: [
                         {
-                            href: '/page/sub-page-1',
-                            title: '01_java语言背景介绍',
-                            childs: [
+                            id: '1-1',
+                            pid: 1,
+                            label: '1.1目录'
+                        },
+                        {
+                            id: '1-2',
+                            pid: 1,
+                            label: '1.2目录'
+                        },
+                        {
+                            id: '1-3',
+                            pid: 1,
+                            label: '1.3目录'
+                        }
+                    ]
+                },
+                {
+                    id: 2,
+                    label: '1级目录2',
+                    children: [
+                        {
+                            id: '2-1',
+                            label: '2.1目录',
+                            pid: 2,
+                            children: [
                                 {
-                                    href: '/page/sub-page-1',
-                                    title: '01_xxxxxxx'
+                                    id: '2-1-1',
+                                    pid: '2-1',
+                                    label: '2.1.1目录'
                                 },
                                 {
-                                    href: '/page/sub-page-1',
-                                    title: '02_xxxxxxx'
+                                    id: '2-1-2',
+                                    pid: '2-1',
+                                    label: '2.1.2目录'
                                 },
                                 {
-                                    href: '/page/sub-page-1',
-                                    title: '03_xxxxxxx'
+                                    id: '2-1-3',
+                                    pid: '2-1',
+                                    label: '2.1.3目录'
                                 }
                             ]
                         },
                         {
-                            href: '/page/sub-page-1',
-                            title: '02_java语言跨平台原理'
-                        },
-                        {
-                            href: '/page/sub-page-1',
-                            title: '03_jdk下载和安装'
+                            id: '2-2',
+                            pid: 2,
+                            label: '2.2目录'
                         }
                     ]
-                },
+                }, //在此继续添加目录
                 {
-                    href: '/',
-                    title: '第二阶段(javaweb)'
-                },
-                {
-                    href: '/',
-                    title: '第三阶段(主流框架)'
-                },
-                {
-                    href: '/',
-                    title: '第四阶段(项目练习)'
-                },
-                {
-                    href: '/',
-                    title: '第五阶段(流行框架)',
-                    childs: [
+                    id: 3,
+                    label: '1级目录3',
+                    children: [
                         {
-                            href: '/page/sub-page-1',
-                            title: '01_java语言背景介绍'
-                        },
-                        {
-                            href: '/page/sub-page-1',
-                            title: '02_java语言跨平台原理'
-                        },
-                        {
-                            href: '/page/sub-page-1',
-                            title: '03_jdk下载和安装'
+                            id: '3-1',
+                            pid: 3,
+                            label: '3.1目录',
+                            children: [
+                                {
+                                    id: '3-1-1',
+                                    pid: '3-1',
+                                    label: '3.1.1目录'
+                                }
+                            ]
                         }
                     ]
-                },
-                {
-                    href: '/',
-                    title: '第六阶段(项目练习)'
-                },
-                {
-                    href: '/',
-                    title: '第七阶段(面试经验)'
-                },
-                {
-                    href: '/',
-                    title: '第四阶段(项目练习)'
-                },
-                {
-                    href: '/',
-                    title: '第五阶段(流行框架)'
-                },
-                {
-                    href: '/',
-                    title: '第六阶段(项目练习)'
-                },
-                {
-                    href: '/',
-                    title: '第七阶段(面试经验)'
-                },
-                {
-                    href: '/',
-                    title: '第四阶段(项目练习)'
-                },
-                {
-                    href: '/',
-                    title: '第五阶段(流行框架)'
-                },
-                {
-                    href: '/',
-                    title: '第六阶段(项目练习)'
-                },
-                {
-                    href: '/',
-                    title: '第七阶段(面试经验)'
                 }
-            ]
+            ],
+            plist: [], //此级以上所有父节点列表
+            flatTree: [], //tree的平行数据
+            node: '' //当前点击的node,
         };
     },
-    methods: {},
-    created() {},
-    mounted() {},
     methods: {
-        // 选中第一层
-        clickEvent(index) {
-            if (index != this.menuIndex) {
-                this.menuIndex = index;
-            }
+        //将tree树形数据转换为平行数据
+        transformData(tree) {
+            tree.forEach(item => {
+                this.flatTree.push(item);
+                item.children && item.children.length > 0 ? this.transformData(item.children) : '';
+            });
         },
 
-        // 选中第二层
-        onSelectItem(index) {
-            this.active = index;
+        //子组件传递过来的点击的node的值
+        selectnode(node) {
+            this.node = node;
+            this.flatTree = [];
+            this.transformData(this.tree);
         }
+    },
+    mounted() {
+        this.transformData(this.tree); //数据初始化:将tree树形数据转换为平行数据
+        console.log(this.flatTree);
     }
 };
 </script>
 <style scoped lang="less">
-.sidebar {
-    overflow-x: hidden;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    -ms-overflow-style: none;
-    box-shadow: 0px 3px 10px 0px rgba(153, 153, 153, 0.1);
-    background-color: #fff;
-    border-radius: 4px;
+.sidebar-inner {
+    // width: 250px;
+    // overflow-x: hidden;
+    // overflow-y: auto;
+    // -webkit-overflow-scrolling: touch;
+    // -ms-overflow-style: none;
+    // box-shadow: 0px 3px 10px 0px rgba(153, 153, 153, 0.1);
+    // background-color: #fff;
+    // border-radius: 4px 0 0 4px;
+    // padding: 10px;
+    // border-right: 1px solid #eaecef;
 
-    .sidebar-inner {
-        width: 250px;
-        padding: 10px 0px 60px 20px;
-
-        .sidebar-link {
-            color: #4f5959;
-            font-size: 16px;
-        }
-
-        .sidebar-link.current {
-            font-weight: 600;
-            color: #42b983;
-            border-bottom: 2px solid #fff;
-        }
-
-        .sidebar-link.active {
-            font-weight: bold;
-            color: #42b983;
-        }
-
-        .menu-root > li > .sidebar-link:hover {
-            border-bottom: 2px solid #42b983;
-        }
-    }
-
-    & ul {
-        list-style-type: none;
-        margin: 0;
-        line-height: 2em;
-        padding-left: 1em;
-    }
-
-    & li {
-        margin-top: 0.5em;
-    }
-
-    & .menu-root {
-        padding-left: 0;
-    }
-}
-
-.icon-arrow-right-bold {
-    display: inline-block;
-    transition: 0.3s transform ease, 0.3s -webkit-transform ease;
-}
-
-.arrow-down {
-    transform: rotate(90deg);
+    position: fixed;
+    width: 320px;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    padding-top: 100px;
+    border-right: 1px solid #eaecef;
+    // background-color: #fafafa;
+    z-index: 15;
 }
 </style>
